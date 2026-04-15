@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The C.H.E.A.T. Code™ Diagnostic | Rebellion Collective</title>
+<meta name="description" content="Ten questions. Two minutes. Find out where your capacity is being extracted and what to do about it.">
+<!-- OG TAGS: Update these with your hosted URL and image -->
+<meta property="og:title" content="The C.H.E.A.T. Code™ Diagnostic">
+<meta property="og:description" content="Ten questions. Two minutes. Find out where your capacity is being extracted.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://quietrebellion.github.io/cheat-code-diagnostic/og-image.png">
+<meta property="og:url" content="https://quietrebellion.github.io/cheat-code-diagnostic">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--bgCard:#161616;--ember:#e8622a;--emberLight:#f0864e;--warm:#ccc5bd;--warmMuted:#8a8682;--text:#ededed;--textMuted:#9a9692;--cream:#fff;--red:#c44d3f;--amber:#d4a843;--green:#6b9b5e}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 20px rgba(232,98,42,0.2)}50%{box-shadow:0 0 35px rgba(232,98,42,0.35)}}
+input[type="range"]{-webkit-appearance:none;appearance:none;background:transparent;position:absolute;width:100%;height:48px;top:-19px;left:0;opacity:0;cursor:pointer;margin:0}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;cursor:pointer}
+a{color:var(--emberLight);text-decoration:none}a:hover{text-decoration:underline}
+a:focus-visible,button:focus-visible{outline:2px solid var(--emberLight);outline-offset:2px}
+input[type="email"]:focus{border-color:var(--ember)!important}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:640px;margin:0 auto;padding:2rem 1.25rem;min-height:100vh;display:flex;flex-direction:column}
+.screen{flex:1;display:flex;flex-direction:column;animation:fadeIn 0.4s ease both}
+.hidden{display:none!important}
+.card{background:var(--bgCard);border-radius:8px;padding:1.25rem;margin-bottom:0.75rem;border:1px solid rgba(232,98,42,0.09)}
+.card-lg{border-radius:12px;padding:2rem 1.5rem;margin-bottom:1.5rem;border:1px solid rgba(232,98,42,0.13)}
+.btn{padding:1rem 2rem;font-family:'Poppins',sans-serif;font-size:1.1rem;font-weight:600;color:var(--bg);background:var(--ember);border:none;border-radius:8px;cursor:pointer}
+.btn-outline{padding:0.85rem 1.75rem;font-family:'Poppins',sans-serif;font-size:1rem;font-weight:500;color:var(--emberLight);background:transparent;border:1px solid rgba(232,98,42,0.33);border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-ghost{background:none;border:none;font-family:'Poppins',sans-serif;color:var(--warmMuted);cursor:pointer;text-decoration:underline}
+.mono{font-family:'DM Mono',monospace}
+.label-sm{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--textMuted);margin-bottom:0.5rem}
+.track{position:relative;height:10px;background:rgba(232,98,42,0.15);border-radius:5px;margin-bottom:0.75rem}
+.track-fill{position:absolute;left:0;top:0;height:100%;border-radius:5px;transition:width 0.25s ease}
+.thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;border:2px solid var(--bg);pointer-events:none;transition:left 0.25s ease,background-color 0.25s ease}
+.progress-bar{height:3px;background:rgba(232,98,42,0.15);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--ember);border-radius:2px;transition:width 0.3s ease}
+.dim-bar{height:6px;background:rgba(232,98,42,0.1);border-radius:3px;overflow:hidden;margin-top:0.4rem}
+.dim-fill{height:100%;border-radius:3px}
+.try-this{padding:0.85rem;background:rgba(232,98,42,0.06);border-radius:6px;border-left:3px solid rgba(232,98,42,0.27);line-height:1.6;color:var(--warm)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const CONVERTKIT_FORM_ID="YOUR_DRIP_CAMPAIGN_FORM_ID";
+const C={bg:"#0a0a0a",bgCard:"#161616",ember:"#e8622a",emberLight:"#f0864e",warm:"#ccc5bd",warmMuted:"#8a8682",text:"#ededed",textMuted:"#9a9692",cream:"#ffffff",red:"#c44d3f",amber:"#d4a843",green:"#6b9b5e"};
+const SECTIONS=[
+{key:"energy",label:"Energy",icon:"\u26A1",intro:"Energy lives in four domains: mental, physical, emotional, and alignment. When one collapses, the others compensate until they can\u2019t.",questions:[
+{key:"mental",label:"Mental Energy",question:"How clear is your thinking right now?",low:"Foggy, decision fatigue, too many tabs open",high:"Sharp, focused, decisions come easily"},
+{key:"physical",label:"Physical Energy",question:"How resourced is your body?",low:"Exhausted, poor sleep, running on caffeine",high:"Well-rested, nourished, physically strong"},
+{key:"emotional",label:"Emotional Energy",question:"How much emotional labor are you carrying?",low:"Performing constantly, managing everyone\u2019s feelings",high:"Regulated, boundaried, emotionally available by choice"},
+{key:"alignment",label:"Alignment Energy",question:"How much of your work matches your values?",low:"Misaligned, going through the motions, hollow",high:"Deeply aligned, meaningful, generative"}]},
+{key:"attention",label:"Attention",icon:"\u25CE",intro:"Attention lives in three states: chosen, captured, and present. The deeper question: who benefits from your distraction?",questions:[
+{key:"chosen",label:"Chosen Attention",question:"How much of your attention goes where you direct it?",low:"Almost none. Reactive, scattered, pulled in every direction",high:"Nearly all of it. Present, intentional, self-directed"},
+{key:"captured",label:"Captured Attention",question:"How much of your attention is taken without your consent?",low:"Constantly hijacked by feeds, notifications, urgency",high:"Very little. I\u2019ve reclaimed most of it"},
+{key:"present",label:"Present Attention",question:"How much of your attention is here, in this moment?",low:"Mostly ruminating about the past or anxious about the future",high:"Grounded in the present moment"}]},
+{key:"time",label:"Time",icon:"\u25F7",intro:"Time breaks down into three types: committed, recovered, and protected. How yours is distributed tells the real story.",questions:[
+{key:"committed",label:"Committed Time",question:"How much of your time is already spoken for by obligations you didn\u2019t choose?",low:"Almost all of it. Calendar inherited, obligations stacked",high:"Very little. Most commitments are chosen"},
+{key:"recovered",label:"Recovered Time",question:"Have you been able to reclaim time from things that no longer serve you?",low:"No. Still carrying everything. Can\u2019t let go",high:"Yes. I\u2019ve dropped what doesn\u2019t serve me"},
+{key:"protected",label:"Protected Time",question:"How much time do you intentionally hold as non-negotiable for what matters?",low:"None. Everything is up for grabs",high:"Significant. My boundaries hold"}]}
+];
+const FIVE_CS=[
+{name:"Curiosity",description:"The starting point. Noticing what\u2019s actually happening without judgment. Looking at what\u2019s running your equation before trying to change it.",actions:{chosen:"For the next 48 hours, track your attention in 60-minute blocks. What are you doing? Did you choose to be there? How focused do you feel? The data will surprise you.",captured:"Pick one notification source. Turn it off for a week. Just one. Notice what happens to your clarity. Notice what you were afraid of missing. Ask yourself: was it worth the cost?",mental:"Get every open loop out of your head. Every half-finished decision, unresolved question, lingering obligation. Write them all down. Your working memory is full. Empty it onto paper.",present:"Three times today, pause. One full breath. Ask yourself: where is my attention right now? Am I here, or am I rehearsing something that already happened or hasn\u2019t happened yet? You don\u2019t need to fix anything. Just see it clearly.",_default:"Name one habit that\u2019s running a variable in your equation without your permission. You already know which one. Say it out loud."},subKeys:["chosen","captured","mental","present"]},
+{name:"Courage",description:"What you find when you get curious can be uncomfortable. Courage converts restored energy into action. Moving toward what matters even when it\u2019s hard.",actions:{alignment:"Ask yourself: what am I calling responsibility right now that might actually be fear? Sit with the answer. Then choose one thing to renegotiate this week.",emotional:"Name the conversation you\u2019ve been avoiding. The one that costs you energy every day you delay it. Put it on the calendar this week and walk in with data, no drama.",_default:"Where are you holding on out of fear? Name it. The cost of staying is real even when you can\u2019t see it on a spreadsheet."},subKeys:["alignment","emotional"]},
+{name:"Compassion",description:"Meeting yourself with kindness in the middle of the mess. Without it, you find the hard thing and beat yourself up for it. That\u2019s the second arrow. Compassion is the floor that holds when everything else is shaking.",actions:{emotional:"Next time you catch the inner critic: pause. Recognize what\u2019s happening. Allow it to be there. Investigate it with kindness. Nurture yourself through it. That\u2019s the RAIN practice. It takes ninety seconds.",physical:"Your body is keeping score. Choose one thing this week: sleep, movement, or nourishment. Treat it as sacred. The same way you\u2019d protect a meeting with your most important client. You are that client.",present:"When you catch yourself ruminating or future-tripping, drop into your body. Where do you feel it? How big is it? Bring five percent of your attention to naming it and ninety-five percent to the direct sensation. Stay there for three breaths.",_default:"Do a body-heart-mind check-in right now. Body: what do you physically feel? Heart: what emotion is present? Mind: what story are you telling yourself? Just notice. That\u2019s the whole practice."},subKeys:["emotional","physical","present"]},
+{name:"Connection",description:"Actual human presence where someone sees you and you see them. Connection restores meaning. Time stops feeling consumed and starts feeling alive.",actions:{committed:"Look at your calendar this week. Find one block spent on obligations that drain you. Replace it with unstructured time with someone who fills you up. Let the conversation go wherever it goes.",alignment:"Think of three people you interact with regularly. For each one, ask: what do I bring to their equation? Do I add energy or drain it? Do I give them my attention or just my time?",_default:"Reach out to one person today. Someone you trust. Tell them something true about where you are right now. Connection starts with visibility."},subKeys:["committed","alignment"]},
+{name:"Commitment",description:"Protecting your capacity. Staying curious, courageous, compassionate, and connected. Every day. Even imperfectly. Especially so.",actions:{protected:"Block one hour this week that belongs to you. Label it. Defend it. When someone tries to take it, practice the full sentence: no. That boundary is the seed of every other boundary.",recovered:"Name one recurring obligation that no longer serves you. You already know which one. Drop it, delegate it, or renegotiate it this week. Recovered time is the first resource you reinvest.",_default:"What\u2019s the smallest honest move you could make before the end of this week? Say it out loud to someone you trust. That\u2019s what makes it real."},subKeys:["protected","recovered"]}
+];
+const ALL_Q=SECTIONS.flatMap(s=>s.questions.map(q=>({...q,section:s})));
+const totalQ=ALL_Q.length;
+
+function scoreColor(s){return s<=3?C.red:s<=6?C.amber:C.green}
+function scoreLabel(s){return s<=2?"Critical":s<=4?"Depleted":s<=6?"Stretched":s<=8?"Resourced":"Thriving"}
+function spreadInsight(sp,dim,low){const n=SECTIONS.find(s=>s.key===dim)?.label||dim;if(sp<=1.5){if(low<=4)return"All three dimensions are running low. This is systemic depletion. The whole system needs tending. When everything is equally drained, the intervention is rest and reconnection before strategy.";if(low<=6)return"Your capacity is stretched evenly across all three dimensions. There\u2019s no single point of collapse, but there\u2019s also no reserve. You\u2019re managing, but the margin is thin. Small disruptions hit harder from here.";return"Your three dimensions are holding steady. That\u2019s a stable foundation. The work from here is about protecting what you\u2019ve built and deepening the habits that sustain it.";}if(sp<=4)return"Your "+n.toLowerCase()+" is the constraint. The other dimensions are compensating for it right now, and that compensation has a cost. This is where the pattern becomes visible. When you address "+n.toLowerCase()+" specifically, the whole equation shifts.";return"Your "+n.toLowerCase()+" has collapsed while the rest of your system is still standing. In the C.H.E.A.T. Code\u2122, capacity is multiplicative. One dimension at this level constrains everything else, regardless of how strong the others are. This is where you begin."}
+function subInsight(section,scores){const items=section.questions.map(q=>({...q,score:scores[q.key]})).filter(q=>q.score!=null);if(items.length<2)return null;const sorted=[...items].sort((a,b)=>a.score-b.score);if(sorted[sorted.length-1].score-sorted[0].score<=1)return null;return{lowest:sorted[0],highest:sorted[sorted.length-1]}}
+function getAction(h,scores){const rs=h.subKeys.filter(k=>scores[k]!=null).sort((a,b)=>scores[a]-scores[b]);return(rs[0]&&h.actions[rs[0]])||h.actions._default}
+
+// State
+let scores={},step=-1,email="",emailSent=false;
+const $=id=>document.getElementById(id);
+const app=document.getElementById("app");
+
+function render(){
+  if(step===-1) return renderIntro();
+  if(step>=0&&step<totalQ) return renderQuestion();
+  if(step>=totalQ) return renderResults();
+}
+
+function renderIntro(){
+  app.innerHTML=`<div class="screen" style="justify-content:center;text-align:center">
+    <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--ember);margin-bottom:1.5rem">Rebellion Collective</div>
+    <h1 style="font-size:2rem;font-weight:600;color:var(--cream);line-height:1.2;margin-bottom:1.5rem">The C.H.E.A.T. Code\u2122 Diagnostic</h1>
+    <p style="font-size:1.1rem;color:var(--textMuted);line-height:1.7;max-width:500px;margin:0 auto 1.5rem">Capacity is the raw material of our life. The systems we occupy and habits we practice extract our time, energy, and attention every day. This tells you where. Ten questions. Two minutes to spot the pattern.</p>
+    <p style="font-size:1.05rem;color:var(--cream);margin-bottom:0.4rem">Reclaim what\u2019s yours.</p>
+    <p style="font-size:1.4rem;font-weight:600;color:var(--ember);margin-bottom:2.5rem">Be rebellious.</p>
+    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="step=0;render()">Begin</button>
+  </div>`;
+}
+
+function renderQuestion(){
+  const q=ALL_Q[step];const sec=q.section;
+  const prev=step>0?ALL_Q[step-1]:null;
+  const isNew=step===0||(prev&&prev.section.key!==sec.key);
+  const val=scores[q.key];const has=val!=null;
+  const col=has?scoreColor(val):C.warmMuted;
+  const pct=has?((val/10)*100):50;
+  app.innerHTML=`<div class="screen">
+    <div style="margin-bottom:2rem" role="group" aria-label="Question ${step+1} of ${totalQ}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+        <span style="font-size:0.85rem;color:var(--warmMuted)"><span aria-hidden="true">${sec.icon}</span> ${sec.label}</span>
+        <span class="mono" style="font-size:0.85rem;color:var(--warmMuted)">${step+1}/${totalQ}</span>
+      </div>
+      <div class="progress-bar" role="progressbar" aria-valuenow="${step+1}" aria-valuemin="0" aria-valuemax="${totalQ}"><div class="progress-fill" style="width:${((step+1)/totalQ)*100}%"></div></div>
+    </div>
+    ${isNew?`<p style="font-size:1rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.5rem;font-style:italic">${sec.intro}</p>`:""}
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+      <div role="group" aria-labelledby="qlabel" style="margin-bottom:2rem">
+        <h2 id="qlabel" style="font-size:1.5rem;font-weight:500;color:var(--cream);line-height:1.35;margin-bottom:1.5rem">${q.question}</h2>
+        <div style="margin-bottom:1rem">
+          ${!has?'<div style="text-align:center;font-size:0.9rem;color:var(--warmMuted);margin-bottom:0.5rem">Slide to rate</div>':""}
+          <div class="track">
+            <div class="track-fill" style="width:${has?(pct+"%"):"0%"};background:${has?col:"transparent"}"></div>
+            <div class="thumb" style="left:${pct}%;background:${col};box-shadow:${has?"0 0 10px "+col+"55":"0 0 12px rgba(232,98,42,0.2)"};${!has?"animation:pulseGlow 2s ease infinite":""}"></div>
+            <input type="range" min="0" max="10" value="${val??5}" aria-label="${q.question}" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${val??5}" oninput="onSlide(this.value)">
+          </div>
+          <div aria-live="polite" class="mono" style="text-align:center;font-size:2.5rem;font-weight:700;color:${col};transition:color 0.25s ease">${has?val:"\u2014"}</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:2rem">
+          <div style="flex:1"><div class="mono" style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.25rem">0</div><div style="font-size:0.95rem;color:var(--warmMuted);line-height:1.4">${q.low}</div></div>
+          <div style="flex:1;text-align:right"><div class="mono" style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.25rem">10</div><div style="font-size:0.95rem;color:var(--warmMuted);line-height:1.4">${q.high}</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:0.75rem;padding-bottom:1rem">
+      ${step>0?'<button onclick="step--;render()" style="flex:1;padding:1rem;font-family:inherit;font-size:1rem;font-weight:500;color:var(--warmMuted);background:transparent;border:1px solid rgba(138,134,130,0.27);border-radius:8px;cursor:pointer">Back</button>':""}
+      <button onclick="advance()" ${!has?"disabled":""} style="flex:2;padding:1rem;font-family:inherit;font-size:1.1rem;font-weight:600;color:${has?"var(--bg)":"var(--warmMuted)"};background:${has?"var(--ember)":"transparent"};border:${has?"none":"1px solid rgba(138,134,130,0.2)"};border-radius:8px;cursor:${has?"pointer":"default"};transition:all 0.2s ease">${step===totalQ-1?"See My Results":"Next"}</button>
+    </div>
+  </div>`;
+}
+function onSlide(v){scores[ALL_Q[step].key]=parseInt(v);render()}
+function advance(){if(step<totalQ-1){step++;render()}else{step=totalQ;render();window.scrollTo({top:0,behavior:"smooth"})}}
+
+function renderResults(){
+  const secScores={};
+  SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.length===s.questions.length?vals.reduce((a,b)=>a+b,0)/vals.length:null});
+  const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+  const sorted=Object.entries(secScores).sort((a,b)=>a[1]-b[1]);
+  const lowDim=sorted[0][0],lowScore=sorted[0][1],highScore=sorted[sorted.length-1][1];
+  const sp=(highScore-lowScore).toFixed(1);
+  const insight=spreadInsight(parseFloat(sp),lowDim,lowScore);
+  const dimLabel=SECTIONS.find(s=>s.key===lowDim).label;
+
+  let dimHTML="";
+  SECTIONS.forEach(s=>{
+    const sc=secScores[s.key];const sub=subInsight(s,scores);
+    dimHTML+=`<div style="margin-bottom:1.25rem">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.4rem">
+        <span style="font-size:1rem;font-weight:600"><span aria-hidden="true">${s.icon}</span> ${s.label}</span>
+        <span class="mono" style="font-size:1.2rem;font-weight:700;color:${scoreColor(sc)}">${sc.toFixed(1)}</span>
+      </div>
+      <div class="dim-bar"><div class="dim-fill" style="width:${(sc/10)*100}%;background:${scoreColor(sc)}"></div></div>
+      ${sub?`<div style="font-size:0.95rem;color:var(--textMuted);margin-top:0.4rem;line-height:1.5">Your <strong style="color:var(--warm)">${sub.lowest.label.toLowerCase()}</strong> (${sub.lowest.score}/10) is dragging this dimension down while your <strong style="color:var(--warm)">${sub.highest.label.toLowerCase()}</strong> (${sub.highest.score}/10) compensates.</div>`:""}
+    </div>`;
+  });
+
+  let habitsHTML="";
+  FIVE_CS.forEach(h=>{
+    const action=getAction(h,scores);
+    habitsHTML+=`<div class="card">
+      <div style="font-size:1.15rem;font-weight:500;color:var(--emberLight);margin-bottom:0.4rem">${h.name}</div>
+      <div style="font-size:1rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">${h.description}</div>
+      <div class="try-this"><span style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--emberLight);display:block;margin-bottom:0.4rem">Try this</span>${action}</div>
+    </div>`;
+  });
+
+  const emailForm=emailSent?`
+    <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">You\u2019re in.</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Your PDF should be downloading. Check your inbox over the next five weeks for deeper dives into each habit.</p>
+    <button class="btn-outline" onclick="genPDF()">Download again</button>
+  `:`
+    <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Save Your Results</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Download your results as a PDF and get a free five-part email series that goes deeper into each habit. One email per week. Practical exercises, coaching insights, and the framework behind the diagnostic. Built to help you actually move the numbers.</p>
+    <div style="display:flex;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
+      <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
+      <button id="dlBtn" onclick="submitEmail()" style="padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Download PDF</button>
+    </div>
+    <p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">No spam. Unsubscribe anytime.</p>
+    <button class="btn-ghost" style="font-size:0.85rem;margin-top:0.75rem" onclick="genPDF()">Skip, just download the PDF</button>
+  `;
+
+  app.innerHTML=`<div class="screen" style="display:block">
+    <div class="card-lg" style="text-align:center;border-color:${scoreColor(parseFloat(comp))}33">
+      <div class="label-sm">Your Capacity Score</div>
+      <div class="mono" style="font-size:4.5rem;font-weight:700;color:${scoreColor(parseFloat(comp))};line-height:1">${comp}</div>
+      <div style="font-size:1.1rem;color:var(--warm);margin-top:0.25rem">${scoreLabel(parseFloat(comp))}</div>
+    </div>
+    <div class="card-lg" style="border-color:rgba(232,98,42,0.07)">
+      <div class="label-sm">Dimension Breakdown</div>
+      ${dimHTML}
+    </div>
+    <div class="card" style="text-align:center;border-color:${scoreColor(lowScore)}33;margin-bottom:1.25rem">
+      <div class="label-sm" style="margin-bottom:0.4rem">Most Depleted</div>
+      <div style="font-size:1.3rem;font-weight:500;color:${scoreColor(lowScore)}">${dimLabel}</div>
+      <div class="mono" style="font-size:0.95rem;color:var(--warmMuted);margin-top:0.2rem">${lowScore.toFixed(1)}/10</div>
+    </div>
+    <div class="card-lg" style="border-color:rgba(232,98,42,0.13)">
+      <div class="label-sm">What Your Pattern Reveals</div>
+      <p style="font-size:1.05rem;color:var(--text);line-height:1.65">${insight}</p>
+    </div>
+    <div style="margin-bottom:2rem">
+      <h2 style="font-size:1.4rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Five Habits That Rebuild Capacity</h2>
+      <p style="font-size:1rem;color:var(--textMuted);margin-bottom:1.25rem;line-height:1.5">These are sequential. Each one builds on the last. The practices below are personalized to your pattern.</p>
+      ${habitsHTML}
+    </div>
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <button class="btn-ghost" style="font-size:1rem" onclick="if(confirm('This will clear all your answers. Are you sure?')){scores={};step=-1;email='';emailSent=false;render();window.scrollTo({top:0,behavior:'smooth'})}">Retake the diagnostic</button>
+    </div>
+    <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
+      <h2 style="font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:0.75rem">Go Deeper</h2>
+      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.5rem">Now you can see the pattern. The next step is a 45-minute Clarity Call. We review your diagnostic, explore what\u2019s underneath the numbers, and talk about how Rebellion Collective can support what comes next. You\u2019ll leave with something useful whether we work together or we don\u2019t.</p>
+      <a href="https://rebellioncollective.com/application-form?utm_source=cheat_diagnostic&utm_medium=tool&utm_campaign=capacity" target="_blank" rel="noopener noreferrer" aria-label="Book a Clarity Call (opens in new tab)" class="btn" style="display:inline-block;font-size:1.05rem;margin-bottom:1rem;text-decoration:none">Book a Clarity Call</a>
+      <div style="font-size:1rem;color:var(--warmMuted);margin-bottom:1rem">or</div>
+      <a href="https://rebellioncollective.com/community?utm_source=cheat_diagnostic&utm_medium=tool&utm_campaign=capacity" target="_blank" rel="noopener noreferrer" aria-label="Join the Rebellion Collective (opens in new tab)" class="btn-outline">Join the Rebellion Collective</a>
+    </div>
+    <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
+      ${emailForm}
+    </div>
+    <p style="font-size:0.85rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">This is a self-assessment for reflection purposes. It is not a clinical or diagnostic instrument.</p>
+    <div style="text-align:center;padding:1.5rem 0;border-top:1px solid rgba(232,98,42,0.07)">
+      <div class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em">The C.H.E.A.T. Code\u2122 Diagnostic</div>
+      <a href="https://rebellioncollective.com" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em;display:block;margin-top:0.25rem;text-decoration:none">Rebellion Collective</a>
+      <div style="font-size:0.95rem;font-style:italic;color:var(--textMuted);margin-top:0.5rem">Be rebellious.</div>
+    </div>
+  </div>`;
+
+  // Wire up email button styling
+  const inp=document.getElementById("emailInput");
+  const btn=document.getElementById("dlBtn");
+  if(inp&&btn){inp.addEventListener("input",()=>{const valid=inp.value.includes("@");btn.style.background=valid?"var(--ember)":"transparent";btn.style.color=valid?"var(--bg)":"var(--warmMuted)";btn.style.border=valid?"none":"1px solid rgba(138,134,130,0.2)";btn.style.cursor=valid?"pointer":"default"})}
+}
+
+async function submitEmail(){
+  const inp=document.getElementById("emailInput");
+  if(!inp||!inp.value.includes("@"))return;
+  email=inp.value;
+  try{await fetch("https://app.convertkit.com/forms/"+CONVERTKIT_FORM_ID+"/subscriptions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email_address:email})})}catch(e){}
+  emailSent=true;genPDF();render();
+}
+
+function genPDF(){
+  const secScores={};
+  SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.reduce((a,b)=>a+b,0)/vals.length});
+  const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+  const sorted=Object.entries(secScores).sort((a,b)=>a[1]-b[1]);
+  const lowDim=sorted[0][0],lowScore=sorted[0][1],highScore=sorted[sorted.length-1][1];
+  const sp=highScore-lowScore;const dimLabel=SECTIONS.find(s=>s.key===lowDim).label;
+  const insight=spreadInsight(sp,lowDim,lowScore);
+  let dims="",habits="";
+  SECTIONS.forEach(s=>{dims+=`<div class="dim"><span class="dim-name">${s.icon} ${s.label}</span><span class="dim-score" style="color:${scoreColor(secScores[s.key])}">${secScores[s.key].toFixed(1)}</span></div>`});
+  FIVE_CS.forEach(h=>{const action=getAction(h,scores);habits+=`<div class="habit"><div class="habit-name">${h.name}</div><div class="habit-desc">${h.description}</div><div class="insight" style="margin-top:0.5rem;font-size:0.9rem"><strong style="color:#f0864e">Try this:</strong> ${action}</div></div>`});
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>C.H.E.A.T. Code Results</title><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Poppins',sans-serif;background:#0a0a0a;color:#ededed;padding:2rem;max-width:600px;margin:0 auto}h1{font-size:1.6rem;font-weight:600;margin-bottom:0.25rem;color:#fff}h2{font-size:1.2rem;font-weight:500;color:#f0864e;margin:1.5rem 0 0.5rem}.score{font-family:'DM Mono',monospace;font-size:3.5rem;font-weight:700;text-align:center;margin:1rem 0 0.25rem}.label{text-align:center;font-size:1rem;color:#ccc5bd;margin-bottom:1.5rem}.dim{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #1a1a1a}.dim-name{font-weight:500}.dim-score{font-family:'DM Mono',monospace;font-weight:700}.insight{background:#161616;border-left:3px solid #e8622a;padding:1rem;margin:1rem 0;border-radius:0 6px 6px 0;line-height:1.6;font-size:0.95rem;color:#9a9692}.habit{background:#161616;padding:1rem;margin:0.5rem 0;border-radius:6px;border:1px solid rgba(232,98,42,0.1)}.habit-name{color:#f0864e;font-weight:500;margin-bottom:0.25rem}.habit-desc{color:#9a9692;font-size:0.9rem;line-height:1.5}.footer{text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid #1a1a1a;font-size:0.8rem;color:#8a8682}.cta{text-align:center;margin:1.5rem 0;padding:1rem;background:#161616;border-radius:8px;border:1px solid rgba(232,98,42,0.15)}.cta a{color:#f0864e;text-decoration:none;font-weight:500}@media print{body{background:#fff;color:#111}h1,h2,.score{color:#111}.dim{border-color:#ddd}.insight,.habit{background:#f5f5f5;border-color:#e8622a}.habit-desc,.insight{color:#444}.footer{color:#999}.cta{background:#f5f5f5}}</style></head><body><h1>The C.H.E.A.T. Code\u2122 Diagnostic</h1><div style="font-size:0.85rem;color:#8a8682;margin-bottom:1.5rem">Rebellion Collective \u00b7 rebellioncollective.com</div><div class="score" style="color:${scoreColor(parseFloat(comp))}">${comp}</div><div class="label">${scoreLabel(parseFloat(comp))} \u00b7 out of 10</div><h2>Dimension Breakdown</h2>${dims}<div style="margin-top:0.5rem"><strong style="color:#ccc5bd">Most Depleted:</strong> ${dimLabel} (${lowScore.toFixed(1)}/10)</div><h2>What Your Pattern Reveals</h2><div class="insight">${insight}</div><h2>Five Habits</h2>${habits}<div class="cta"><p style="margin-bottom:0.5rem">Ready to go deeper?</p><a href="https://rebellioncollective.com/application-form?utm_source=cheat_diagnostic_pdf">Book a Clarity Call</a> \u00b7 <a href="https://rebellioncollective.com/community?utm_source=cheat_diagnostic_pdf">Join the Rebellion Collective</a></div><div class="footer"><div>The C.H.E.A.T. Code\u2122 Diagnostic \u00b7 Rebellion Collective</div><div style="margin-top:0.25rem;font-style:italic;color:#9a9692">Be rebellious.</div><div style="margin-top:0.5rem;font-size:0.75rem">This is a self-assessment for reflection purposes. It is not a clinical or diagnostic instrument.</div></div></body></html>`;
+  const w=window.open("","_blank");if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),500)}
+}
+
+render();
+</script>
+</body>
+</html>

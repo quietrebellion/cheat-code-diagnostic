@@ -104,11 +104,9 @@ function decodeScores(str){
   }
   return out;
 }
-function shareURL(channel){
+function shareURL(){
   const code=encodeScores(scores);
-  const base="https://capacityaudit.rebellioncollective.com/";
-  const utm=channel?`&utm_source=share&utm_medium=${channel}&utm_campaign=capacity_audit`:"";
-  return `${base}?r=${code}${utm}`;
+  return `https://capacityaudit.rebellioncollective.com/?r=${code}`;
 }
 
 function render(){
@@ -250,6 +248,7 @@ function renderResults(){
         <button class="btn-outline" onclick="copyShareLink(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Copy link</button>
         <button class="btn-outline" onclick="shareLinkedIn()" style="font-size:0.9rem;padding:0.7rem 1.25rem">LinkedIn</button>
         <button class="btn-outline" onclick="shareX()" style="font-size:0.9rem;padding:0.7rem 1.25rem">X</button>
+        <button class="btn-outline" onclick="shareSubstack()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Substack</button>
         <button class="btn-outline" onclick="shareEmail()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Email</button>
       </div>
     </div>`:"";
@@ -346,7 +345,7 @@ function genPDF(){
 })();
 
 function copyShareLink(btn){
-  const url=shareURL("copy");
+  const url=shareURL();
   const orig=btn.textContent;
   const done=()=>{btn.textContent="Copied \u2713";setTimeout(()=>{btn.textContent=orig},1800)};
   if(navigator.clipboard&&navigator.clipboard.writeText){
@@ -358,16 +357,22 @@ function copyShareLink(btn){
   }
 }
 function shareLinkedIn(){
-  const url=encodeURIComponent(shareURL("linkedin"));
-  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`,"_blank","noopener");
+  const url=shareURL();
+  const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.\n\n"+url);
+  window.open(`https://www.linkedin.com/feed/?shareActive=true&text=${text}`,"_blank","noopener");
 }
 function shareX(){
-  const url=shareURL("x");
+  const url=shareURL();
   const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.");
   window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`,"_blank","noopener");
 }
+function shareSubstack(){
+  const url=shareURL();
+  const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.\n\n"+url);
+  window.open(`https://substack.com/notes?action=restacks&body=${text}`,"_blank","noopener");
+}
 function shareEmail(){
-  const url=shareURL("email");
+  const url=shareURL();
   const subject=encodeURIComponent("My Capacity Audit pattern");
   const body=encodeURIComponent(`I ran the Capacity Audit from Rebellion Collective. This is the shape mine is in right now \u2014 thought you might find it useful too.\n\n${url}`);
   window.location.href=`mailto:?subject=${subject}&body=${body}`;

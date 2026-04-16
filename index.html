@@ -36,8 +36,8 @@ input[type="email"]:focus{border-color:var(--ember)!important}
 .mono{font-family:'DM Mono',monospace}
 .label-sm{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--textMuted);margin-bottom:0.5rem}
 .track{position:relative;height:10px;background:rgba(232,98,42,0.15);border-radius:5px;margin-bottom:0.75rem}
-.track-fill{position:absolute;left:0;top:0;height:100%;border-radius:5px;transition:width 0.25s ease}
-.thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;border:2px solid var(--bg);pointer-events:none;transition:left 0.25s ease,background-color 0.25s ease}
+.track-fill{position:absolute;left:0;top:0;height:100%;border-radius:5px}
+.thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;border:2px solid var(--bg);pointer-events:none;transition:background-color 0.25s ease,box-shadow 0.25s ease}
 .progress-bar{height:3px;background:rgba(232,98,42,0.15);border-radius:2px;overflow:hidden}
 .progress-fill{height:100%;background:var(--ember);border-radius:2px;transition:width 0.3s ease}
 .dim-bar{height:6px;background:rgba(232,98,42,0.1);border-radius:3px;overflow:hidden;margin-top:0.4rem}
@@ -170,7 +170,22 @@ function renderQuestion(){
     </div>
   </div>`;
 }
-function onSlide(v){scores[ALL_Q[step].key]=parseInt(v);render()}
+function onSlide(v){
+  const val=parseInt(v);
+  const key=ALL_Q[step].key;
+  const wasEmpty=scores[key]==null;
+  scores[key]=val;
+  if(wasEmpty){render();return}
+  const pct=(val/10)*100;
+  const screen=app.querySelector(".screen");
+  if(!screen)return;
+  const thumb=screen.querySelector(".thumb");
+  const fill=screen.querySelector(".track-fill");
+  const num=screen.querySelector('[aria-live="polite"]');
+  if(thumb)thumb.style.left=pct+"%";
+  if(fill)fill.style.width=pct+"%";
+  if(num)num.textContent=val;
+}
 function advance(){if(step<totalQ-1){step++;render()}else{step=totalQ;render();window.scrollTo({top:0,behavior:"smooth"})}}
 
 function renderResults(){

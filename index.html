@@ -25,7 +25,7 @@ a{color:var(--emberLight);text-decoration:none}a:hover{text-decoration:underline
 a:focus-visible,button:focus-visible{outline:2px solid var(--emberLight);outline-offset:2px}
 input[type="email"]:focus{border-color:var(--ember)!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-.wrap{max-width:640px;margin:0 auto;padding:2rem 1.25rem;min-height:100vh;display:flex;flex-direction:column}
+.wrap{max-width:640px;margin:0 auto;padding:1.25rem 1.25rem 1.5rem;min-height:100vh;display:flex;flex-direction:column}
 .screen{flex:1;display:flex;flex-direction:column;animation:fadeIn 0.4s ease both}
 .hidden{display:none!important}
 .card{background:var(--bgCard);border-radius:8px;padding:1.25rem;margin-bottom:0.75rem;border:1px solid rgba(232,98,42,0.09)}
@@ -52,18 +52,18 @@ const CONVERTKIT_FORM_ID="9331134";
 const C={bg:"#0a0a0a",bgCard:"#161616",ember:"#e8622a",emberLight:"#f0864e",warm:"#ccc5bd",warmMuted:"#8a8682",text:"#ededed",textMuted:"#9a9692",cream:"#ffffff",red:"#c44d3f",amber:"#d4a843",green:"#6b9b5e"};
 const SECTIONS=[
 {key:"energy",label:"Energy",icon:"\u26A1",intro:"Energy lives in four domains: mental, physical, emotional, and alignment. When one collapses, the others compensate until they can\u2019t.",questions:[
-{key:"mental",label:"Mental Energy",question:"How clear is your thinking right now?",low:"Foggy, decision fatigue, too many tabs open",high:"Sharp, focused, decisions come easily"},
-{key:"physical",label:"Physical Energy",question:"How resourced is your body?",low:"Exhausted, poor sleep, running on caffeine",high:"Well-rested, nourished, physically strong"},
-{key:"emotional",label:"Emotional Energy",question:"How much emotional labor are you carrying?",low:"Performing constantly, managing everyone\u2019s feelings",high:"Regulated, boundaried, emotionally available by choice"},
-{key:"alignment",label:"Alignment Energy",question:"How much of your work matches your values?",low:"Misaligned, going through the motions, hollow",high:"Deeply aligned, meaningful, generative"}]},
+{key:"mental",label:"Mental Energy",question:"How clear is your thinking right now?",low:"Foggy. Too many tabs open in my head.",high:"Sharp. Decisions come easily."},
+{key:"physical",label:"Physical Energy",question:"How much does your body have to give right now?",low:"Exhausted. Poor sleep. Running on caffeine.",high:"Rested, nourished, ready."},
+{key:"emotional",label:"Emotional Energy",question:"How much are you holding for other people right now?",low:"Performing constantly. Managing everyone\u2019s feelings.",high:"I\u2019m available when I choose to be. Not before."},
+{key:"alignment",label:"Alignment Energy",question:"How much of your work matches your values?",low:"Going through the motions. Hollow.",high:"The work matches who I am."}]},
 {key:"attention",label:"Attention",icon:"\u25CE",intro:"Attention lives in three states: chosen, captured, and present. The deeper question: who benefits from your distraction?",questions:[
-{key:"chosen",label:"Chosen Attention",question:"How much of your attention goes where you direct it?",low:"Almost none. Reactive, scattered, pulled in every direction",high:"Nearly all of it. Present, intentional, self-directed"},
-{key:"captured",label:"Captured Attention",question:"How much of your attention is taken without your consent?",low:"Constantly hijacked by feeds, notifications, urgency",high:"Very little. I\u2019ve reclaimed or protected most of it"},
-{key:"present",label:"Present Attention",question:"How much of your attention is here, in this moment?",low:"Mostly ruminating about the past or anxious about the future",high:"Grounded in the present moment"}]},
+{key:"chosen",label:"Chosen Attention",question:"How much of your attention is going where you want it to?",low:"Almost none. Reactive, scattered, pulled in every direction.",high:"Most of it. I\u2019m where I mean to be."},
+{key:"captured",label:"Captured Attention",question:"How much of your attention is taken without your consent?",low:"Constantly hijacked by feeds, notifications, urgency.",high:"Very little. I\u2019ve reclaimed or protected most of it."},
+{key:"present",label:"Present Attention",question:"How present are you right now?",low:"Stuck in the past or spinning about what\u2019s next.",high:"Here. Now."}]},
 {key:"time",label:"Time",icon:"\u25F7",intro:"Time breaks down into three types: committed, recovered, and protected. How yours is distributed tells the real story.",questions:[
-{key:"committed",label:"Committed Time",question:"How much of your time is already spoken for by obligations you didn\u2019t choose?",low:"Almost all of it. Calendar inherited, obligations stacked",high:"Very little. Most commitments are chosen"},
-{key:"recovered",label:"Recovered Time",question:"Have you been able to reclaim time from things that no longer serve you?",low:"No. Still carrying everything. Can\u2019t let go",high:"Yes. I\u2019ve dropped what doesn\u2019t serve me"},
-{key:"protected",label:"Protected Time",question:"How much time do you intentionally hold as non-negotiable for what matters?",low:"None. Everything is up for grabs",high:"Significant. My boundaries hold"}]}
+{key:"committed",label:"Committed Time",question:"How much of your time belongs to obligations you didn\u2019t choose?",low:"Almost all of it. My calendar was handed to me.",high:"Very little. Most commitments are chosen."},
+{key:"recovered",label:"Recovered Time",question:"How much time have you reclaimed from things that no longer serve you?",low:"None. I\u2019m still carrying it all.",high:"A lot. I\u2019ve dropped what doesn\u2019t serve me."},
+{key:"protected",label:"Protected Time",question:"How much time do you hold non-negotiable for what matters?",low:"None. Everything is up for grabs.",high:"Significant. My boundaries hold."}]}
 ];
 const FIVE_CS=[
 {name:"Curiosity",description:"The starting point. Noticing what\u2019s actually happening without judgment. Looking at what\u2019s running your equation before trying to change it.",actions:{chosen:"For the next 48 hours, track your attention in 60-minute blocks. What are you doing? Did you choose to be there? How focused do you feel? The data will surprise you.",captured:"Pick one notification source. Turn it off for a week. Just one. Notice what happens to your clarity. Notice what you were afraid of missing. Ask yourself: was it worth the cost?",mental:"Get every open loop out of your head. Every half-finished decision, unresolved question, lingering obligation. Write them all down. Your working memory is full. Empty it onto paper.",present:"Three times today, pause. One full breath. Ask yourself: where is my attention right now? Am I here, or am I rehearsing something that already happened or hasn\u2019t happened yet? You don\u2019t need to fix anything. Just see it clearly.",_default:"Name one habit that\u2019s running a variable in your equation without your permission. You already know which one. Say it out loud."},subKeys:["chosen","captured","mental","present"]},
@@ -82,9 +82,34 @@ function subInsight(section,scores){const items=section.questions.map(q=>({...q,
 function getAction(h,scores){const rs=h.subKeys.filter(k=>scores[k]!=null).sort((a,b)=>scores[a]-scores[b]);return(rs[0]&&h.actions[rs[0]])||h.actions._default}
 
 // State
-let scores={},step=-1,email="",emailSent=false;
+let scores={},step=-1,email="",emailSent=false,isShared=false;
 const $=id=>document.getElementById(id);
 const app=document.getElementById("app");
+
+// Share encoding: one char per score in canonical ALL_Q order. 0-9 = 0-9, 'a' = 10.
+const SHARE_KEYS=ALL_Q.map(q=>q.key);
+function encodeScores(sc){
+  return SHARE_KEYS.map(k=>{const v=sc[k];if(v==null||v<0||v>10)return "-";return v===10?"a":String(v)}).join("");
+}
+function decodeScores(str){
+  if(!str||str.length!==SHARE_KEYS.length)return null;
+  const out={};
+  for(let i=0;i<SHARE_KEYS.length;i++){
+    const ch=str[i];
+    let v;
+    if(ch==="a"||ch==="A")v=10;
+    else if(/^[0-9]$/.test(ch))v=parseInt(ch,10);
+    else return null;
+    out[SHARE_KEYS[i]]=v;
+  }
+  return out;
+}
+function shareURL(channel){
+  const code=encodeScores(scores);
+  const base="https://capacityaudit.rebellioncollective.com/";
+  const utm=channel?`&utm_source=share&utm_medium=${channel}&utm_campaign=capacity_audit`:"";
+  return `${base}?r=${code}${utm}`;
+}
 
 function render(){
   if(step===-1) return renderIntro();
@@ -110,21 +135,21 @@ function renderQuestion(){
   const prev=step>0?ALL_Q[step-1]:null;
   const isNew=step===0||(prev&&prev.section.key!==sec.key);
   const val=scores[q.key];const has=val!=null;
-  const col=has?scoreColor(val):C.warmMuted;
+  const col=has?C.ember:C.warmMuted;
   const pct=has?((val/10)*100):50;
   app.innerHTML=`<div class="screen">
-    <div style="margin-bottom:2rem" role="group" aria-label="Question ${step+1} of ${totalQ}">
+    <div style="margin-bottom:1.25rem" role="group" aria-label="Question ${step+1} of ${totalQ}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
         <span style="font-size:0.85rem;color:var(--warmMuted)"><span aria-hidden="true">${sec.icon}</span> ${sec.label}</span>
         <span class="mono" style="font-size:0.85rem;color:var(--warmMuted)">${step+1}/${totalQ}</span>
       </div>
       <div class="progress-bar" role="progressbar" aria-valuenow="${step+1}" aria-valuemin="0" aria-valuemax="${totalQ}"><div class="progress-fill" style="width:${((step+1)/totalQ)*100}%"></div></div>
     </div>
-    ${isNew?`<p style="font-size:1rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.5rem;font-style:italic">${sec.intro}</p>`:""}
-    <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-      <div role="group" aria-labelledby="qlabel" style="margin-bottom:2rem">
-        <h2 id="qlabel" style="font-size:1.5rem;font-weight:500;color:var(--cream);line-height:1.35;margin-bottom:1.5rem">${q.question}</h2>
-        <div style="margin-bottom:1rem">
+    ${isNew?`<p style="font-size:1rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem;font-style:italic">${sec.intro}</p>`:""}
+    <div style="flex:1;display:flex;flex-direction:column">
+      <div role="group" aria-labelledby="qlabel" style="margin-bottom:1rem">
+        <h2 id="qlabel" style="font-size:1.4rem;font-weight:500;color:var(--cream);line-height:1.35;margin-bottom:1rem">${q.question}</h2>
+        <div style="margin-bottom:0.75rem">
           ${!has?'<div style="text-align:center;font-size:0.9rem;color:var(--warmMuted);margin-bottom:0.5rem">Slide to rate</div>':""}
           <div class="track">
             <div class="track-fill" style="width:${has?(pct+"%"):"0%"};background:${has?col:"transparent"}"></div>
@@ -139,9 +164,9 @@ function renderQuestion(){
         </div>
       </div>
     </div>
-    <div style="display:flex;gap:0.75rem;padding-bottom:1rem">
-      ${step>0?'<button onclick="step--;render()" style="flex:1;padding:1rem;font-family:inherit;font-size:1rem;font-weight:500;color:var(--warmMuted);background:transparent;border:1px solid rgba(138,134,130,0.27);border-radius:8px;cursor:pointer">Back</button>':""}
-      <button onclick="advance()" ${!has?"disabled":""} style="flex:2;padding:1rem;font-family:inherit;font-size:1.1rem;font-weight:600;color:${has?"var(--bg)":"var(--warmMuted)"};background:${has?"var(--ember)":"transparent"};border:${has?"none":"1px solid rgba(138,134,130,0.2)"};border-radius:8px;cursor:${has?"pointer":"default"};transition:all 0.2s ease">${step===totalQ-1?"See My Results":"Next"}</button>
+    <div style="display:flex;gap:0.75rem;padding-top:0.5rem">
+      ${step>0?'<button onclick="step--;render()" style="flex:1;padding:0.9rem;font-family:inherit;font-size:1rem;font-weight:500;color:var(--warmMuted);background:transparent;border:1px solid rgba(138,134,130,0.27);border-radius:8px;cursor:pointer">Back</button>':""}
+      <button onclick="advance()" ${!has?"disabled":""} style="flex:2;padding:0.9rem;font-family:inherit;font-size:1.05rem;font-weight:600;color:${has?"var(--bg)":"var(--warmMuted)"};background:${has?"var(--ember)":"transparent"};border:${has?"none":"1px solid rgba(138,134,130,0.2)"};border-radius:8px;cursor:${has?"pointer":"default"};transition:all 0.2s ease">${step===totalQ-1?"See My Results":"Next"}</button>
     </div>
   </div>`;
 }
@@ -196,9 +221,27 @@ function renderResults(){
     <button class="btn-ghost" style="font-size:0.85rem;margin-top:0.75rem" onclick="genPDF()">Skip, just download the PDF</button>
   `;
 
+  const sharedBanner=isShared?`
+    <div class="card" style="text-align:center;border-color:rgba(232,98,42,0.27);background:rgba(232,98,42,0.06);margin-bottom:1.25rem">
+      <div class="label-sm" style="margin-bottom:0.4rem">Shared with you</div>
+      <p style="font-size:1rem;color:var(--warm);line-height:1.55;margin-bottom:0.75rem">You\u2019re looking at someone else\u2019s Capacity Audit. This is the shape their system is in right now.</p>
+      <button class="btn-outline" onclick="startOwnAudit()">Take your own \u2192</button>
+    </div>`:"";
+  const shareRow=!isShared?`
+    <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
+      <div class="label-sm" style="margin-bottom:0.4rem">Share your pattern</div>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem">A link to your shape \u2014 no account, no name, just the numbers. Useful when someone asks how you\u2019re actually doing.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center">
+        <button class="btn-outline" onclick="copyShareLink(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Copy link</button>
+        <button class="btn-outline" onclick="shareLinkedIn()" style="font-size:0.9rem;padding:0.7rem 1.25rem">LinkedIn</button>
+        <button class="btn-outline" onclick="shareX()" style="font-size:0.9rem;padding:0.7rem 1.25rem">X</button>
+        <button class="btn-outline" onclick="shareEmail()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Email</button>
+      </div>
+    </div>`:"";
   app.innerHTML=`<div class="screen" style="display:block">
+    ${sharedBanner}
     <div class="card-lg" style="text-align:center;border-color:${scoreColor(parseFloat(comp))}33">
-      <div class="label-sm">Your Capacity Score</div>
+      <div class="label-sm">${isShared?"Their Capacity Score":"Your Capacity Score"}</div>
       <div class="mono" style="font-size:4.5rem;font-weight:700;color:${scoreColor(parseFloat(comp))};line-height:1">${comp}</div>
       <div style="font-size:1.1rem;color:var(--warm);margin-top:0.25rem">${scoreLabel(parseFloat(comp))}</div>
     </div>
@@ -220,17 +263,24 @@ function renderResults(){
       <p style="font-size:1rem;color:var(--textMuted);margin-bottom:1.25rem;line-height:1.5">These are sequential. Each one builds on the last. The practices below are personalized to your pattern.</p>
       ${habitsHTML}
     </div>
+    ${isShared?`
+    <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.27);background:var(--bgCard)">
+      <h2 style="font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">This isn\u2019t your pattern.</h2>
+      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">Someone shared theirs so you could see what it looks like. The audit takes two minutes and the shape it surfaces is yours alone.</p>
+      <button class="btn" onclick="startOwnAudit()">Take the Capacity Audit</button>
+    </div>`:`
     <div style="text-align:center;margin-bottom:1.5rem">
       <button class="btn-ghost" style="font-size:1rem" onclick="if(confirm('This will clear all your answers. Are you sure?')){scores={};step=-1;email='';emailSent=false;render();window.scrollTo({top:0,behavior:'smooth'})}">Retake the Capacity Audit</button>
     </div>
+    ${shareRow}
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
       ${emailForm}
     </div>
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
-      <h2 style="font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:0.75rem">What’s Next</h2>
+      <h2 style="font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:0.75rem">What\u2019s Next</h2>
       <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Five dispatches. One for each habit. Starting tomorrow.</p>
-      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6">Until then, feel free to share the Capacity Audit with someone who needs it.</p>
-    </div>
+      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6">Until then, feel free to share your pattern with someone who needs it.</p>
+    </div>`}
     <p style="font-size:0.85rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</p>
     <div style="text-align:center;padding:1.5rem 0;border-top:1px solid rgba(232,98,42,0.07)">
       <div class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em">The C.H.E.A.T. Code\u2122 Capacity Audit</div>
@@ -266,6 +316,51 @@ function genPDF(){
   FIVE_CS.forEach(h=>{const action=getAction(h,scores);habits+=`<div class="habit"><div class="habit-name">${h.name}</div><div class="habit-desc">${h.description}</div><div class="insight" style="margin-top:0.5rem;font-size:0.9rem"><strong style="color:#f0864e">Try this:</strong> ${action}</div></div>`});
   const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>C.H.E.A.T. Code Results</title><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Poppins',sans-serif;background:#0a0a0a;color:#ededed;padding:2rem;max-width:600px;margin:0 auto}h1{font-size:1.6rem;font-weight:600;margin-bottom:0.25rem;color:#fff}h2{font-size:1.2rem;font-weight:500;color:#f0864e;margin:1.5rem 0 0.5rem}.score{font-family:'DM Mono',monospace;font-size:3.5rem;font-weight:700;text-align:center;margin:1rem 0 0.25rem}.label{text-align:center;font-size:1rem;color:#ccc5bd;margin-bottom:1.5rem}.dim{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #1a1a1a}.dim-name{font-weight:500}.dim-score{font-family:'DM Mono',monospace;font-weight:700}.insight{background:#161616;border-left:3px solid #e8622a;padding:1rem;margin:1rem 0;border-radius:0 6px 6px 0;line-height:1.6;font-size:0.95rem;color:#9a9692}.habit{background:#161616;padding:1rem;margin:0.5rem 0;border-radius:6px;border:1px solid rgba(232,98,42,0.1)}.habit-name{color:#f0864e;font-weight:500;margin-bottom:0.25rem}.habit-desc{color:#9a9692;font-size:0.9rem;line-height:1.5}.footer{text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid #1a1a1a;font-size:0.8rem;color:#8a8682}.cta{text-align:center;margin:1.5rem 0;padding:1rem;background:#161616;border-radius:8px;border:1px solid rgba(232,98,42,0.15)}.cta a{color:#f0864e;text-decoration:none;font-weight:500}@media print{body{background:#fff;color:#111}h1,h2,.score{color:#111}.dim{border-color:#ddd}.insight,.habit{background:#f5f5f5;border-color:#e8622a}.habit-desc,.insight{color:#444}.footer{color:#999}.cta{background:#f5f5f5}}</style></head><body><h1>The C.H.E.A.T. Code\u2122 Capacity Audit</h1><div style="font-size:0.85rem;color:#8a8682;margin-bottom:1.5rem">Rebellion Collective \u00b7 rebellioncollective.com</div><div class="score" style="color:${scoreColor(parseFloat(comp))}">${comp}</div><div class="label">${scoreLabel(parseFloat(comp))} \u00b7 out of 10</div><h2>Dimension Breakdown</h2>${dims}<div style="margin-top:0.5rem"><strong style="color:#ccc5bd">Most Depleted:</strong> ${dimLabel} (${lowScore.toFixed(1)}/10)</div><h2>What Your Pattern Reveals</h2><div class="insight">${insight}</div><h2>Five Habits</h2>${habits}<div class="cta"><p style="margin-bottom:0.5rem">Ready to go deeper?</p><a href="https://rebellioncollective.com/application-form?utm_source=cheat_diagnostic_pdf">Book a Clarity Call</a> \u00b7 <a href="https://rebellioncollective.com/community?utm_source=cheat_diagnostic_pdf">Join the Rebellion Collective</a></div><div class="footer"><div>The C.H.E.A.T. Code\u2122 Capacity Audit \u00b7 Rebellion Collective</div><div style="margin-top:0.25rem;font-style:italic;color:#9a9692">Be rebellious.</div><div style="margin-top:0.5rem;font-size:0.75rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</div></div></body></html>`;
   const w=window.open("","_blank");if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),500)}
+}
+
+// Parse ?r= param for shared view, otherwise normal flow.
+(function bootFromURL(){
+  try{
+    const params=new URLSearchParams(window.location.search);
+    const r=params.get("r");
+    if(r){
+      const decoded=decodeScores(r);
+      if(decoded){scores=decoded;isShared=true;step=totalQ;return}
+    }
+  }catch(e){}
+})();
+
+function copyShareLink(btn){
+  const url=shareURL("copy");
+  const orig=btn.textContent;
+  const done=()=>{btn.textContent="Copied \u2713";setTimeout(()=>{btn.textContent=orig},1800)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(done).catch(()=>{prompt("Copy your link:",url)});
+  }else{
+    const ta=document.createElement("textarea");ta.value=url;document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy");done()}catch(e){prompt("Copy your link:",url)}
+    document.body.removeChild(ta);
+  }
+}
+function shareLinkedIn(){
+  const url=encodeURIComponent(shareURL("linkedin"));
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`,"_blank","noopener");
+}
+function shareX(){
+  const url=shareURL("x");
+  const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.");
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`,"_blank","noopener");
+}
+function shareEmail(){
+  const url=shareURL("email");
+  const subject=encodeURIComponent("My Capacity Audit pattern");
+  const body=encodeURIComponent(`I ran the Capacity Audit from Rebellion Collective. This is the shape mine is in right now \u2014 thought you might find it useful too.\n\n${url}`);
+  window.location.href=`mailto:?subject=${subject}&body=${body}`;
+}
+function startOwnAudit(){
+  isShared=false;scores={};step=-1;email="";emailSent=false;
+  try{history.replaceState(null,"",window.location.pathname)}catch(e){}
+  render();window.scrollTo({top:0,behavior:"smooth"});
 }
 
 render();

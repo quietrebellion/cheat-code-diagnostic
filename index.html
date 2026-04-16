@@ -56,7 +56,7 @@ const SECTIONS=[
 {key:"physical",label:"Physical Energy",question:"How much does your body have to give right now?",low:"Exhausted. Poor sleep. Running on caffeine.",high:"Rested, nourished, ready."},
 {key:"emotional",label:"Emotional Energy",question:"How much are you holding for other people right now?",low:"Performing constantly. Managing everyone\u2019s feelings.",high:"I\u2019m available when I choose to be. Not before."},
 {key:"alignment",label:"Alignment Energy",question:"How much of your work matches your values?",low:"Going through the motions. Hollow.",high:"The work matches who I am."}]},
-{key:"attention",label:"Attention",icon:"\u25CE",intro:"Attention lives in three states: chosen, captured, and present. The deeper question: who benefits from your distraction?",questions:[
+{key:"attention",label:"Attention",icon:"\uD83C\uDFAF",intro:"Attention lives in three states: chosen, captured, and present. The deeper question: who benefits from your distraction?",questions:[
 {key:"chosen",label:"Chosen Attention",question:"How much of your attention is going where you want it to?",low:"Almost none. Reactive, scattered, pulled in every direction.",high:"Most of it. I\u2019m where I mean to be."},
 {key:"captured",label:"Captured Attention",question:"How much of your attention is taken without your consent?",low:"Constantly hijacked by feeds, notifications, urgency.",high:"Very little. I\u2019ve reclaimed or protected most of it."},
 {key:"present",label:"Present Attention",question:"How present are you right now?",low:"Stuck in the past or spinning about what\u2019s next.",high:"Here. Now."}]},
@@ -230,10 +230,10 @@ function renderResults(){
     <button class="btn-outline" onclick="genPDF()">Download again</button>
   `:`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Save Your Results</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Download your results as a PDF and get five dispatches, one for each habit, delivered over the next two weeks. Coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
-    <div style="display:flex;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
-      <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
-      <button id="dlBtn" onclick="submitEmail()" style="padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Get My Results</button>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Your PDF downloads instantly. Enter your email to also receive five dispatches over the next two weeks \u2014 one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
+      <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
+      <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Get My Results</button>
     </div>
     <p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">One-click unsubscribe. Always.</p>
     <button class="btn-ghost" style="font-size:0.85rem;margin-top:0.75rem" onclick="genPDF()">Skip, just download the PDF</button>

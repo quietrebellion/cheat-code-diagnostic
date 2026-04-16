@@ -181,16 +181,16 @@ function renderResults(){
 
   const emailForm=emailSent?`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">You\u2019re in.</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Your PDF should be downloading. Check your inbox over the next five weeks for deeper dives into each habit.</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Your PDF should be downloading. Check your inbox — five dispatches arriving over the next two weeks, one for each habit.</p>
     <button class="btn-outline" onclick="genPDF()">Download again</button>
   `:`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Save Your Results</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Download your results as a PDF and get a free five-part email series that goes deeper into each habit. One email per week. Practical exercises, coaching insights, and the framework behind the diagnostic. Built to help you actually move the numbers.</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Download your results as a PDF and get five dispatches — one for each habit — delivered over the next two weeks. Coaching exercises, the framework behind the diagnostic, and the deeper questions your scores are pointing to.</p>
     <div style="display:flex;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
       <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
-      <button id="dlBtn" onclick="submitEmail()" style="padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Download PDF</button>
+      <button id="dlBtn" onclick="submitEmail()" style="padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Get My Results</button>
     </div>
-    <p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">No spam. Unsubscribe anytime.</p>
+    <p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">One-click unsubscribe. Always.</p>
     <button class="btn-ghost" style="font-size:0.85rem;margin-top:0.75rem" onclick="genPDF()">Skip, just download the PDF</button>
   `;
 
@@ -222,14 +222,14 @@ function renderResults(){
       <button class="btn-ghost" style="font-size:1rem" onclick="if(confirm('This will clear all your answers. Are you sure?')){scores={};step=-1;email='';emailSent=false;render();window.scrollTo({top:0,behavior:'smooth'})}">Retake the diagnostic</button>
     </div>
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
+      ${emailForm}
+    </div>
+    <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
       <h2 style="font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:0.75rem">Go Deeper</h2>
       <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.5rem">Now you can see the pattern. The next step is a 45-minute Clarity Call. We review your diagnostic, explore what\u2019s underneath the numbers, and talk about how Rebellion Collective can support what comes next. You\u2019ll leave with something useful whether we work together or we don\u2019t.</p>
       <a href="https://rebellioncollective.com/application-form?utm_source=cheat_diagnostic&utm_medium=tool&utm_campaign=capacity" target="_blank" rel="noopener noreferrer" aria-label="Book a Clarity Call (opens in new tab)" class="btn" style="display:inline-block;font-size:1.05rem;margin-bottom:1rem;text-decoration:none">Book a Clarity Call</a>
       <div style="font-size:1rem;color:var(--warmMuted);margin-bottom:1rem">or</div>
       <a href="https://rebellioncollective.com/community?utm_source=cheat_diagnostic&utm_medium=tool&utm_campaign=capacity" target="_blank" rel="noopener noreferrer" aria-label="Join the Rebellion Collective (opens in new tab)" class="btn-outline">Join the Rebellion Collective</a>
-    </div>
-    <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
-      ${emailForm}
     </div>
     <p style="font-size:0.85rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">This is a self-assessment for reflection purposes. It is not a clinical or diagnostic instrument.</p>
     <div style="text-align:center;padding:1.5rem 0;border-top:1px solid rgba(232,98,42,0.07)">

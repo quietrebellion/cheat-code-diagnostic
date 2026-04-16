@@ -86,6 +86,22 @@ let scores={},step=-1,email="",emailSent=false,isShared=false;
 const $=id=>document.getElementById(id);
 const app=document.getElementById("app");
 
+// History (localStorage)
+const HISTORY_KEY="cheat_audit_history";
+const MAX_HISTORY=20;
+function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY))||[]}catch(e){return[]}}
+function saveToHistory(sc,secScores,composite){
+  const hist=loadHistory();
+  const entry={date:new Date().toISOString(),scores:{...sc},sections:{energy:secScores.energy,attention:secScores.attention,time:secScores.time},composite:parseFloat(composite)};
+  // Don't save duplicates within 60 seconds
+  if(hist.length>0){const last=hist[hist.length-1];if(Math.abs(new Date(last.date)-new Date(entry.date))<60000)return}
+  hist.push(entry);
+  if(hist.length>MAX_HISTORY)hist.splice(0,hist.length-MAX_HISTORY);
+  try{localStorage.setItem(HISTORY_KEY,JSON.stringify(hist))}catch(e){}
+}
+function getLastEntry(){const h=loadHistory();return h.length>0?h[h.length-1]:null}
+function formatDate(iso){const d=new Date(iso);return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
+
 // Share encoding: one char per score in canonical ALL_Q order. 0-9 = 0-9, 'a' = 10.
 const SHARE_KEYS=ALL_Q.map(q=>q.key);
 function encodeScores(sc){
@@ -129,7 +145,14 @@ function renderIntro(){
     <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 1.5rem;font-style:italic">A lifetime to practice.</p>
     <p style="font-size:1.05rem;color:var(--cream);margin-bottom:0.4rem">Reclaim what\u2019s yours.</p>
     <p style="font-size:1.4rem;font-weight:600;color:var(--ember);margin-bottom:2.5rem">Be rebellious.</p>
-    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="step=0;render()">Begin</button>
+    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="step=0;render()">${(()=>{const last=getLastEntry();return last?"Retake the Audit":"Begin"})()}</button>
+    ${(()=>{const last=getLastEntry();return last?`<div style="margin-top:1.25rem;padding:1rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:360px;align-self:center">
+      <div style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.25rem">Last taken ${formatDate(last.date)}</div>
+      <div style="display:flex;align-items:baseline;gap:0.5rem;justify-content:center">
+        <span class="mono" style="font-size:1.5rem;font-weight:700;color:${scoreColor(last.composite)}">${last.composite.toFixed(1)}</span>
+        <span style="font-size:0.9rem;color:var(--warm)">${scoreLabel(last.composite)}</span>
+      </div>
+    </div>`:""})()}
   </div>`;
 }
 
@@ -191,10 +214,62 @@ function onSlide(v){
 }
 function advance(){if(step<totalQ-1){step++;render()}else{step=totalQ;render();window.scrollTo({top:0,behavior:"smooth"})}}
 
+function renderHistoryCard(currentComp,currentSec){
+  const hist=loadHistory();
+  // Need at least 2 entries (current one was just saved) to show history
+  if(hist.length<2)return"";
+  const prev=hist[hist.length-2]; // second-to-last is the previous take
+  const delta=(currentComp-prev.composite).toFixed(1);
+  const sign=delta>0?"+":"";
+  const deltaColor=delta>0?C.green:delta<0?C.red:C.warmMuted;
+
+  // Build mini bar chart of composite scores
+  const entries=hist.slice(-8); // last 8 entries max
+
+  let barsHTML="";
+  entries.forEach((e,i)=>{
+    const isLatest=i===entries.length-1;
+    const hPx=Math.max(6,Math.round((e.composite/10)*64));
+    const col=isLatest?scoreColor(e.composite):"rgba(232,98,42,0.25)";
+    barsHTML+=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.25rem">
+      <div class="mono" style="font-size:${isLatest?"0.8rem":"0.7rem"};color:${isLatest?"var(--cream)":"var(--warmMuted)"};font-weight:${isLatest?"700":"400"}">${e.composite.toFixed(1)}</div>
+      <div style="width:100%;max-width:32px;height:${hPx}px;background:${col};border-radius:3px"></div>
+      <div style="font-size:0.6rem;color:var(--warmMuted)">${formatDate(e.date).replace(/, \\d{4}/,"")}</div>
+    </div>`;
+  });
+
+  // Dimension deltas
+  let dimDeltaHTML="";
+  SECTIONS.forEach(s=>{
+    const curr=currentSec[s.key];
+    const prevVal=prev.sections[s.key];
+    if(curr!=null&&prevVal!=null){
+      const dd=(curr-prevVal).toFixed(1);
+      const ds=dd>0?"+":"";
+      const dc=dd>0?C.green:dd<0?C.red:C.warmMuted;
+      dimDeltaHTML+=`<span style="font-size:0.85rem;color:var(--warmMuted)">${s.icon} ${s.label} <span class="mono" style="color:${dc}">${ds}${dd}</span></span>`;
+    }
+  });
+
+  return`<div class="card-lg" style="border-color:rgba(232,98,42,0.1)">
+    <div class="label-sm">Your Pattern Over Time</div>
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+      <div style="font-size:1rem;color:var(--warm)">Since last time:</div>
+      <div class="mono" style="font-size:1.3rem;font-weight:700;color:${deltaColor}">${sign}${delta}</div>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:0.35rem;height:80px;margin-bottom:0.75rem;padding:0 0.25rem">
+      ${barsHTML}
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0.75rem 1.25rem;margin-top:0.5rem">${dimDeltaHTML}</div>
+    <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.75rem">${hist.length} audit${hist.length===1?"":"s"} recorded on this device</div>
+  </div>`;
+}
+
 function renderResults(){
   const secScores={};
   SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.length===s.questions.length?vals.reduce((a,b)=>a+b,0)/vals.length:null});
   const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+  if(!isShared)saveToHistory(scores,secScores,comp);
   const sorted=Object.entries(secScores).sort((a,b)=>a[1]-b[1]);
   const lowDim=sorted[0][0],lowScore=sorted[0][1],highScore=sorted[sorted.length-1][1];
   const sp=(highScore-lowScore).toFixed(1);
@@ -268,6 +343,7 @@ function renderResults(){
       <div class="label-sm">Dimension Breakdown</div>
       ${dimHTML}
     </div>
+    ${(!isShared&&renderHistoryCard(parseFloat(comp),secScores))||""}
     <div class="card" style="text-align:center;border-color:${scoreColor(lowScore)}33;margin-bottom:1.25rem">
       <div class="label-sm" style="margin-bottom:0.4rem">Most Depleted</div>
       <div style="font-size:1.3rem;font-weight:500;color:${scoreColor(lowScore)}">${dimLabel}</div>

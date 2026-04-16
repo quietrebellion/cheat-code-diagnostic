@@ -104,7 +104,12 @@ function decodeScores(str){
   }
   return out;
 }
+const OG_HOST="https://capacity-audit-og.vercel.app";
 function shareURL(){
+  const code=encodeScores(scores);
+  return `${OG_HOST}/api/share?r=${code}`;
+}
+function directURL(){
   const code=encodeScores(scores);
   return `https://capacityaudit.rebellioncollective.com/?r=${code}`;
 }

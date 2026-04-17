@@ -394,8 +394,10 @@ async function submitEmail(){
   const inp=document.getElementById("emailInput");
   if(!inp||!inp.value.includes("@"))return;
   email=inp.value;
+  emailSent=true;
+  genPDF();          // open window FIRST while we still have user-gesture context (avoids popup blocker)
+  render();
   try{await fetch("https://app.convertkit.com/forms/"+CONVERTKIT_FORM_ID+"/subscriptions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email_address:email})})}catch(e){}
-  emailSent=true;genPDF();render();
 }
 
 function genPDF(){

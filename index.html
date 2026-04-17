@@ -18,9 +18,9 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulseGlow{0%,100%{box-shadow:0 0 20px rgba(232,98,42,0.2)}50%{box-shadow:0 0 35px rgba(232,98,42,0.35)}}
-input[type="range"]{-webkit-appearance:none;appearance:none;background:transparent;position:absolute;width:100%;height:48px;top:-19px;left:0;opacity:0;cursor:pointer;margin:0}
-input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;cursor:pointer}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 20px rgba(232,98,42,0.25),0 0 60px rgba(232,98,42,0.1)}50%{box-shadow:0 0 30px rgba(232,98,42,0.5),0 0 80px rgba(232,98,42,0.2)}}
+input[type="range"]{-webkit-appearance:none;appearance:none;background:transparent;position:absolute;width:100%;height:56px;top:-23px;left:0;opacity:0;cursor:pointer;margin:0;touch-action:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;cursor:pointer}
 a{color:var(--emberLight);text-decoration:none}a:hover{text-decoration:underline}
 a:focus-visible,button:focus-visible{outline:2px solid var(--emberLight);outline-offset:2px}
 input[type="email"]:focus{border-color:var(--ember)!important}
@@ -35,9 +35,9 @@ input[type="email"]:focus{border-color:var(--ember)!important}
 .btn-ghost{background:none;border:none;font-family:'Poppins',sans-serif;color:var(--warmMuted);cursor:pointer;text-decoration:underline}
 .mono{font-family:'DM Mono',monospace}
 .label-sm{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--textMuted);margin-bottom:0.5rem}
-.track{position:relative;height:10px;background:rgba(232,98,42,0.15);border-radius:5px;margin-bottom:0.75rem}
-.track-fill{position:absolute;left:0;top:0;height:100%;border-radius:5px}
-.thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;border:2px solid var(--bg);pointer-events:none;transition:background-color 0.25s ease,box-shadow 0.25s ease}
+.track{position:relative;height:10px;background:rgba(232,98,42,0.15);border-radius:5px;margin-bottom:0.75rem;touch-action:none}
+.track-fill{position:absolute;left:0;top:0;height:100%;border-radius:5px;transition:width 0.08s linear,background 0.2s ease}
+.thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;border:2px solid var(--bg);pointer-events:none;transition:left 0.08s linear,background-color 0.2s ease,box-shadow 0.2s ease}
 .progress-bar{height:3px;background:rgba(232,98,42,0.15);border-radius:2px;overflow:hidden}
 .progress-fill{height:100%;background:var(--ember);border-radius:2px;transition:width 0.3s ease}
 .dim-bar{height:6px;background:rgba(232,98,42,0.1);border-radius:3px;overflow:hidden;margin-top:0.4rem}
@@ -263,7 +263,7 @@ function renderQuestion(){
       <div role="group" aria-labelledby="qlabel" style="margin-bottom:1rem">
         <h2 id="qlabel" style="font-size:1.4rem;font-weight:500;color:var(--cream);line-height:1.35;margin-bottom:1rem">${q.question}</h2>
         <div style="margin-bottom:0.75rem">
-          ${!has?'<div style="text-align:center;font-size:0.9rem;color:var(--warmMuted);margin-bottom:0.5rem">Slide to rate</div>':""}
+          ${!has?'<div class="slide-hint" style="text-align:center;font-size:0.9rem;color:var(--warmMuted);margin-bottom:0.5rem">Slide to rate</div>':""}
           <div class="track">
             <div class="track-fill" style="width:${has?(pct+"%"):"0%"};background:${has?col:"transparent"}"></div>
             <div class="thumb" style="left:${pct}%;background:${col};box-shadow:${has?"0 0 10px "+col+"55":"0 0 12px rgba(232,98,42,0.2)"};${!has?"animation:pulseGlow 2s ease infinite":""}"></div>
@@ -288,13 +288,25 @@ function onSlide(v){
   const key=ALL_Q[step].key;
   const wasEmpty=scores[key]==null;
   scores[key]=val;
-  if(wasEmpty){render();return}
   const pct=(val/10)*100;
   const screen=app.querySelector(".screen");
   if(!screen)return;
   const thumb=screen.querySelector(".thumb");
   const fill=screen.querySelector(".track-fill");
   const num=screen.querySelector('[aria-live="polite"]');
+  const hint=screen.querySelector(".slide-hint");
+  if(wasEmpty){
+    // First touch: activate visuals without full re-render
+    if(thumb){thumb.style.left=pct+"%";thumb.style.background=C.ember;thumb.style.boxShadow="0 0 10px "+C.ember+"55";thumb.style.animation="none"}
+    if(fill){fill.style.width=pct+"%";fill.style.background=C.ember}
+    if(num){num.textContent=val;num.style.color=C.ember}
+    if(hint)hint.style.display="none";
+    // Enable the Next button
+    const btns=screen.querySelectorAll("button");
+    const nextBtn=btns[btns.length-1];
+    if(nextBtn&&nextBtn.hasAttribute("disabled")){nextBtn.removeAttribute("disabled");nextBtn.style.color="var(--bg)";nextBtn.style.background="var(--ember)";nextBtn.style.border="none";nextBtn.style.cursor="pointer"}
+    return;
+  }
   if(thumb)thumb.style.left=pct+"%";
   if(fill)fill.style.width=pct+"%";
   if(num)num.textContent=val;
@@ -414,12 +426,9 @@ function renderResults(){
   const shareRow=!isShared?`
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
       <div class="label-sm" style="margin-bottom:0.4rem">Share your pattern</div>
-      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem">No account, no name, just the numbers. Grab what you need and share wherever you want.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center">
-        <button class="btn-outline" onclick="copyShareLink(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Copy link</button>
-        <button class="btn-outline" onclick="copyShareText(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Copy share text</button>
-        <button class="btn-outline" onclick="downloadShareCard(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Download share card</button>
-      </div>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem">No account, no name, just the numbers.</p>
+      <button class="btn" onclick="copyShareText(this)" style="font-size:1rem;padding:0.85rem 2rem;margin-bottom:0.75rem;width:100%;max-width:320px">Share my results</button>
+      <div><button class="btn-ghost" onclick="downloadShareCard(this)" style="font-size:0.85rem">Download share image</button></div>
     </div>`:"";
   app.innerHTML=`<div class="screen" style="display:block">
     ${sharedBanner}
@@ -514,8 +523,8 @@ function genPDF(){
 })();
 
 function clipCopy(text,btn,label){
-  const orig=btn.textContent;
-  const done=()=>{btn.textContent="Copied \u2713";setTimeout(()=>{btn.textContent=orig},1800)};
+  const orig=btn.textContent;const origBg=btn.style.background;const origColor=btn.style.color;const origBorder=btn.style.border;
+  const done=()=>{btn.textContent="Copied \u2713";btn.style.background="var(--green)";btn.style.color="var(--bg)";btn.style.border="none";setTimeout(()=>{btn.textContent=orig;btn.style.background=origBg;btn.style.color=origColor;btn.style.border=origBorder},1800)};
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(done).catch(()=>{prompt(label,text)});
   }else{
@@ -528,24 +537,74 @@ function copyShareLink(btn){
   clipCopy(directURL(),btn,"Copy your link:");
 }
 function copyShareText(btn){
-  const text="I just ran my Capacity Audit. This is the shape mine is in right now\u2014curious what yours looks like.\n\n"+directURL();
+  const text="I just ran my Capacity Audit. This is the shape mine is in right now. Curious what yours looks like.\n\n"+directURL();
   clipCopy(text,btn,"Copy share text:");
 }
 function downloadShareCard(btn){
   const orig=btn.textContent;
-  btn.textContent="Downloading\u2026";
+  btn.textContent="Generating\u2026";
   const code=encodeScores(scores);
   const imgUrl=`${OG_HOST}/api/og?r=${code}`;
-  fetch(imgUrl).then(r=>r.blob()).then(blob=>{
+  fetch(imgUrl,{mode:"cors"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.blob()}).then(blob=>{
+    if(blob.size<500)throw new Error("empty");
     const a=document.createElement("a");
     a.href=URL.createObjectURL(blob);
     a.download="capacity-audit.png";
     document.body.appendChild(a);a.click();document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
-    btn.textContent="Downloaded \u2713";setTimeout(()=>{btn.textContent=orig},1800);
+    btn.textContent="Downloaded \u2713";setTimeout(()=>{btn.textContent=orig},2000);
   }).catch(()=>{
-    window.open(imgUrl,"_blank","noopener");
-    btn.textContent=orig;
+    // Fallback: generate a canvas-based share card
+    generateLocalShareCard().then(dataUrl=>{
+      const a=document.createElement("a");a.href=dataUrl;a.download="capacity-audit.png";
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      btn.textContent="Downloaded \u2713";setTimeout(()=>{btn.textContent=orig},2000);
+    }).catch(()=>{btn.textContent=orig});
+  });
+}
+function generateLocalShareCard(){
+  return new Promise((resolve,reject)=>{
+    try{
+      const c=document.createElement("canvas");c.width=1200;c.height=630;
+      const ctx=c.getContext("2d");
+      // Background
+      ctx.fillStyle="#0a0a0a";ctx.fillRect(0,0,1200,630);
+      // Border accent
+      ctx.fillStyle="#e8622a";ctx.fillRect(0,0,1200,4);
+      // Title
+      ctx.fillStyle="#e8622a";ctx.font="600 16px sans-serif";ctx.letterSpacing="0.15em";
+      ctx.fillText("REBELLION COLLECTIVE",60,60);
+      ctx.fillStyle="#ffffff";ctx.font="600 36px sans-serif";ctx.letterSpacing="0";
+      ctx.fillText("The C.H.E.A.T. Code\u2122 Capacity Audit",60,110);
+      // Scores
+      const secScores={};
+      SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.reduce((a,b)=>a+b,0)/vals.length});
+      const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+      // Composite score
+      ctx.fillStyle=scoreColor(parseFloat(comp));ctx.font="700 120px monospace";
+      ctx.fillText(comp,60,270);
+      ctx.fillStyle="#ccc5bd";ctx.font="400 24px sans-serif";
+      ctx.fillText(scoreLabel(parseFloat(comp))+" / 10",60,310);
+      // Dimension scores
+      let dy=370;
+      SECTIONS.forEach(s=>{
+        const sc=secScores[s.key];
+        ctx.fillStyle="#ededed";ctx.font="500 20px sans-serif";
+        ctx.fillText(s.icon+" "+s.label,60,dy);
+        ctx.fillStyle=scoreColor(sc);ctx.font="700 20px monospace";
+        ctx.fillText(sc.toFixed(1),350,dy);
+        // Bar
+        ctx.fillStyle="rgba(232,98,42,0.15)";ctx.fillRect(420,dy-14,500,16);
+        ctx.fillStyle=scoreColor(sc);ctx.fillRect(420,dy-14,(sc/10)*500,16);
+        dy+=40;
+      });
+      // Footer
+      ctx.fillStyle="#8a8682";ctx.font="400 16px sans-serif";
+      ctx.fillText("capacityaudit.rebellioncollective.com",60,590);
+      ctx.fillStyle="#9a9692";ctx.font="italic 400 16px sans-serif";
+      ctx.fillText("Be rebellious.",450,590);
+      resolve(c.toDataURL("image/png"));
+    }catch(e){reject(e)}
   });
 }
 function startOwnAudit(){

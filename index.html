@@ -441,25 +441,24 @@ function copyShareLink(btn){
   }
 }
 function shareLinkedIn(){
-  const url=directURL();
-  const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.\n\n"+url);
-  window.open(`https://www.linkedin.com/feed/?shareActive=true&text=${text}`,"_blank","noopener");
+  const ogUrl=shareURL();
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(ogUrl)}`,"_blank","noopener");
 }
 function shareX(){
-  const url=directURL();
+  const ogUrl=shareURL();
   const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.");
-  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`,"_blank","noopener");
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(ogUrl)}`,"_blank","noopener");
 }
 function shareSubstack(){
   const url=directURL();
-  const body=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.\n\n"+url);
-  window.open(`https://substack.com/note/compose&body=${body}`,"_blank","noopener");
+  const text="I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.\n\n"+url;
+  navigator.clipboard.writeText(text).then(()=>{window.open("https://substack.com/notes","_blank","noopener");alert("Your share text has been copied to your clipboard. Paste it into your Substack note.")}).catch(()=>{prompt("Copy this text to share on Substack:",text)});
 }
 function shareEmail(){
   const url=directURL();
   const subject=encodeURIComponent("My Capacity Audit pattern");
-  const body=encodeURIComponent(`I ran the Capacity Audit from Rebellion Collective. This is the shape mine is in right now \u2014 thought you might find it useful too.\n\n${url}`);
-  window.open(`mailto:?subject=${subject}&body=${body}`,"_blank");
+  const body=encodeURIComponent("I ran the Capacity Audit from Rebellion Collective. This is the shape mine is in right now \u2014 thought you might find it useful too.\n\n"+url);
+  window.location.href="mailto:?subject="+subject+"&body="+body;
 }
 function startOwnAudit(){
   isShared=false;scores={};step=-1;email="";emailSent=false;

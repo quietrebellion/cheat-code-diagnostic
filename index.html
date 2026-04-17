@@ -234,7 +234,7 @@ function renderHistoryCard(currentComp,currentSec){
     barsHTML+=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.25rem">
       <div class="mono" style="font-size:${isLatest?"0.8rem":"0.7rem"};color:${isLatest?"var(--cream)":"var(--warmMuted)"};font-weight:${isLatest?"700":"400"}">${e.composite.toFixed(1)}</div>
       <div style="width:100%;max-width:32px;height:${hPx}px;background:${col};border-radius:3px"></div>
-      <div style="font-size:0.6rem;color:var(--warmMuted)">${formatDate(e.date).replace(/, \\d{4}/,"")}</div>
+      <div style="font-size:0.6rem;color:var(--warmMuted)">${formatDate(e.date).replace(/, \d{4}/,"")}</div>
     </div>`;
   });
 
@@ -310,7 +310,7 @@ function renderResults(){
     <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Five dispatches arriving over the next two weeks, one for each habit.</p>
   `:`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Go Deeper</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Five dispatches over the next two weeks , one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Five dispatches over the next two weeks, one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
     <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
       <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
       <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Start Dispatches</button>
@@ -327,13 +327,11 @@ function renderResults(){
   const shareRow=!isShared?`
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
       <div class="label-sm" style="margin-bottom:0.4rem">Share your pattern</div>
-      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem">A link to your shape \u2014 no account, no name, just the numbers. Useful when someone asks how you\u2019re actually doing.</p>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem">No account, no name, just the numbers. Grab what you need and share wherever you want.</p>
       <div style="display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center">
         <button class="btn-outline" onclick="copyShareLink(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Copy link</button>
-        <button class="btn-outline" onclick="shareLinkedIn()" style="font-size:0.9rem;padding:0.7rem 1.25rem">LinkedIn</button>
-        <button class="btn-outline" onclick="shareX()" style="font-size:0.9rem;padding:0.7rem 1.25rem">X</button>
-        <button class="btn-outline" onclick="shareSubstack()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Substack</button>
-        <button class="btn-outline" onclick="shareEmail()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Email</button>
+        <button class="btn-outline" onclick="copyShareText(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Copy share text</button>
+        <button class="btn-outline" onclick="downloadShareCard(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Download share card</button>
       </div>
     </div>`:"";
   app.innerHTML=`<div class="screen" style="display:block">
@@ -428,37 +426,40 @@ function genPDF(){
   }catch(e){}
 })();
 
-function copyShareLink(btn){
-  const url=directURL();
+function clipCopy(text,btn,label){
   const orig=btn.textContent;
   const done=()=>{btn.textContent="Copied \u2713";setTimeout(()=>{btn.textContent=orig},1800)};
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(done).catch(()=>{prompt("Copy your link:",url)});
+    navigator.clipboard.writeText(text).then(done).catch(()=>{prompt(label,text)});
   }else{
-    const ta=document.createElement("textarea");ta.value=url;document.body.appendChild(ta);ta.select();
-    try{document.execCommand("copy");done()}catch(e){prompt("Copy your link:",url)}
+    const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy");done()}catch(e){prompt(label,text)}
     document.body.removeChild(ta);
   }
 }
-function shareLinkedIn(){
-  const ogUrl=shareURL();
-  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(ogUrl)}`,"_blank","noopener");
+function copyShareLink(btn){
+  clipCopy(directURL(),btn,"Copy your link:");
 }
-function shareX(){
-  const ogUrl=shareURL();
-  const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.");
-  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(ogUrl)}`,"_blank","noopener");
+function copyShareText(btn){
+  const text="I just ran my Capacity Audit. This is the shape mine is in right now\u2014curious what yours looks like.\n\n"+directURL();
+  clipCopy(text,btn,"Copy share text:");
 }
-function shareSubstack(){
-  const url=directURL();
-  const text="I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.\n\n"+url;
-  navigator.clipboard.writeText(text).then(()=>{window.open("https://substack.com/notes","_blank","noopener");alert("Your share text has been copied to your clipboard. Paste it into your Substack note.")}).catch(()=>{prompt("Copy this text to share on Substack:",text)});
-}
-function shareEmail(){
-  const url=directURL();
-  const subject=encodeURIComponent("My Capacity Audit pattern");
-  const body=encodeURIComponent("I ran the Capacity Audit from Rebellion Collective. This is the shape mine is in right now \u2014 thought you might find it useful too.\n\n"+url);
-  window.location.href="mailto:?subject="+subject+"&body="+body;
+function downloadShareCard(btn){
+  const orig=btn.textContent;
+  btn.textContent="Downloading\u2026";
+  const code=encodeScores(scores);
+  const imgUrl=`${OG_HOST}/api/og?r=${code}`;
+  fetch(imgUrl).then(r=>r.blob()).then(blob=>{
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="capacity-audit.png";
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+    btn.textContent="Downloaded \u2713";setTimeout(()=>{btn.textContent=orig},1800);
+  }).catch(()=>{
+    window.open(imgUrl,"_blank","noopener");
+    btn.textContent=orig;
+  });
 }
 function startOwnAudit(){
   isShared=false;scores={};step=-1;email="";emailSent=false;

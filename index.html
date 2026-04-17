@@ -299,19 +299,23 @@ function renderResults(){
     </div>`;
   });
 
+  const pdfSection=`
+    <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Save Your Results</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">These are yours. No email required.</p>
+    <button class="btn-outline" onclick="genPDF()" style="font-size:1rem;padding:0.85rem 1.5rem">Download PDF</button>
+  `;
+
   const emailForm=emailSent?`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">You\u2019re in.</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Your PDF should be downloading. Check your inbox — five dispatches arriving over the next two weeks, one for each habit.</p>
-    <button class="btn-outline" onclick="genPDF()">Download again</button>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Five dispatches arriving over the next two weeks, one for each habit.</p>
   `:`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Go Deeper</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Your PDF downloads instantly. Enter your email to also receive five dispatches over the next two weeks \u2014 one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
-    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:480px;margin:0 auto 0.75rem">
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Five dispatches over the next two weeks \u2014 one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
       <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
-      <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Download PDF + Start Dispatches</button>
+      <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Start Dispatches</button>
     </div>
     <p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">One-click unsubscribe. Always.</p>
-    <button class="btn-ghost" style="font-size:0.85rem;margin-top:0.75rem" onclick="genPDF()">Skip, just download the PDF</button>
   `;
 
   const sharedBanner=isShared?`
@@ -369,12 +373,10 @@ function renderResults(){
     </div>
     ${shareRow}
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
-      ${emailForm}
+      ${pdfSection}
     </div>
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
-      <h2 style="font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:0.75rem">What\u2019s Next</h2>
-      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Five dispatches. One for each habit. Starting tomorrow.</p>
-      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6">Until then, feel free to share your pattern with someone who needs it.</p>
+      ${emailForm}
     </div>`}
     <p style="font-size:0.85rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</p>
     <div style="text-align:center;padding:1.5rem 0;border-top:1px solid rgba(232,98,42,0.07)">
@@ -395,7 +397,6 @@ async function submitEmail(){
   if(!inp||!inp.value.includes("@"))return;
   email=inp.value;
   emailSent=true;
-  genPDF();          // open window FIRST while we still have user-gesture context (avoids popup blocker)
   render();
   try{await fetch("https://app.convertkit.com/forms/"+CONVERTKIT_FORM_ID+"/subscriptions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email_address:email})})}catch(e){}
 }

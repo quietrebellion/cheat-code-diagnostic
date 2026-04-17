@@ -310,7 +310,7 @@ function renderResults(){
     <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Five dispatches arriving over the next two weeks, one for each habit.</p>
   `:`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Go Deeper</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Five dispatches over the next two weeks \u2014 one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Five dispatches over the next two weeks , one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
     <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
       <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
       <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Start Dispatches</button>
@@ -429,7 +429,7 @@ function genPDF(){
 })();
 
 function copyShareLink(btn){
-  const url=shareURL();
+  const url=directURL();
   const orig=btn.textContent;
   const done=()=>{btn.textContent="Copied \u2713";setTimeout(()=>{btn.textContent=orig},1800)};
   if(navigator.clipboard&&navigator.clipboard.writeText){
@@ -441,25 +441,25 @@ function copyShareLink(btn){
   }
 }
 function shareLinkedIn(){
-  const url=shareURL();
+  const url=directURL();
   const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.\n\n"+url);
   window.open(`https://www.linkedin.com/feed/?shareActive=true&text=${text}`,"_blank","noopener");
 }
 function shareX(){
-  const url=shareURL();
+  const url=directURL();
   const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.");
   window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`,"_blank","noopener");
 }
 function shareSubstack(){
-  const url=shareURL();
-  const text=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.\n\n"+url);
-  window.open(`https://substack.com/notes?action=restacks&body=${text}`,"_blank","noopener");
+  const url=directURL();
+  const body=encodeURIComponent("I just ran my Capacity Audit. This is the shape mine is in right now \u2014 curious what yours looks like.\n\n"+url);
+  window.open(`https://substack.com/note/compose&body=${body}`,"_blank","noopener");
 }
 function shareEmail(){
-  const url=shareURL();
+  const url=directURL();
   const subject=encodeURIComponent("My Capacity Audit pattern");
   const body=encodeURIComponent(`I ran the Capacity Audit from Rebellion Collective. This is the shape mine is in right now \u2014 thought you might find it useful too.\n\n${url}`);
-  window.location.href=`mailto:?subject=${subject}&body=${body}`;
+  window.open(`mailto:?subject=${subject}&body=${body}`,"_blank");
 }
 function startOwnAudit(){
   isShared=false;scores={};step=-1;email="";emailSent=false;

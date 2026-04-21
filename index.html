@@ -511,10 +511,10 @@ function renderResults(){
       <h2 class="label-sm" style="margin-bottom:0.4rem">Download Your Results</h2>
       <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem">Save a copy to share with others or keep for yourself.</p>
       <button class="btn-outline" onclick="genPDF()" style="font-size:1rem;padding:0.85rem 1.5rem;margin-bottom:0.75rem;width:100%;max-width:320px">Download PDF</button>
-      <div style="margin-bottom:0.75rem"><button class="btn-outline" onclick="downloadShareCard(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Download Share Image</button></div>
+      <div style="margin-bottom:0.75rem"><button class="btn-outline" onclick="downloadShareCard(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Save as Image</button></div>
       <div style="border-top:1px solid rgba(232,98,42,0.09);padding-top:1rem;margin-top:0.5rem">
-        <p style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.75rem">Or share a link. No account, no name, just the numbers.</p>
-        <button class="btn" onclick="copyShareText(this)" style="font-size:1rem;padding:0.85rem 2rem;width:100%;max-width:320px">Share my results</button>
+        <p style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.75rem">Or copy a shareable link. No account, no name, just the numbers.</p>
+        <button class="btn" onclick="copyShareText(this)" style="font-size:1rem;padding:0.85rem 2rem;width:100%;max-width:320px">Copy share link</button>
       </div>
     </div>`:"";
   app.innerHTML=`<div class="screen" style="display:block">
@@ -636,7 +636,7 @@ function genPDF(){
 
 function clipCopy(text,btn,label){
   const orig=btn.textContent;const origBg=btn.style.background;const origColor=btn.style.color;const origBorder=btn.style.border;
-  const done=()=>{btn.textContent="Copied \u2713";btn.style.background="var(--green)";btn.style.color="var(--bg)";btn.style.border="none";setTimeout(()=>{btn.textContent=orig;btn.style.background=origBg;btn.style.color=origColor;btn.style.border=origBorder},1800)};
+  const done=()=>{btn.textContent="Copied \u2014 paste anywhere to share";btn.style.background="var(--green)";btn.style.color="var(--bg)";btn.style.border="none";setTimeout(()=>{btn.textContent=orig;btn.style.background=origBg;btn.style.color=origColor;btn.style.border=origBorder},3000)};
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(done).catch(()=>{prompt(label,text)});
   }else{
@@ -649,7 +649,7 @@ function copyShareLink(btn){
   clipCopy(directURL(),btn,"Copy your link:");
 }
 function copyShareText(btn){
-  const text="I just ran my Capacity Audit. This is the shape mine is in right now. Curious what yours looks like.\n\n"+directURL();
+  const text="I just ran my Capacity Audit. This is the shape mine is in right now. Curious what yours looks like.\n\n"+shareURL();
   clipCopy(text,btn,"Copy share text:");
 }
 function downloadShareCard(btn){

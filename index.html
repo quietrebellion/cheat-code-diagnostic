@@ -258,16 +258,10 @@ function renderIntro(){
   app.innerHTML=`<div class="screen" style="justify-content:center;text-align:center">
     <div style="font-size:1.1rem;text-transform:uppercase;letter-spacing:0.25em;color:var(--ember);margin-bottom:1.5rem;font-weight:600">Rebellion Collective</div>
     <h1 style="font-size:2rem;font-weight:600;color:var(--cream);line-height:1.2;margin-bottom:1.5rem">The C.H.E.A.T. Code\u2122 Capacity Audit</h1>
-    <div style="text-align:left;max-width:500px;margin:0 auto 1.5rem">
-      <p style="font-size:1.1rem;color:var(--textMuted);line-height:1.7;margin-bottom:0.8rem">Capacity is the raw material of our life.</p>
-      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">The systems we occupy and habits we practice extract or reclaim our time, energy, and attention every day.</p>
-      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">Understanding how our systems and habits impact our capacity is the key to making choices that support the kind of life we want to live.</p>
-      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">This Capacity Audit tells you where your capacity is being drained, how, and what to do about it.</p>
-    </div>
     <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Ten questions to spark curiosity.</p>
     <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Two minutes to build awareness.</p>
     <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 1.5rem;font-style:italic">A lifetime to practice.</p>
-    <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Collect data Not Drama.</p>
+    <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Collect data not drama.</p>
     <p style="font-size:1.05rem;color:var(--cream);margin-bottom:1.5rem">Reclaim what\u2019s yours.</p>
     <p style="font-size:1.4rem;font-weight:600;color:var(--ember);margin-bottom:2.5rem">Be Rebellious.</p>
     <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="showTimeframe=true;render()">${(()=>{const last=getLastEntry();return last?"Retake the Audit":"Begin"})()}</button>
@@ -278,7 +272,15 @@ function renderIntro(){
         <span style="font-size:0.9rem;color:var(--warm)">${scoreLabel(last.composite)}</span>
       </div>
     </div>`:""})()}
-  </div>`;
+  </div>
+    <div style="text-align:left;max-width:500px;margin:2.5rem auto 0">
+      <p style="font-size:1.1rem;color:var(--textMuted);line-height:1.7;margin-bottom:0.8rem">Capacity is the raw material of our life.</p>
+      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">The systems we occupy and habits we practice extract or reclaim our time, energy, and attention every day.</p>
+      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">Understanding how systems and habitss impact our capacity is the key to making choices that support the kind of life we want to live.</p>
+      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">This Capacity Audit tells you where your capacity is being drained, how, and what to do about it.</p>
+    
+      <p><a href="https://rebellioncollective.com/manifesto" target="_blank" rel="noopener noreferrer" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Read the manifesto that started it all →</a></p>
+    </div>`;
 }
 
 function renderQuestion(){

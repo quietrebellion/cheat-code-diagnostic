@@ -43,6 +43,13 @@ input[type="email"]:focus{border-color:var(--ember)!important}
 .dim-bar{height:6px;background:rgba(232,98,42,0.1);border-radius:3px;overflow:hidden;margin-top:0.4rem}
 .dim-fill{height:100%;border-radius:3px}
 .try-this{padding:0.85rem;background:rgba(232,98,42,0.06);border-radius:6px;border-left:3px solid rgba(232,98,42,0.27);line-height:1.6;color:var(--warm)}
+.tf-btn{display:block;width:100%;text-align:left;padding:1.1rem 1.25rem;background:var(--bgCard);border:1px solid rgba(232,98,42,0.13);border-radius:8px;cursor:pointer;font-family:inherit;margin-bottom:0.5rem;transition:border-color 0.2s ease}
+.tf-btn:hover{border-color:var(--ember)}
+.filter-btn{padding:0.4rem 0.75rem;font-family:inherit;font-size:0.75rem;border-radius:4px;cursor:pointer;transition:all 0.15s ease}
+.nav-row{display:flex;gap:0.75rem;padding-top:0.5rem;flex-shrink:0;padding-bottom:0.5rem}
+.q-content{flex:1;display:flex;flex-direction:column;overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch}
+.sec-icon{font-size:1.3rem;line-height:1;vertical-align:middle}
+@media(max-width:680px){.wrap{padding-bottom:calc(0.5rem + env(safe-area-inset-bottom,0px))}}
 </style>
 </head>
 <body>
@@ -58,9 +65,9 @@ const SECTIONS=[
 {key:"alignment",label:"Alignment Energy",question:"How much of your work matches your values?",low:"Going through the motions. Hollow.",high:"The work matches who I am."}]},
 {key:"attention",label:"Attention",icon:"\uD83C\uDFAF",intro:"Attention lives in three states: chosen, captured, and present. The deeper question: who benefits from your distraction?",questions:[
 {key:"chosen",label:"Chosen Attention",question:"How much of your attention is going where you want it to?",low:"Almost none. Reactive, scattered, pulled in every direction.",high:"Most of it. I\u2019m where I mean to be."},
-{key:"captured",label:"Captured Attention",question:"How much of your attention is taken without your consent?",low:"Constantly hijacked by feeds, notifications, urgency.",high:"Very little. I\u2019ve reclaimed or protected most of it."},
+captured",label:"Captured Attention",question:"How much of your attention is taken without your consent?",low:"Constantly hijacked by feeds, notifications, urgency.",high:"Very little. I\u2019ve reclaimed or protected most of it."},
 {key:"present",label:"Present Attention",question:"How present are you right now?",low:"Stuck in the past or spinning about what\u2019s next.",high:"Here. Now."}]},
-{key:"time",label:"Time",icon:"\u25F7",intro:"Time breaks down into three types: committed, recovered, and protected. How yours is distributed tells the real story.",questions:[
+{key:"time",label:"Time",icon:"\u23F1\uFE0F",intro:"Time breaks down into three types: committed, recovered, and protected. How yours is distributed tells the real story.",questions:[
 {key:"committed",label:"Committed Time",question:"How much of your time belongs to obligations you didn\u2019t choose?",low:"Almost all of it. My calendar was handed to me.",high:"Very little. Most commitments are chosen."},
 {key:"recovered",label:"Recovered Time",question:"How much time have you reclaimed from things that no longer serve you?",low:"None. I\u2019m still carrying it all.",high:"A lot. I\u2019ve dropped what doesn\u2019t serve me."},
 {key:"protected",label:"Protected Time",question:"How much time do you hold non-negotiable for what matters?",low:"None. Everything is up for grabs.",high:"Significant. My boundaries hold."}]}
@@ -170,24 +177,29 @@ function getAction(h,scores){
 
 // State
 let scores={},step=-1,email="",emailSent=false,isShared=false;
+let timeframe=null,showTimeframe=false,historyFilter="all",historySaved=false;
 const $=id=>document.getElementById(id);
 const app=document.getElementById("app");
 
 // History (localStorage)
 const HISTORY_KEY="cheat_audit_history";
-const MAX_HISTORY=20;
+const MAX_HISTORY=90;
 function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY))||[]}catch(e){return[]}}
 function saveToHistory(sc,secScores,composite){
+  if(historySaved)return;
   const hist=loadHistory();
-  const entry={date:new Date().toISOString(),scores:{...sc},sections:{energy:secScores.energy,attention:secScores.attention,time:secScores.time},composite:parseFloat(composite)};
-  // Don't save duplicates within 60 seconds
-  if(hist.length>0){const last=hist[hist.length-1];if(Math.abs(new Date(last.date)-new Date(entry.date))<60000)return}
+  const entry={date:new Date().toISOString(),scores:{...sc},sections:{energy:secScores.energy,attention:secScores.attention,time:secScores.time},composite:parseFloat(composite),timeframe:timeframe||"right_now"};
+  // Don't save duplicates within 4 hours
+  if(hist.length>0){const last=hist[hist.length-1];if(Math.abs(new Date(last.date)-new Date(entry.date))<14400000)return}
   hist.push(entry);
   if(hist.length>MAX_HISTORY)hist.splice(0,hist.length-MAX_HISTORY);
   try{localStorage.setItem(HISTORY_KEY,JSON.stringify(hist))}catch(e){}
+  historySaved=true;
 }
 function getLastEntry(){const h=loadHistory();return h.length>0?h[h.length-1]:null}
 function formatDate(iso){const d=new Date(iso);return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
+function formatDateTime(iso){const d=new Date(iso);return d.toLocaleDateString("en-US",{month:"short",day:"numeric"})+" "+d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}
+function timeframeLabel(tf){return tf==="right_now"?"Right now":tf==="this_week"?"This week":tf==="past_month"?"Past month":""}
 
 // Share encoding: one char per score in canonical ALL_Q order. 0-9 = 0-9, 'a' = 10.
 const SHARE_KEYS=ALL_Q.map(q=>q.key);
@@ -218,9 +230,28 @@ function directURL(){
 }
 
 function render(){
-  if(step===-1) return renderIntro();
+  if(step===-1) return showTimeframe ? renderTimeframe() : renderIntro();
   if(step>=0&&step<totalQ) return renderQuestion();
   if(step>=totalQ) return renderResults();
+}
+
+function renderTimeframe(){
+  const opts=[
+    {value:"right_now",label:"Right now",desc:"How things stand today"},
+    {value:"this_week",label:"This week",desc:"Your pattern over the past few days"},
+    {value:"past_month",label:"Past month",desc:"The broader shape of the last 30 days"}
+  ];
+  let optHTML=opts.map(o=>`<button class="tf-btn" onclick="timeframe='${o.value}';showTimeframe=false;step=0;render()">
+    <div style="font-size:1.1rem;font-weight:500;color:var(--cream)">${o.label}</div>
+    <div style="font-size:0.9rem;color:var(--textMuted);margin-top:0.15rem">${o.desc}</div>
+  </button>`).join("");
+  app.innerHTML=`<div class="screen" style="justify-content:center">
+    <div class="label-sm" style="text-align:center;margin-bottom:1.5rem">Before you begin</div>
+    <h2 style="font-size:1.4rem;font-weight:500;color:var(--cream);text-align:center;margin-bottom:0.5rem">What timeframe are you responding to?</h2>
+    <p style="font-size:0.95rem;color:var(--textMuted);text-align:center;line-height:1.6;margin-bottom:1.5rem">Your answers will reflect a different pattern depending on the lens.</p>
+    ${optHTML}
+    <button class="btn-ghost" style="margin-top:0.75rem;font-size:0.9rem" onclick="showTimeframe=false;step=-1;render()">Back</button>
+  </div>`;
 }
 
 function renderIntro(){
@@ -232,7 +263,7 @@ function renderIntro(){
     <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 1.5rem;font-style:italic">A lifetime to practice.</p>
     <p style="font-size:1.05rem;color:var(--cream);margin-bottom:0.4rem">Reclaim what\u2019s yours.</p>
     <p style="font-size:1.4rem;font-weight:600;color:var(--ember);margin-bottom:2.5rem">Be rebellious.</p>
-    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="step=0;render()">${(()=>{const last=getLastEntry();return last?"Retake the Audit":"Begin"})()}</button>
+    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="showTimeframe=true;render()">${(()=>{const last=getLastEntry();return last?"Retake the Audit":"Begin"})()}</button>
     ${(()=>{const last=getLastEntry();return last?`<div style="margin-top:1.25rem;padding:1rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:360px;align-self:center">
       <div style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.25rem">Last taken ${formatDate(last.date)}</div>
       <div style="display:flex;align-items:baseline;gap:0.5rem;justify-content:center">
@@ -253,13 +284,13 @@ function renderQuestion(){
   app.innerHTML=`<div class="screen">
     <div style="margin-bottom:1.25rem" role="group" aria-label="Question ${step+1} of ${totalQ}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
-        <span style="font-size:0.85rem;color:var(--warmMuted)"><span aria-hidden="true">${sec.icon}</span> ${sec.label}</span>
+        <span style="font-size:0.85rem;color:var(--warmMuted)"><span class="sec-icon" aria-hidden="true">${sec.icon}</span> ${sec.label}</span>
         <span class="mono" style="font-size:0.85rem;color:var(--warmMuted)">${step+1}/${totalQ}</span>
       </div>
       <div class="progress-bar" role="progressbar" aria-valuenow="${step+1}" aria-valuemin="0" aria-valuemax="${totalQ}"><div class="progress-fill" style="width:${((step+1)/totalQ)*100}%"></div></div>
     </div>
     ${isNew?`<p style="font-size:1rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem;font-style:italic">${sec.intro}</p>`:""}
-    <div style="flex:1;display:flex;flex-direction:column">
+    <div class="q-content">
       <div role="group" aria-labelledby="qlabel" style="margin-bottom:1rem">
         <h2 id="qlabel" style="font-size:1.4rem;font-weight:500;color:var(--cream);line-height:1.35;margin-bottom:1rem">${q.question}</h2>
         <div style="margin-bottom:0.75rem">
@@ -277,7 +308,7 @@ function renderQuestion(){
         </div>
       </div>
     </div>
-    <div style="display:flex;gap:0.75rem;padding-top:0.5rem">
+    <div class="nav-row">
       ${step>0?'<button onclick="step--;render()" style="flex:1;padding:0.9rem;font-family:inherit;font-size:1rem;font-weight:500;color:var(--warmMuted);background:transparent;border:1px solid rgba(138,134,130,0.27);border-radius:8px;cursor:pointer">Back</button>':""}
       <button onclick="advance()" ${!has?"disabled":""} style="flex:2;padding:0.9rem;font-family:inherit;font-size:1.05rem;font-weight:600;color:${has?"var(--bg)":"var(--warmMuted)"};background:${has?"var(--ember)":"transparent"};border:${has?"none":"1px solid rgba(138,134,130,0.2)"};border-radius:8px;cursor:${has?"pointer":"default"};transition:all 0.2s ease">${step===totalQ-1?"See My Results":"Next"}</button>
     </div>
@@ -315,52 +346,90 @@ function advance(){if(step<totalQ-1){step++;render()}else{step=totalQ;render();w
 
 function renderHistoryCard(currentComp,currentSec){
   const hist=loadHistory();
-  // Need at least 2 entries (current one was just saved) to show history
   if(hist.length<2)return"";
-  const prev=hist[hist.length-2]; // second-to-last is the previous take
+
+  // Filter controls
+  const filterOpts=[{value:"all",label:"All"},{value:"right_now",label:"Right now"},{value:"this_week",label:"This week"},{value:"past_month",label:"Past month"}];
+  let filterHTML=filterOpts.map(o=>
+    `<button class="filter-btn" onclick="historyFilter='${o.value}';renderResults();window.scrollTo({top:document.querySelector('.history-card')?.offsetTop-20||0})" style="border:1px solid ${historyFilter===o.value?'var(--ember)':'rgba(138,134,130,0.2)'};background:${historyFilter===o.value?'rgba(232,98,42,0.15)':'transparent'};color:${historyFilter===o.value?'var(--emberLight)':'var(--warmMuted)'}">${o.label}</button>`
+  ).join("");
+
+  const filtered=historyFilter==="all"?hist:hist.filter(e=>(e.timeframe||"right_now")===historyFilter);
+  if(filtered.length<2){
+    return`<div class="card-lg history-card" style="border-color:rgba(232,98,42,0.1)">
+      <div class="label-sm">Your Pattern Over Time</div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem">${filterHTML}</div>
+      <p style="font-size:0.9rem;color:var(--warmMuted)">Take the audit again to start tracking your pattern${historyFilter!=="all"?" with this timeframe":""}.</p>
+      <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.75rem">${hist.length} audit${hist.length===1?"":"s"} total on this device</div>
+    </div>`;
+  }
+
+  const prev=filtered[filtered.length-2];
   const delta=(currentComp-prev.composite).toFixed(1);
   const sign=delta>0?"+":"";
   const deltaColor=delta>0?C.green:delta<0?C.red:C.warmMuted;
 
-  // Build mini bar chart of composite scores
-  const entries=hist.slice(-8); // last 8 entries max
-
+  // Bar chart â last 12 entries
+  const entries=filtered.slice(-12);
   let barsHTML="";
   entries.forEach((e,i)=>{
     const isLatest=i===entries.length-1;
     const hPx=Math.max(6,Math.round((e.composite/10)*64));
     const col=isLatest?scoreColor(e.composite):"rgba(232,98,42,0.25)";
-    barsHTML+=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.25rem">
-      <div class="mono" style="font-size:${isLatest?"0.8rem":"0.7rem"};color:${isLatest?"var(--cream)":"var(--warmMuted)"};font-weight:${isLatest?"700":"400"}">${e.composite.toFixed(1)}</div>
-      <div style="width:100%;max-width:32px;height:${hPx}px;background:${col};border-radius:3px"></div>
-      <div style="font-size:0.6rem;color:var(--warmMuted)">${formatDate(e.date).replace(/, \d{4}/,"")}</div>
+    const d=new Date(e.date);
+    const isToday=d.toDateString()===new Date().toDateString();
+    const dateLabel=isToday?d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}):formatDate(e.date).replace(/, \d{4}/,"");
+    barsHTML+=`<div style="flex:1;min-width:16px;display:flex;flex-direction:column;align-items:center;gap:0.25rem">
+      <div class="mono" style="font-size:${isLatest?"0.75rem":"0.65rem"};color:${isLatest?"var(--cream)":"var(--warmMuted)"};font-weight:${isLatest?"700":"400"}">${e.composite.toFixed(1)}</div>
+      <div style="width:100%;max-width:28px;height:${hPx}px;background:${col};border-radius:3px"></div>
+      <div style="font-size:0.55rem;color:var(--warmMuted);white-space:nowrap">${dateLabel}</div>
     </div>`;
   });
 
-  // Dimension deltas
-  let dimDeltaHTML="";
+  // Dimension deltas + sparklines
+  let dimTrendHTML="";
   SECTIONS.forEach(s=>{
     const curr=currentSec[s.key];
     const prevVal=prev.sections[s.key];
-    if(curr!=null&&prevVal!=null){
-      const dd=(curr-prevVal).toFixed(1);
-      const ds=dd>0?"+":"";
-      const dc=dd>0?C.green:dd<0?C.red:C.warmMuted;
-      dimDeltaHTML+=`<span style="font-size:0.85rem;color:var(--warmMuted)">${s.icon} ${s.label} <span class="mono" style="color:${dc}">${ds}${dd}</span></span>`;
+    if(curr==null||prevVal==null)return;
+    const dd=(curr-prevVal).toFixed(1);
+    const ds=dd>0?"+":"";
+    const dc=dd>0?C.green:dd<0?C.red:C.warmMuted;
+    // Sparkline from filtered entries
+    const vals=filtered.slice(-12).map(e=>e.sections[s.key]).filter(v=>v!=null);
+    let spark="";
+    if(vals.length>=2){
+      spark=vals.map((v,i)=>{
+        const h=Math.max(3,Math.round((v/10)*20));
+        const isLast=i===vals.length-1;
+        return`<div style="flex:1;height:${h}px;background:${isLast?scoreColor(v):'rgba(232,98,42,0.18)'};border-radius:2px"></div>`;
+      }).join("");
     }
+    dimTrendHTML+=`<div style="margin-bottom:0.5rem">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.25rem">
+        <span style="font-size:0.85rem;color:var(--warmMuted)"><span class="sec-icon">${s.icon}</span> ${s.label}</span>
+        <span class="mono" style="font-size:0.85rem;color:${dc}">${ds}${dd}</span>
+      </div>
+      ${spark?`<div style="display:flex;align-items:flex-end;gap:2px;height:20px">${spark}</div>`:""}
+    </div>`;
   });
 
-  return`<div class="card-lg" style="border-color:rgba(232,98,42,0.1)">
+  // Weekly count
+  const now=new Date();const weekAgo=new Date(now-7*24*60*60*1000);
+  const thisWeekCount=hist.filter(e=>new Date(e.date)>=weekAgo).length;
+
+  return`<div class="card-lg history-card" style="border-color:rgba(232,98,42,0.1)">
     <div class="label-sm">Your Pattern Over Time</div>
+    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem">${filterHTML}</div>
     <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
-      <div style="font-size:1rem;color:var(--warm)">Since last time:</div>
+      <div style="font-size:1rem;color:var(--warm)">Since last${historyFilter!=="all"?" "+timeframeLabel(historyFilter).toLowerCase():""} audit:</div>
       <div class="mono" style="font-size:1.3rem;font-weight:700;color:${deltaColor}">${sign}${delta}</div>
     </div>
-    <div style="display:flex;align-items:flex-end;gap:0.35rem;height:80px;margin-bottom:0.75rem;padding:0 0.25rem">
+    <div style="display:flex;align-items:flex-end;gap:0.3rem;height:80px;margin-bottom:1rem;padding:0 0.15rem;overflow-x:auto">
       ${barsHTML}
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:0.75rem 1.25rem;margin-top:0.5rem">${dimDeltaHTML}</div>
-    <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.75rem">${hist.length} audit${hist.length===1?"":"s"} recorded on this device</div>
+    <div style="margin-top:0.5rem">${dimTrendHTML}</div>
+    <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">${hist.length} audit${hist.length===1?"":"s"} recorded${thisWeekCount>0?" / "+thisWeekCount+" this week":""}</div>
   </div>`;
 }
 
@@ -380,7 +449,7 @@ function renderResults(){
     const sc=secScores[s.key];const sub=subInsight(s,scores);
     dimHTML+=`<div style="margin-bottom:1.25rem">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.4rem">
-        <span style="font-size:1rem;font-weight:600"><span aria-hidden="true">${s.icon}</span> ${s.label}</span>
+        <span style="font-size:1rem;font-weight:600"><span class="sec-icon" aria-hidden="true">${s.icon}</span> ${s.label}</span>
         <span class="mono" style="font-size:1.2rem;font-weight:700;color:${scoreColor(sc)}">${sc.toFixed(1)}</span>
       </div>
       <div class="dim-bar"><div class="dim-fill" style="width:${(sc/10)*100}%;background:${scoreColor(sc)}"></div></div>
@@ -436,6 +505,7 @@ function renderResults(){
       <div class="label-sm">${isShared?"Their Capacity Score":"Your Capacity Score"}</div>
       <div class="mono" style="font-size:4.5rem;font-weight:700;color:${scoreColor(parseFloat(comp))};line-height:1">${comp}</div>
       <div style="font-size:1.1rem;color:var(--warm);margin-top:0.25rem">${scoreLabel(parseFloat(comp))}</div>
+      <div style="font-size:0.85rem;color:var(--warmMuted);margin-top:0.5rem">${isShared?"Shared result":new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"})+" at "+new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})+(timeframe?" / "+timeframeLabel(timeframe):"")}</div>
     </div>
     <div class="card-lg" style="border-color:rgba(232,98,42,0.07)">
       <div class="label-sm">Dimension Breakdown</div>
@@ -463,7 +533,7 @@ function renderResults(){
       <button class="btn" onclick="startOwnAudit()">Take the Capacity Audit</button>
     </div>`:`
     <div style="text-align:center;margin-bottom:1.5rem">
-      <button class="btn-ghost" style="font-size:1rem" onclick="if(confirm('This will clear all your answers. Are you sure?')){scores={};step=-1;email='';emailSent=false;render();window.scrollTo({top:0,behavior:'smooth'})}">Retake the Capacity Audit</button>
+      <button class="btn-ghost" style="font-size:1rem" onclick="if(confirm('This will clear all your answers. Are you sure?')){scores={};step=-1;email='';emailSent=false;timeframe=null;showTimeframe=false;historyFilter='all';historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}">Retake the Capacity Audit</button>
     </div>
     ${shareRow}
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
@@ -506,7 +576,9 @@ function genPDF(){
   let dims="",habits="";
   SECTIONS.forEach(s=>{dims+=`<div class="dim"><span class="dim-name">${s.icon} ${s.label}</span><span class="dim-score" style="color:${scoreColor(secScores[s.key])}">${secScores[s.key].toFixed(1)}</span></div>`});
   FIVE_CS.forEach(h=>{const action=getAction(h,scores);habits+=`<div class="habit"><div class="habit-name">${h.name}</div><div class="habit-desc">${h.description}</div><div class="insight" style="margin-top:0.5rem;font-size:0.9rem"><strong style="color:#f0864e">Try this:</strong> ${action}</div></div>`});
-  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>C.H.E.A.T. Code Results</title><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Poppins',sans-serif;background:#0a0a0a;color:#ededed;padding:2rem;max-width:600px;margin:0 auto}h1{font-size:1.6rem;font-weight:600;margin-bottom:0.25rem;color:#fff}h2{font-size:1.2rem;font-weight:500;color:#f0864e;margin:1.5rem 0 0.5rem}.score{font-family:'DM Mono',monospace;font-size:3.5rem;font-weight:700;text-align:center;margin:1rem 0 0.25rem}.label{text-align:center;font-size:1rem;color:#ccc5bd;margin-bottom:1.5rem}.dim{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #1a1a1a}.dim-name{font-weight:500}.dim-score{font-family:'DM Mono',monospace;font-weight:700}.insight{background:#161616;border-left:3px solid #e8622a;padding:1rem;margin:1rem 0;border-radius:0 6px 6px 0;line-height:1.6;font-size:0.95rem;color:#9a9692}.habit{background:#161616;padding:1rem;margin:0.5rem 0;border-radius:6px;border:1px solid rgba(232,98,42,0.1)}.habit-name{color:#f0864e;font-weight:500;margin-bottom:0.25rem}.habit-desc{color:#9a9692;font-size:0.9rem;line-height:1.5}.footer{text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid #1a1a1a;font-size:0.8rem;color:#8a8682}.cta{text-align:center;margin:1.5rem 0;padding:1rem;background:#161616;border-radius:8px;border:1px solid rgba(232,98,42,0.15)}.cta a{color:#f0864e;text-decoration:none;font-weight:500}@media print{body{background:#fff;color:#111}h1,h2,.score{color:#111}.dim{border-color:#ddd}.insight,.habit{background:#f5f5f5;border-color:#e8622a}.habit-desc,.insight{color:#444}.footer{color:#999}.cta{background:#f5f5f5}}</style></head><body><h1>The C.H.E.A.T. Code\u2122 Capacity Audit</h1><div style="font-size:0.85rem;color:#8a8682;margin-bottom:1.5rem">Rebellion Collective \u00b7 rebellioncollective.com</div><div class="score" style="color:${scoreColor(parseFloat(comp))}">${comp}</div><div class="label">${scoreLabel(parseFloat(comp))} \u00b7 out of 10</div><h2>Dimension Breakdown</h2>${dims}<div style="margin-top:0.5rem"><strong style="color:#ccc5bd">Most Depleted:</strong> ${dimLabel} (${lowScore.toFixed(1)}/10)</div><h2>What Your Pattern Reveals</h2><div class="insight">${insight}</div><h2>Five Habits</h2>${habits}<div class="cta"><p style="margin-bottom:0.5rem">Ready to go deeper?</p><a href="https://rebellioncollective.com/application-form?utm_source=cheat_diagnostic_pdf">Book a Clarity Call</a> \u00b7 <a href="https://rebellioncollective.com/community?utm_source=cheat_diagnostic_pdf">Join the Rebellion Collective</a></div><div class="footer"><div>The C.H.E.A.T. Code\u2122 Capacity Audit \u00b7 Rebellion Collective</div><div style="margin-top:0.25rem;font-style:italic;color:#9a9692">Be rebellious.</div><div style="margin-top:0.5rem;font-size:0.75rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</div></div></body></html>`;
+  const tfLabel=timeframe?timeframeLabel(timeframe):"";
+  const dateStr=new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>C.H.E.A.T. Code Results</title><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Poppins',sans-serif;background:#0a0a0a;color:#ededed;padding:2rem;max-width:600px;margin:0 auto}h1{font-size:1.6rem;font-weight:600;margin-bottom:0.25rem;color:#fff}h2{font-size:1.2rem;font-weight:500;color:#f0864e;margin:1.5rem 0 0.5rem}.score{font-family:'DM Mono',monospace;font-size:3.5rem;font-weight:700;text-align:center;margin:1rem 0 0.25rem}.label{text-align:center;font-size:1rem;color:#ccc5bd;margin-bottom:0.25rem}.date{text-align:center;font-size:0.85rem;color:#8a8682;margin-bottom:1.5rem}.dim{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #1a1a1a}.dim-name{font-weight:500}.dim-score{font-family:'DM Mono',monospace;font-weight:700}.insight{background:#161616;border-left:3px solid #e8622a;padding:1rem;margin:1rem 0;border-radius:0 6px 6px 0;line-height:1.6;font-size:0.95rem;color:#9a9692}.habit{background:#161616;padding:1rem;margin:0.5rem 0;border-radius:6px;border:1px solid rgba(232,98,42,0.1)}.habit-name{color:#f0864e;font-weight:500;margin-bottom:0.25rem}.habit-desc{color:#9a9692;font-size:0.9rem;line-height:1.5}.footer{text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid #1a1a1a;font-size:0.8rem;color:#8a8682}.cta{text-align:center;margin:1.5rem 0;padding:1rem;background:#161616;border-radius:8px;border:1px solid rgba(232,98,42,0.15)}.cta a{color:#f0864e;text-decoration:none;font-weight:500}@media print{body{background:#fff;color:#111}h1,h2,.score{color:#111}.dim{border-color:#ddd}.insight,.habit{background:#f5f5f5;border-color:#e8622a}.habit-desc,.insight{color:#444}.footer{color:#999}.cta{background:#f5f5f5}}</style></head><body><h1>The C.H.E.A.T. Code\u2122 Capacity Audit</h1><div style="font-size:0.85rem;color:#8a8682;margin-bottom:1.5rem">Rebellion Collective \u00b7 rebellioncollective.com</div><div class="score" style="color:${scoreColor(parseFloat(comp))}">${comp}</div><div class="label">${scoreLabel(parseFloat(comp))} \u00b7 out of 10</div><div class="date">${dateStr}${tfLabel?" \u00b7 "+tfLabel:""}</div><h2>Dimension Breakdown</h2>${dims}<div style="margin-top:0.5rem"><strong style="color:#ccc5bd">Most Depleted:</strong> ${dimLabel} (${lowScore.toFixed(1)}/10)</div><h2>What Your Pattern Reveals</h2><div class="insight">${insight}</div><h2>Five Habits</h2>${habits}<div class="cta"><p style="margin-bottom:0.5rem">Ready to go deeper?</p><a href="https://rebellioncollective.com/application-form?utm_source=cheat_diagnostic_pdf">Book a Clarity Call</a> \u00b7 <a href="https://rebellioncollective.com/community?utm_source=cheat_diagnostic_pdf">Join the Rebellion Collective</a></div><div class="footer"><div>The C.H.E.A.T. Code\u2122 Capacity Audit \u00b7 Rebellion Collective</div><div style="margin-top:0.25rem;font-style:italic;color:#9a9692">Be rebellious.</div><div style="margin-top:0.5rem;font-size:0.75rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</div></div></body></html>`;
   const w=window.open("","_blank");if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),500)}
 }
 
@@ -609,6 +681,7 @@ function generateLocalShareCard(){
 }
 function startOwnAudit(){
   isShared=false;scores={};step=-1;email="";emailSent=false;
+  timeframe=null;showTimeframe=false;historyFilter="all";historySaved=false;
   try{history.replaceState(null,"",window.location.pathname)}catch(e){}
   render();window.scrollTo({top:0,behavior:"smooth"});
 }

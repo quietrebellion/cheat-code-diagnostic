@@ -246,16 +246,16 @@ function renderTimeframe(){
   </button>`).join("");
   app.innerHTML=`<div class="screen" style="justify-content:center">
     <div class="label-sm" style="text-align:center;margin-bottom:1.5rem">Before you begin</div>
+    <div style="padding:1.25rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:500px;text-align:left;margin-bottom:2rem">
+      <div style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--ember);margin-bottom:0.75rem;font-weight:600">How to use this</div>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">This audit works best as a practice, as opposed to a one-time snapshot.</p>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">The more often you check in, the sharper the pattern gets. Three times a day is ideal. Anytime you notice the signals (drained, scattered, short on time, reacting instead of choosing) that\u2019s your cue.</p>
+      <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin-bottom:0.75rem">The data compounds. The pattern reveals itself.</p>
+      <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Capacity+Check-in&details=Take+2+minutes.+Notice+where+your+energy%2C+attention%2C+and+time+are+going.%0A%0Ahttps%3A%2F%2Fcapacityaudit.rebellioncollective.com&recur=RRULE:FREQ%3DDAILY" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.9rem;color:var(--ember);text-decoration:none;border:1px solid rgba(232,98,42,0.3);border-radius:6px;padding:0.4rem 0.75rem;transition:background 0.2s">\uD83D\uDCC5 Set a daily reminder</a>
+    </div>
     <h2 style="font-size:1.4rem;font-weight:500;color:var(--cream);text-align:center;margin-bottom:0.5rem">What timeframe are you auditing?</h2>
     <p style="font-size:0.95rem;color:var(--textMuted);text-align:center;line-height:1.6;margin-bottom:1.5rem">Your answers will reflect a different pattern depending on the lens.</p>
     ${optHTML}
-    <div style="margin-top:2rem;padding:1.25rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:500px;text-align:left">
-      <div style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--ember);margin-bottom:0.75rem;font-weight:600">How to use this</div>
-      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">This audit works best as a practice, as opposed to a one-time snapshot.</p>
-      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Check in three times a day (morning, midday, and evening) to catch your capacity pattern as it shifts. Use <strong style="color:var(--cream)">\u201CRight now\u201D</strong> for each check-in. At the end of the day, take it once more with <strong style="color:var(--cream)">\u201CToday\u201D</strong> to reflect on the full picture.</p>
-      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">And anytime you notice the signals (drained, scattered, short on time, reacting instead of choosing) that\u2019s your cue. Take two minutes. The audit meets you where you are.</p>
-      <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin:0">The data compounds. The pattern reveals itself.</p>
-    </div>
     <button class="btn-ghost" style="margin-top:1rem;font-size:0.9rem" onclick="showTimeframe=false;step=-1;render()">Back</button>
   </div>`;
 }

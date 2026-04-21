@@ -199,7 +199,7 @@ function saveToHistory(sc,secScores,composite){
 function getLastEntry(){const h=loadHistory();return h.length>0?h[h.length-1]:null}
 function formatDate(iso){const d=new Date(iso);return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
 function formatDateTime(iso){const d=new Date(iso);return d.toLocaleDateString("en-US",{month:"short",day:"numeric"})+" "+d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}
-function timeframeLabel(tf){return tf==="right_now"?"Right now":tf==="this_week"?"This week":tf==="past_month"?"Past month":""}
+function timeframeLabel(tf){return tf==="right_now"?"Right now":tf==="today"?"Today":tf==="this_week"?"This week":tf==="past_month"?"Past month":""}
 
 // Share encoding: one char per score in canonical ALL_Q order. 0-9 = 0-9, 'a' = 10.
 const SHARE_KEYS=ALL_Q.map(q=>q.key);
@@ -237,9 +237,8 @@ function render(){
 
 function renderTimeframe(){
   const opts=[
-    {value:"right_now",label:"Right now",desc:"How things stand today"},
-    {value:"this_week",label:"This week",desc:"Your pattern over the past few days"},
-    {value:"past_month",label:"Past month",desc:"The broader shape of the last 30 days"}
+    {value:"right_now",label:"Right now",desc:"A snapshot of your capacity in this moment"},
+    {value:"today",label:"Today",desc:"Reflect on the full shape of your day"}
   ];
   let optHTML=opts.map(o=>`<button class="tf-btn" onclick="timeframe='${o.value}';showTimeframe=false;step=0;render()">
     <div style="font-size:1.1rem;font-weight:500;color:var(--cream)">${o.label}</div>
@@ -247,10 +246,17 @@ function renderTimeframe(){
   </button>`).join("");
   app.innerHTML=`<div class="screen" style="justify-content:center">
     <div class="label-sm" style="text-align:center;margin-bottom:1.5rem">Before you begin</div>
-    <h2 style="font-size:1.4rem;font-weight:500;color:var(--cream);text-align:center;margin-bottom:0.5rem">What timeframe are you responding to?</h2>
+    <h2 style="font-size:1.4rem;font-weight:500;color:var(--cream);text-align:center;margin-bottom:0.5rem">What timeframe are you auditing?</h2>
     <p style="font-size:0.95rem;color:var(--textMuted);text-align:center;line-height:1.6;margin-bottom:1.5rem">Your answers will reflect a different pattern depending on the lens.</p>
     ${optHTML}
-    <button class="btn-ghost" style="margin-top:0.75rem;font-size:0.9rem" onclick="showTimeframe=false;step=-1;render()">Back</button>
+    <div style="margin-top:2rem;padding:1.25rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:500px;text-align:left">
+      <div style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--ember);margin-bottom:0.75rem;font-weight:600">How to use this</div>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">This audit works best as a practice, as opposed to a one-time snapshot.</p>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Check in three times a day (morning, midday, and evening) to catch your capacity pattern as it shifts. Use <strong style="color:var(--cream)">\u201CRight now\u201D</strong> for each check-in. At the end of the day, take it once more with <strong style="color:var(--cream)">\u201CToday\u201D</strong> to reflect on the full picture.</p>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">And anytime you notice the signals (drained, scattered, short on time, reacting instead of choosing) that\u2019s your cue. Take two minutes. The audit meets you where you are.</p>
+      <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin:0">The data compounds. The pattern reveals itself.</p>
+    </div>
+    <button class="btn-ghost" style="margin-top:1rem;font-size:0.9rem" onclick="showTimeframe=false;step=-1;render()">Back</button>
   </div>`;
 }
 
@@ -354,7 +360,7 @@ function renderHistoryCard(currentComp,currentSec){
   if(hist.length<2)return"";
 
   // Filter controls
-  const filterOpts=[{value:"all",label:"All"},{value:"right_now",label:"Right now"},{value:"this_week",label:"This week"},{value:"past_month",label:"Past month"}];
+  const filterOpts=[{value:"all",label:"All"},{value:"right_now",label:"Right now"},{value:"today",label:"Today"}];
   let filterHTML=filterOpts.map(o=>
     `<button class="filter-btn" onclick="historyFilter='${o.value}';renderResults();window.scrollTo({top:document.querySelector('.history-card')?.offsetTop-20||0})" style="border:1px solid ${historyFilter===o.value?'var(--ember)':'rgba(138,134,130,0.2)'};background:${historyFilter===o.value?'rgba(232,98,42,0.15)':'transparent'};color:${historyFilter===o.value?'var(--emberLight)':'var(--warmMuted)'}">${o.label}</button>`
   ).join("");

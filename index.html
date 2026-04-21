@@ -236,26 +236,20 @@ function render(){
 }
 
 function renderTimeframe(){
-  const opts=[
-    {value:"right_now",label:"Right now",desc:"A snapshot of your capacity in this moment"},
-    {value:"today",label:"Today",desc:"Reflect on the full shape of your day"}
-  ];
-  let optHTML=opts.map(o=>`<button class="tf-btn" onclick="timeframe='${o.value}';showTimeframe=false;step=0;render()">
-    <div style="font-size:1.1rem;font-weight:500;color:var(--cream)">${o.label}</div>
-    <div style="font-size:0.9rem;color:var(--textMuted);margin-top:0.15rem">${o.desc}</div>
-  </button>`).join("");
   app.innerHTML=`<div class="screen" style="justify-content:center">
     <div class="label-sm" style="text-align:center;margin-bottom:1.5rem">Before you begin</div>
-    <div style="padding:1.25rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:500px;text-align:left;margin-bottom:2rem">
+    <div style="padding:1.25rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:500px;text-align:left;margin:0 auto 2rem">
       <div style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--ember);margin-bottom:0.75rem;font-weight:600">How to use this</div>
       <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">This audit works best as a practice, as opposed to a one-time snapshot.</p>
-      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">The more often you check in, the sharper the pattern gets. Three times a day is ideal. Anytime you notice the signals (drained, scattered, short on time, reacting instead of choosing) that\u2019s your cue.</p>
-      <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin-bottom:0.75rem">The data compounds. The pattern reveals itself.</p>
-      <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Capacity+Check-in&details=Take+2+minutes.+Notice+where+your+energy%2C+attention%2C+and+time+are+going.%0A%0Ahttps%3A%2F%2Fcapacityaudit.rebellioncollective.com&recur=RRULE:FREQ%3DDAILY" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.9rem;color:var(--ember);text-decoration:none;border:1px solid rgba(232,98,42,0.3);border-radius:6px;padding:0.4rem 0.75rem;transition:background 0.2s">\uD83D\uDCC5 Set a daily reminder</a>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">The more often you check in, the sharper the pattern gets. Three times a day is ideal. Even once a day is enough if that\u2019s all you have. Anytime you notice the signals (drained, scattered, short on time, reacting instead of choosing) that\u2019s your cue.</p>
+      <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin-bottom:1rem">As the data compounds. The patterns reveal themselves.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Capacity+Check-in+%28Morning%29&details=Take+2+minutes.+Notice+where+your+energy%2C+attention%2C+and+time+are+going.%0A%0Ahttps%3A%2F%2Fcapacityaudit.rebellioncollective.com&dates=20260422T090000/20260422T090500&recur=RRULE:FREQ%3DDAILY" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:var(--ember);text-decoration:none;border:1px solid rgba(232,98,42,0.3);border-radius:6px;padding:0.4rem 0.75rem;transition:background 0.2s">\uD83D\uDCC5 Morning</a>
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Capacity+Check-in+%28Midday%29&details=Take+2+minutes.+Notice+where+your+energy%2C+attention%2C+and+time+are+going.%0A%0Ahttps%3A%2F%2Fcapacityaudit.rebellioncollective.com&dates=20260422T130000/20260422T130500&recur=RRULE:FREQ%3DDAILY" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:var(--ember);text-decoration:none;border:1px solid rgba(232,98,42,0.3);border-radius:6px;padding:0.4rem 0.75rem;transition:background 0.2s">\uD83D\uDCC5 Midday</a>
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Capacity+Check-in+%28Evening%29&details=Take+2+minutes.+Notice+where+your+energy%2C+attention%2C+and+time+are+going.%0A%0Ahttps%3A%2F%2Fcapacityaudit.rebellioncollective.com&dates=20260422T180000/20260422T180500&recur=RRULE:FREQ%3DDAILY" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:var(--ember);text-decoration:none;border:1px solid rgba(232,98,42,0.3);border-radius:6px;padding:0.4rem 0.75rem;transition:background 0.2s">\uD83D\uDCC5 Evening</a>
+      </div>
     </div>
-    <h2 style="font-size:1.4rem;font-weight:500;color:var(--cream);text-align:center;margin-bottom:0.5rem">What timeframe are you auditing?</h2>
-    <p style="font-size:0.95rem;color:var(--textMuted);text-align:center;line-height:1.6;margin-bottom:1.5rem">Your answers will reflect a different pattern depending on the lens.</p>
-    ${optHTML}
+    <button class="btn" style="align-self:center" onclick="timeframe='right_now';showTimeframe=false;step=0;render()">Continue</button>
     <button class="btn-ghost" style="margin-top:1rem;font-size:0.9rem" onclick="showTimeframe=false;step=-1;render()">Back</button>
   </div>`;
 }
@@ -264,7 +258,7 @@ function renderIntro(){
   app.innerHTML=`<div class="screen" style="justify-content:center;text-align:center">
     <div style="font-size:1.1rem;text-transform:uppercase;letter-spacing:0.25em;color:var(--ember);margin-bottom:1.5rem;font-weight:600">Rebellion Collective</div>
     <h1 style="font-size:2rem;font-weight:600;color:var(--cream);line-height:1.2;margin-bottom:1.5rem">The C.H.E.A.T. Code\u2122 Capacity Audit</h1>
-<div style="text-align:left;max-width:500px;margin:0 auto 1.5rem">
+    <div style="text-align:left;max-width:500px;margin:0 auto 1.5rem">
       <p style="font-size:1.1rem;color:var(--textMuted);line-height:1.7;margin-bottom:0.8rem">Capacity is the raw material of our life.</p>
       <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">The systems we occupy and habits we practice extract or reclaim our time, energy, and attention every day.</p>
       <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">Understanding how our systems and habits impact our capacity is the key to making choices that support the kind of life we want to live.</p>
@@ -293,7 +287,8 @@ function renderQuestion(){
   const isNew=step===0||(prev&&prev.section.key!==sec.key);
   const val=scores[q.key];const has=val!=null;
   const col=has?C.ember:C.warmMuted;
-  const pct=has?((val/10)*100):50;
+  const rawPct=has?((val/10)*100):50;
+  const pct=rawPct;
   app.innerHTML=`<div class="screen">
     <div style="margin-bottom:1.25rem" role="group" aria-label="Question ${step+1} of ${totalQ}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
@@ -309,8 +304,8 @@ function renderQuestion(){
         <div style="margin-bottom:0.75rem">
           ${!has?'<div class="slide-hint" style="text-align:center;font-size:0.9rem;color:var(--warmMuted);margin-bottom:0.5rem">Slide to rate</div>':""}
           <div class="track">
-            <div class="track-fill" style="width:${has?(pct+"%"):"0%"};background:${has?col:"transparent"}"></div>
-            <div class="thumb" style="left:${pct}%;background:${col};box-shadow:${has?"0 0 10px "+col+"55":"0 0 12px rgba(232,98,42,0.2)"};${!has?"animation:pulseGlow 2s ease infinite":""}"></div>
+            <div class="track-fill" style="width:calc(14px + ${has?pct:0} * (100% - 28px) / 100);background:${has?col:"transparent"}"></div>
+            <div class="thumb" style="left:calc(14px + ${pct} * (100% - 28px) / 100);background:${col};box-shadow:${has?"0 0 10px "+col+"55":"0 0 12px rgba(232,98,42,0.2)"};${!has?"animation:pulseGlow 2s ease infinite":""}"></div>
             <input type="range" min="0" max="10" value="${val??5}" aria-label="${q.question}" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${val??5}" oninput="onSlide(this.value)">
           </div>
           <div aria-live="polite" class="mono" style="text-align:center;font-size:2.5rem;font-weight:700;color:${col};transition:color 0.25s ease">${has?val:"\u2014"}</div>
@@ -333,6 +328,8 @@ function onSlide(v){
   const wasEmpty=scores[key]==null;
   scores[key]=val;
   const pct=(val/10)*100;
+  const calcLeft="calc(14px + "+pct+" * (100% - 28px) / 100)";
+  const calcWidth="calc(14px + "+pct+" * (100% - 28px) / 100)";
   const screen=app.querySelector(".screen");
   if(!screen)return;
   const thumb=screen.querySelector(".thumb");
@@ -340,19 +337,17 @@ function onSlide(v){
   const num=screen.querySelector('[aria-live="polite"]');
   const hint=screen.querySelector(".slide-hint");
   if(wasEmpty){
-    // First touch: activate visuals without full re-render
-    if(thumb){thumb.style.left=pct+"%";thumb.style.background=C.ember;thumb.style.boxShadow="0 0 10px "+C.ember+"55";thumb.style.animation="none"}
-    if(fill){fill.style.width=pct+"%";fill.style.background=C.ember}
+    if(thumb){thumb.style.left=calcLeft;thumb.style.background=C.ember;thumb.style.boxShadow="0 0 10px "+C.ember+"55";thumb.style.animation="none"}
+    if(fill){fill.style.width=calcWidth;fill.style.background=C.ember}
     if(num){num.textContent=val;num.style.color=C.ember}
     if(hint)hint.style.display="none";
-    // Enable the Next button
     const btns=screen.querySelectorAll("button");
     const nextBtn=btns[btns.length-1];
     if(nextBtn&&nextBtn.hasAttribute("disabled")){nextBtn.removeAttribute("disabled");nextBtn.style.color="var(--bg)";nextBtn.style.background="var(--ember)";nextBtn.style.border="none";nextBtn.style.cursor="pointer"}
     return;
   }
-  if(thumb)thumb.style.left=pct+"%";
-  if(fill)fill.style.width=pct+"%";
+  if(thumb)thumb.style.left=calcLeft;
+  if(fill)fill.style.width=calcWidth;
   if(num)num.textContent=val;
 }
 function advance(){if(step<totalQ-1){step++;render()}else{step=totalQ;render();window.scrollTo({top:0,behavior:"smooth"})}}
@@ -361,13 +356,23 @@ function renderHistoryCard(currentComp,currentSec){
   const hist=loadHistory();
   if(hist.length<2)return"";
 
-  // Filter controls
-  const filterOpts=[{value:"all",label:"All"},{value:"right_now",label:"Right now"},{value:"today",label:"Today"}];
+  // Filter controls â time-range based
+  const filterOpts=[{value:"all",label:"All Time"},{value:"today",label:"Today"},{value:"this_week",label:"This Week"},{value:"this_month",label:"This Month"}];
   let filterHTML=filterOpts.map(o=>
     `<button class="filter-btn" onclick="historyFilter='${o.value}';renderResults();window.scrollTo({top:document.querySelector('.history-card')?.offsetTop-20||0})" style="border:1px solid ${historyFilter===o.value?'var(--ember)':'rgba(138,134,130,0.2)'};background:${historyFilter===o.value?'rgba(232,98,42,0.15)':'transparent'};color:${historyFilter===o.value?'var(--emberLight)':'var(--warmMuted)'}">${o.label}</button>`
   ).join("");
 
-  const filtered=historyFilter==="all"?hist:hist.filter(e=>(e.timeframe||"right_now")===historyFilter);
+  const now=new Date();
+  const todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const weekAgoDate=new Date(now-7*24*60*60*1000);
+  const monthAgoDate=new Date(now-30*24*60*60*1000);
+  const filtered=historyFilter==="all"?hist:hist.filter(e=>{
+    const d=new Date(e.date);
+    if(historyFilter==="today")return d>=todayStart;
+    if(historyFilter==="this_week")return d>=weekAgoDate;
+    if(historyFilter==="this_month")return d>=monthAgoDate;
+    return true;
+  });
   if(filtered.length<2){
     return`<div class="card-lg history-card" style="border-color:rgba(232,98,42,0.1)">
       <div class="label-sm">Your Pattern Over Time</div>
@@ -428,14 +433,13 @@ function renderHistoryCard(currentComp,currentSec){
   });
 
   // Weekly count
-  const now=new Date();const weekAgo=new Date(now-7*24*60*60*1000);
-  const thisWeekCount=hist.filter(e=>new Date(e.date)>=weekAgo).length;
+  const thisWeekCount=hist.filter(e=>new Date(e.date)>=weekAgoDate).length;
 
   return`<div class="card-lg history-card" style="border-color:rgba(232,98,42,0.1)">
     <div class="label-sm">Your Pattern Over Time</div>
     <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem">${filterHTML}</div>
     <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
-      <div style="font-size:1rem;color:var(--warm)">Since last${historyFilter!=="all"?" "+timeframeLabel(historyFilter).toLowerCase():""} audit:</div>
+      <div style="font-size:1rem;color:var(--warm)">Since last audit:</div>
       <div class="mono" style="font-size:1.3rem;font-weight:700;color:${deltaColor}">${sign}${delta}</div>
     </div>
     <div style="display:flex;align-items:flex-end;gap:0.3rem;height:80px;margin-bottom:1rem;padding:0 0.15rem;overflow-x:auto">
@@ -480,18 +484,12 @@ function renderResults(){
     </div>`;
   });
 
-  const pdfSection=`
-    <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Save Your Results</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">These are yours. No email required.</p>
-    <button class="btn-outline" onclick="genPDF()" style="font-size:1rem;padding:0.85rem 1.5rem">Download PDF</button>
-  `;
-
   const emailForm=emailSent?`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">You\u2019re in.</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Five dispatches arriving over the next two weeks, one for each habit.</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Your results are saved. Five dispatches arriving over the next two weeks, one for each habit.</p>
   `:`
-    <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Go Deeper</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Five dispatches over the next two weeks, one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
+    <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Save Your Results & Go Deeper</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Enter your email to save your results and receive five dispatches over the next two weeks, one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
     <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
       <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
       <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Start Dispatches</button>
@@ -507,10 +505,14 @@ function renderResults(){
     </div>`:"";
   const shareRow=!isShared?`
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
-      <div class="label-sm" style="margin-bottom:0.4rem">Share your pattern</div>
-      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem">No account, no name, just the numbers.</p>
-      <button class="btn" onclick="copyShareText(this)" style="font-size:1rem;padding:0.85rem 2rem;margin-bottom:0.75rem;width:100%;max-width:320px">Share my results</button>
-      <div><button class="btn-ghost" onclick="downloadShareCard(this)" style="font-size:0.85rem">Download share image</button></div>
+      <div class="label-sm" style="margin-bottom:0.4rem">Download Your Results</div>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1rem">Save a copy to share with others or keep for yourself.</p>
+      <button class="btn-outline" onclick="genPDF()" style="font-size:1rem;padding:0.85rem 1.5rem;margin-bottom:0.75rem;width:100%;max-width:320px">Download PDF</button>
+      <div style="margin-bottom:0.75rem"><button class="btn-outline" onclick="downloadShareCard(this)" style="font-size:0.9rem;padding:0.7rem 1.25rem">Download Share Image</button></div>
+      <div style="border-top:1px solid rgba(232,98,42,0.09);padding-top:1rem;margin-top:0.5rem">
+        <p style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.75rem">Or share a link. No account, no name, just the numbers.</p>
+        <button class="btn" onclick="copyShareText(this)" style="font-size:1rem;padding:0.85rem 2rem;width:100%;max-width:320px">Share my results</button>
+      </div>
     </div>`:"";
   app.innerHTML=`<div class="screen" style="display:block">
     ${sharedBanner}
@@ -518,7 +520,7 @@ function renderResults(){
       <div class="label-sm">${isShared?"Their Capacity Score":"Your Capacity Score"}</div>
       <div class="mono" style="font-size:4.5rem;font-weight:700;color:${scoreColor(parseFloat(comp))};line-height:1">${comp}</div>
       <div style="font-size:1.1rem;color:var(--warm);margin-top:0.25rem">${scoreLabel(parseFloat(comp))}</div>
-      <div style="font-size:0.85rem;color:var(--warmMuted);margin-top:0.5rem">${isShared?"Shared result":new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"})+" at "+new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})+(timeframe?" / "+timeframeLabel(timeframe):"")}</div>
+      <div style="font-size:0.85rem;color:var(--warmMuted);margin-top:0.5rem">${isShared?"Shared result":new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"})+" at "+new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}</div>
     </div>
     <div class="card-lg" style="border-color:rgba(232,98,42,0.07)">
       <div class="label-sm">Dimension Breakdown</div>
@@ -545,13 +547,10 @@ function renderResults(){
       <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">Someone shared theirs so you could see what it looks like. The audit takes two minutes and the shape it surfaces is yours alone.</p>
       <button class="btn" onclick="startOwnAudit()">Take the Capacity Audit</button>
     </div>`:`
-    <div style="text-align:center;margin-bottom:1.5rem">
-      <button class="btn-ghost" style="font-size:1rem" onclick="if(confirm('This will clear all your answers. Are you sure?')){scores={};step=-1;email='';emailSent=false;timeframe=null;showTimeframe=false;historyFilter='all';historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}">Retake the Capacity Audit</button>
+    <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
+      <button class="btn" style="font-size:1.1rem;padding:1rem 2rem;width:100%;max-width:360px" onclick="if(confirm('This will clear all your answers. Are you sure?')){scores={};step=-1;email='';emailSent=false;timeframe=null;showTimeframe=false;historyFilter='all';historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}">Retake the Capacity Audit</button>
     </div>
     ${shareRow}
-    <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
-      ${pdfSection}
-    </div>
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
       ${emailForm}
     </div>`}

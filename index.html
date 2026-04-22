@@ -6,7 +6,7 @@
 <title>The C.H.E.A.T. Code&#8482; Capacity Audit | Rebellion Collective</title>
 <meta name="description" content="Ten questions. Two minutes. Find out where your capacity is being extracted and what to do about it.">
 <!-- OG TAGS: Update these with your hosted URL and image -->
-<meta property="og:title" content="The C.H.E.A.T. Codeâ¢ Capacity Audit">
+<meta property="og:title" content="The C.H.E.A.T. Code™ Capacity Audit">
 <meta property="og:description" content="Ten questions. Two minutes. Find out where your capacity is being extracted.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://capacityaudit.rebellioncollective.com/og-image.png">
@@ -57,6 +57,7 @@ h2.label-sm,h3.label-sm{font-weight:400}
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
 <main id="main"><div class="wrap" id="app"></div></main>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script>
 const CONVERTKIT_FORM_ID="9331134";
 const C={bg:"#0a0a0a",bgCard:"#161616",ember:"#e8622a",emberLight:"#f0864e",warm:"#ccc5bd",warmMuted:"#8a8682",text:"#ededed",textMuted:"#9a9692",cream:"#ffffff",red:"#c44d3f",amber:"#d4a843",green:"#6b9b5e"};
@@ -284,7 +285,7 @@ function renderIntro(){
       <p><a href="https://rebellioncollective.com/manifesto" target="_blank" rel="noopener noreferrer" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Read the manifesto that started it all →</a></p>
   
     <div style="max-width:500px;margin:1.5rem auto 0;padding-top:1rem;border-top:1px solid rgba(232,98,42,0.07)">
-      <p style="font-size:0.8rem;color:var(--warmMuted);line-height:1.5;text-align:center">Your data is stored locally in your browser. It\u2019s private to you and never leaves your device. Clearing your browser cache will erase it.${(()=>{const h=loadHistory();return h.length>0?` <a href="#" onclick="event.preventDefault();if(confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?')){localStorage.removeItem('cheat_audit_history');scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a>`:""})()}</p>
+      <p style="font-size:0.8rem;color:var(--warmMuted);line-height:1.5;text-align:center">Your data is stored locally in your browser. It\u2019s private to you and never leaves your device. Clearing your browser cache will erase it.${(()=>{const h=loadHistory();return h.length>0?` <a href="#" onclick="event.preventDefault();if(confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?')){localStorage.removeItem('cheat_audit_history');localStorage.removeItem('cheat_audit_session');scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a>`:""})()}</p>
     </div>  </div>`;
 }
 
@@ -523,6 +524,7 @@ function renderResults(){
   SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.length===s.questions.length?vals.reduce((a,b)=>a+b,0)/vals.length:null});
   const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
   if(!isShared)saveToHistory(scores,secScores,comp);
+  if(!isShared)try{localStorage.setItem("cheat_audit_session",JSON.stringify({scores:scores,step:10}))}catch(e){}
   const sorted=Object.entries(secScores).sort((a,b)=>a[1]-b[1]);
   const lowDim=sorted[0][0],lowScore=sorted[0][1],highScore=sorted[sorted.length-1][1];
   const sp=(highScore-lowScore).toFixed(1);
@@ -596,6 +598,7 @@ function renderResults(){
     </div>
     ${(!isShared&&renderHistoryCard(parseFloat(comp),secScores))||""}
     ${(!isShared&&renderTrendsCard())||""}
+    ${(!isShared&&loadHistory().length>0)?`<div style="text-align:center;margin-bottom:1.25rem"><button class="btn-outline" onclick="downloadSpreadsheet()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Download Spreadsheet (.xlsx)</button><p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.4rem">${loadHistory().length} audit${loadHistory().length===1?'':'s'} \u00b7 current results + full history</p></div>`:""}
     <div class="card" style="text-align:center;border-color:${scoreColor(lowScore)}33;margin-bottom:1.25rem">
       <h2 class="label-sm" style="margin-bottom:0.4rem">Most Depleted</h2>
       <div style="font-size:1.3rem;font-weight:500;color:${scoreColor(lowScore)}">${dimLabel}</div>
@@ -617,14 +620,14 @@ function renderResults(){
       <button class="btn" onclick="startOwnAudit()">Take the Capacity Audit</button>
     </div>`:`
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
-      <button class="btn" style="font-size:1.1rem;padding:1rem 2rem;width:100%;max-width:360px" onclick="scores={};step=-1;email='';emailSent=false;timeframe=null;showTimeframe=false;historyFilter='all';historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})">Retake the Capacity Audit</button>
+      <button class="btn" style="font-size:1.1rem;padding:1rem 2rem;width:100%;max-width:360px" onclick="try{localStorage.removeItem('cheat_audit_session')}catch(e){}scores={};step=-1;email='';emailSent=false;timeframe=null;showTimeframe=false;historyFilter='all';historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})">Retake the Capacity Audit</button>
     </div>
     ${shareRow}
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
       ${emailForm}
     </div>`}
     <p style="font-size:0.85rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:0.75rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</p>
-    <p style="font-size:0.8rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">Your data is stored locally in your browser. It’s private to you and never leaves your device. Clearing your browser cache will erase it. <a href="#" onclick="event.preventDefault();if(confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?')){localStorage.removeItem('cheat_audit_history');scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a></p>
+    <p style="font-size:0.8rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">Your data is stored locally in your browser. It’s private to you and never leaves your device. Clearing your browser cache will erase it. <a href="#" onclick="event.preventDefault();if(confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?')){localStorage.removeItem('cheat_audit_history');localStorage.removeItem('cheat_audit_session');scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a></p>
     <div style="text-align:center;padding:1.5rem 0;border-top:1px solid rgba(232,98,42,0.07)">
       <div class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em">The C.H.E.A.T. Code\u2122 Capacity Audit</div>
       <a href="https://rebellioncollective.com" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em;display:block;margin-top:0.25rem;text-decoration:none">Rebellion Collective</a>
@@ -672,6 +675,44 @@ function downloadCalendarHolds(){
   a.href=url;a.download='capacity-check-in.ics';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
+function downloadSpreadsheet(){
+  var hist=loadHistory();
+  var wb=XLSX.utils.book_new();
+  // Sheet 1: Current Audit Summary
+  var secScores={};
+  SECTIONS.forEach(function(s){var vals=s.questions.map(function(q){return scores[q.key]}).filter(function(v){return v!=null});secScores[s.key]=vals.reduce(function(a,b){return a+b},0)/vals.length});
+  var comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+  var summaryData=[
+    ["C.H.E.A.T. Code Capacity Audit - Current Results"],
+    ["Date",new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"})],
+    ["Overall Score",parseFloat(comp)],
+    ["Tier",scoreLabel(parseFloat(comp))],
+    [],
+    ["Dimension Averages"],
+    ["Energy",parseFloat(secScores.energy.toFixed(1))],
+    ["Attention",parseFloat(secScores.attention.toFixed(1))],
+    ["Time",parseFloat(secScores.time.toFixed(1))],
+    [],
+    ["Individual Scores"]
+  ];
+  SECTIONS.forEach(function(s){s.questions.forEach(function(q){summaryData.push([q.label,scores[q.key]||0])})});
+  var ws1=XLSX.utils.aoa_to_sheet(summaryData);
+  ws1["!cols"]=[{wch:35},{wch:20}];
+  XLSX.utils.book_append_sheet(wb,ws1,"Current Audit");
+  // Sheet 2: Full History
+  var headers=["Date","Overall","Tier","Energy","Attention","Time"];
+  SECTIONS.forEach(function(s){s.questions.forEach(function(q){headers.push(q.label)})});
+  var histData=[headers];
+  hist.forEach(function(entry){
+    var row=[new Date(entry.date).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"}),entry.composite,scoreLabel(entry.composite),parseFloat((entry.sections.energy||0).toFixed(1)),parseFloat((entry.sections.attention||0).toFixed(1)),parseFloat((entry.sections.time||0).toFixed(1))];
+    SECTIONS.forEach(function(s){s.questions.forEach(function(q){row.push(entry.scores[q.key]||0)})});
+    histData.push(row);
+  });
+  var ws2=XLSX.utils.aoa_to_sheet(histData);
+  ws2["!cols"]=headers.map(function(h){return{wch:Math.max(h.length+2,12)}});
+  XLSX.utils.book_append_sheet(wb,ws2,"History");
+  XLSX.writeFile(wb,"capacity-audit-data.xlsx");
+}
 function genPDF(){
   const secScores={};
   SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.reduce((a,b)=>a+b,0)/vals.length});
@@ -787,12 +828,14 @@ function generateLocalShareCard(){
   });
 }
 function startOwnAudit(){
-  isShared=false;scores={};step=-1;email="";emailSent=false;
+  isShared=false;scores={};step=-1;try{localStorage.removeItem("cheat_audit_session")}catch(e){}email="";emailSent=false;
   timeframe=null;showTimeframe=false;historyFilter="all";historySaved=false;
   try{history.replaceState(null,"",window.location.pathname)}catch(e){}
   render();window.scrollTo({top:0,behavior:"smooth"});
 }
 
+// Restore last session so refresh returns to results
+(function(){try{var s=localStorage.getItem("cheat_audit_session");if(s){var d=JSON.parse(s);if(d.scores&&Object.keys(d.scores).length===10){scores=d.scores;step=d.step||10}}}catch(e){}})();
 render();
 </script>
 </body>

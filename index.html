@@ -617,7 +617,7 @@ function renderResults(){
       <button class="btn" onclick="startOwnAudit()">Take the Capacity Audit</button>
     </div>`:`
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
-      <button class="btn" style="font-size:1.1rem;padding:1rem 2rem;width:100%;max-width:360px" onclick="if(confirm('This will clear all your answers. Are you sure?')){scores={};step=-1;email='';emailSent=false;timeframe=null;showTimeframe=false;historyFilter='all';historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}">Retake the Capacity Audit</button>
+      <button class="btn" style="font-size:1.1rem;padding:1rem 2rem;width:100%;max-width:360px" onclick="scores={};step=-1;email='';emailSent=false;timeframe=null;showTimeframe=false;historyFilter='all';historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})">Retake the Capacity Audit</button>
     </div>
     ${shareRow}
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">

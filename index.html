@@ -710,7 +710,7 @@ function downloadSpreadsheet(){
   });
   var ws2=XLSX.utils.aoa_to_sheet(histData);
   ws2["!cols"]=headers.map(function(h){return{wch:Math.max(h.length+2,12)}});
-  XLSX.utils.book_append_sheet(wb,ws2,"History");
+  XLSX.utils.book_append_sheet(wb,ws2,"Audit History");
   XLSX.writeFile(wb,"capacity-audit-data.xlsx");
 }
 function genPDF(){
@@ -757,7 +757,7 @@ function copyShareLink(btn){
   clipCopy(directURL(),btn,"Copy your link:");
 }
 function copyShareText(btn){
-  const text="I just ran my Capacity Audit. This is the shape mine is in right now. Curious what yours looks like.\n\n"+shareURL();
+  const text="I just ran my C.H.E.A.T. Code\u2122 Capacity Audit. This is the shape my capacity is in right now. Curious what yours looks like. Take the free audit and learn how to reclaim yours.\n\nhttps://capacityaudit.rebellioncollective.com";
   clipCopy(text,btn,"Copy share text:");
 }
 function downloadShareCard(btn){

@@ -265,7 +265,8 @@ function renderIntro(){
     <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Collect data not drama.</p>
     <p style="font-size:1.05rem;color:var(--cream);margin-bottom:1.5rem">Reclaim what\u2019s yours.</p>
     <p style="font-size:1.4rem;font-weight:600;color:var(--ember);margin-bottom:2.5rem">Be Rebellious.</p>
-    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="showTimeframe=true;render()">${(()=>{const last=getLastEntry();return last?"Retake the Audit":"Begin"})()}</button>
+    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="${(()=>{const last=getLastEntry();return last?"timeframe='right_now';showTimeframe=false;step=0;render()":"showTimeframe=true;render()"})()}">${(()=>{const last=getLastEntry();return last?"Retake the Audit":"Begin"})()}</button>
+    ${(()=>{const last=getLastEntry();return last?`<button class="btn-ghost" style="margin-top:0.5rem;font-size:0.85rem" onclick="showTimeframe=true;render()">How to use this</button>`:""})()} 
     ${(()=>{const last=getLastEntry();return last?`<div style="margin-top:1.25rem;padding:1rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:360px;align-self:center">
       <div style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.25rem">Last taken ${formatDate(last.date)}</div>
       <div style="display:flex;align-items:baseline;gap:0.5rem;justify-content:center">
@@ -281,7 +282,10 @@ function renderIntro(){
       <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">This Capacity Audit tells you where your capacity is being drained, how, and what to do about it.</p>
     
       <p><a href="https://rebellioncollective.com/manifesto" target="_blank" rel="noopener noreferrer" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Read the manifesto that started it all →</a></p>
-    </div>`;
+  
+    <div style="max-width:500px;margin:1.5rem auto 0;padding-top:1rem;border-top:1px solid rgba(232,98,42,0.07)">
+      <p style="font-size:0.8rem;color:var(--warmMuted);line-height:1.5;text-align:center">Your data is stored locally in your browser. It\u2019s private to you and never leaves your device. Clearing your browser cache will erase it.${(()=>{const h=loadHistory();return h.length>0?\` <a href="#" onclick="event.preventDefault();if(confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?')){localStorage.removeItem('cheat_audit_history');scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a>\`:""})()\`}</p>
+    </div>  </div>`;
 }
 
 function renderQuestion(){
@@ -453,6 +457,67 @@ function renderHistoryCard(currentComp,currentSec){
   </div>`;
 }
 
+function renderTrendsCard(){
+  const hist=loadHistory();
+  if(hist.length<3)return"";
+  const first=new Date(hist[0].date),last=new Date(hist[hist.length-1].date);
+  const spanDays=Math.round((last-first)/(86400000));
+  const spanLabel=spanDays<1?"today":spanDays<7?spanDays+" day"+(spanDays===1?"":"s"):spanDays<31?Math.round(spanDays/7)+" week"+(Math.round(spanDays/7)===1?"":"s"):Math.round(spanDays/30)+" month"+(Math.round(spanDays/30)===1?"":"s");
+  const W=360,H=120,PAD=28,PB=18;
+  const pts=hist.slice(-30);
+  const xStep=(W-PAD*2)/Math.max(pts.length-1,1);
+  function yPos(v){return PB+(H-PB*2)*(1-v/10)}
+  function makeLine(data,color,dashed){
+    if(data.length<2)return"";
+    let d="M";
+    data.forEach((v,i)=>{d+=(i?"L":"")+(PAD+i*xStep).toFixed(1)+","+yPos(v).toFixed(1)+" "});
+    return`<path d="${d}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"${dashed?' stroke-dasharray="4,3"':""}/>`;
+  }
+  const compLine=makeLine(pts.map(e=>e.composite),C.ember,false);
+  const eLine=makeLine(pts.map(e=>e.sections.energy),C.green,true);
+  const aLine=makeLine(pts.map(e=>e.sections.attention),C.amber,true);
+  const tLine=makeLine(pts.map(e=>e.sections.time),C.red,true);
+  let grid="";
+  [2,4,6,8,10].forEach(v=>{
+    const y=yPos(v);
+    grid+=`<line x1="${PAD}" y1="${y}" x2="${W-PAD}" y2="${y}" stroke="rgba(138,134,130,0.1)" stroke-width="0.5"/>`;
+    grid+=`<text x="${PAD-6}" y="${y+3}" text-anchor="end" fill="rgba(138,134,130,0.4)" font-size="8" font-family="DM Mono,monospace">${v}</text>`;
+  });
+  const lastPt=pts[pts.length-1];
+  const dotX=PAD+(pts.length-1)*xStep,dotY=yPos(lastPt.composite);
+  const dot=`<circle cx="${dotX}" cy="${dotY}" r="3.5" fill="${scoreColor(lastPt.composite)}" stroke="var(--bgCard)" stroke-width="1.5"/>`;
+  const svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;margin-bottom:0.75rem">${grid}${tLine}${aLine}${eLine}${compLine}${dot}</svg>`;
+  const legend=`<div style="display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center;margin-bottom:1rem"><span style="font-size:0.75rem;color:var(--ember)">\u2501 Overall</span><span style="font-size:0.75rem;color:${C.green}">\u254C Energy</span><span style="font-size:0.75rem;color:${C.amber}">\u254C Attention</span><span style="font-size:0.75rem;color:${C.red}">\u254C Time</span></div>`;
+  const recent=pts.slice(-5);
+  const older=pts.slice(0,Math.max(pts.length-5,1));
+  const recentAvg=recent.reduce((s,e)=>s+e.composite,0)/recent.length;
+  const olderAvg=older.reduce((s,e)=>s+e.composite,0)/older.length;
+  const delta=recentAvg-olderAvg;
+  let narrative="";
+  if(Math.abs(delta)<0.3){
+    narrative="Your capacity has been holding steady over the past "+spanLabel+". Stability is data too \u2014 it means your current habits are maintaining the system at this level.";
+  }else if(delta>0){
+    const magWord=delta>1.5?"significantly":"gradually";
+    narrative="Your capacity has been "+magWord+" rising over the past "+spanLabel+". The practices are working. ";
+    const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>b.delta-a.delta);
+    const driver=SECTIONS.find(s=>s.key===dimDeltas[0].key);
+    if(dimDeltas[0].delta>0.5)narrative+=driver.label+" is leading the shift (+"+dimDeltas[0].delta.toFixed(1)+").";
+  }else{
+    const magWord=delta<-1.5?"significantly":"gradually";
+    narrative="Your capacity has been "+magWord+" declining over the past "+spanLabel+". This isn\u2019t a verdict \u2014 it\u2019s signal. ";
+    const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>a.delta-b.delta);
+    const drain=SECTIONS.find(s=>s.key===dimDeltas[0].key);
+    if(dimDeltas[0].delta<-0.5)narrative+=drain.label+" is where the drop is sharpest ("+dimDeltas[0].delta.toFixed(1)+").";
+  }
+  return`<div class="card-lg" style="border-color:rgba(232,98,42,0.13)">
+    <h2 class="label-sm">Trends Analysis</h2>
+    <p style="font-size:0.8rem;color:var(--warmMuted);margin-bottom:0.75rem">${hist.length} audits over ${spanLabel}</p>
+    ${svg}
+    ${legend}
+    <p style="font-size:0.95rem;color:var(--text);line-height:1.6">${narrative}</p>
+  </div>`;
+}
+
 function renderResults(){
   const secScores={};
   SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.length===s.questions.length?vals.reduce((a,b)=>a+b,0)/vals.length:null});
@@ -491,8 +556,8 @@ function renderResults(){
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">You\u2019re in.</p>
     <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Your results are saved. Five dispatches arriving over the next two weeks, one for each habit.</p>
   `:`
-    <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Save Your Results & Go Deeper</p>
-    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Enter your email to save your results and receive five dispatches over the next two weeks, one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
+    <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Go Deeper</p>
+    <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Your results are already saved to this device. Want to go further? Enter your email to receive five dispatches over the next two weeks, one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
     <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
       <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
       <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Start Dispatches</button>
@@ -530,6 +595,7 @@ function renderResults(){
       ${dimHTML}
     </div>
     ${(!isShared&&renderHistoryCard(parseFloat(comp),secScores))||""}
+    ${(!isShared&&renderTrendsCard())||""}
     <div class="card" style="text-align:center;border-color:${scoreColor(lowScore)}33;margin-bottom:1.25rem">
       <h2 class="label-sm" style="margin-bottom:0.4rem">Most Depleted</h2>
       <div style="font-size:1.3rem;font-weight:500;color:${scoreColor(lowScore)}">${dimLabel}</div>
@@ -557,7 +623,8 @@ function renderResults(){
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
       ${emailForm}
     </div>`}
-    <p style="font-size:0.85rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</p>
+    <p style="font-size:0.85rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:0.75rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</p>
+    <p style="font-size:0.8rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">Your data is stored locally in your browser. It’s private to you and never leaves your device. Clearing your browser cache will erase it. <a href="#" onclick="event.preventDefault();if(confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?')){localStorage.removeItem('cheat_audit_history');scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a></p>
     <div style="text-align:center;padding:1.5rem 0;border-top:1px solid rgba(232,98,42,0.07)">
       <div class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em">The C.H.E.A.T. Code\u2122 Capacity Audit</div>
       <a href="https://rebellioncollective.com" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em;display:block;margin-top:0.25rem;text-decoration:none">Rebellion Collective</a>

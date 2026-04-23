@@ -519,15 +519,15 @@ function renderTrendsCard(){
   }else if(delta>0){
     const magWord=delta>1.5?"significantly":"gradually";
     narrative="Your capacity has been "+magWord+" rising over the past "+spanLabel+". The practices are working. ";
-    const sorted=[...dimDeltas].sort((a,b)=>b.delta-a.delta);
-    const driver=SECTIONS.find(s=>s.key===sorted[0].key);
-    if(sorted[0].delta>0.5)narrative+=driver.label+" is leading the shift (+"+dimDeltas[0].delta.toFixed(1)+").";
+    const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>b.delta-a.delta);
+    const driver=SECTIONS.find(s=>s.key===dimDeltas[0].key);
+    if(dimDeltas[0].delta>0.5)narrative+=driver.label+" is leading the shift (+"+dimDeltas[0].delta.toFixed(1)+").";
   }else{
     const magWord=delta<-1.5?"significantly":"gradually";
     narrative="Your capacity has been "+magWord+" declining over the past "+spanLabel+". This isn\u2019t a verdict \u2014 it\u2019s signal. ";
-    const sorted=[...dimDeltas].sort((a,b)=>a.delta-b.delta);
-    const drain=SECTIONS.find(s=>s.key===sorted[0].key);
-    if(sorted[0].delta<-0.5)narrative+=drain.label+" is where the drop is sharpest ("+dimDeltas[0].delta.toFixed(1)+").";
+    const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>a.delta-b.delta);
+    const drain=SECTIONS.find(s=>s.key===dimDeltas[0].key);
+    if(dimDeltas[0].delta<-0.5)narrative+=drain.label+" is where the drop is sharpest ("+dimDeltas[0].delta.toFixed(1)+").";
   }
   return`<div class="card-lg" style="border-color:rgba(232,98,42,0.13)">
     <h2 class="label-sm">Trends Analysis</h2>

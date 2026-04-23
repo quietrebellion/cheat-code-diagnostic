@@ -615,7 +615,7 @@ function renderResults(){
     </div>
     ${(!isShared&&renderHistoryCard(parseFloat(comp),secScores))||""}
     ${(!isShared&&renderTrendsCard())||""}
-    ${(!isShared&&loadHistory().length>0)?`<div style="text-align:center;margin-bottom:1.25rem"><button class="btn-outline" onclick="downloadSpreadsheet()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Download Spreadsheet (.xlsx)</button><p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.4rem">${loadHistory().length} audit${loadHistory().length===1?'':'s'} \u00b7 current results + full history</p></div>`:""})()}
+    ${(!isShared&&loadHistory().length>0)?`<div style="text-align:center;margin-bottom:1.25rem"><button class="btn-outline" onclick="downloadSpreadsheet()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Download Spreadsheet (.xlsx)</button><p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.4rem">${loadHistory().length} audit${loadHistory().length===1?'':'s'} \u00b7 current results + full history</p></div>`:""}
     <div class="card" style="text-align:center;border-color:${scoreColor(lowScore)}33;margin-bottom:1.25rem">
       <h2 class="label-sm" style="margin-bottom:0.4rem">Most Depleted</h2>
       <div style="font-size:1.3rem;font-weight:500;color:${scoreColor(lowScore)}">${dimLabel}</div>

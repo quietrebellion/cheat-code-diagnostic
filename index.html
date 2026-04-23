@@ -262,8 +262,8 @@ function renderTimeframe(){
     <div style="padding:1.25rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:500px;text-align:left;margin:0 auto 2rem">
       <div style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--ember);margin-bottom:0.75rem;font-weight:600">How to use this</div>
       <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">This audit works best as a practice, as opposed to a one-time snapshot.</p>
-      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">The more often you check in, the sharper the pattern gets. Three times a day is ideal. Even once a day is enough if that\u2019s all you have. Anytime you notice the signals (drained, scattered, short on time, reacting instead of choosing) that\u2019s your cue.</p>
-      <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin-bottom:1rem">As the data compounds. The patterns reveal themselves.</p>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Three times a day is ideal. Once a day works if that’s what you’ve got. Anytime you notice the signals — drained, scattered, short on time, reacting instead of choosing — that’s your cue.</p>
+      <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin-bottom:1rem">You’re not looking for a score. You’re looking for what keeps showing up.</p>
       <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Download three daily calendar holds (8am, 12pm, 6pm) to build the habit. Each one is five minutes. Open the file and your calendar app will do the rest.</p>
       <button onclick="downloadCalendarHolds()" style="display:inline-flex;align-items:center;gap:0.5rem;font-family:inherit;font-size:0.9rem;font-weight:500;color:var(--ember);background:transparent;text-decoration:none;border:1px solid rgba(232,98,42,0.3);border-radius:6px;padding:0.5rem 1rem;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='rgba(232,98,42,0.08)'" onmouseout="this.style.background='transparent'">📅 Download Calendar Holds</button>
       </div>
@@ -577,8 +577,8 @@ function renderResults(){
   `:`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Go Deeper</p>
     <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Your results are already saved to this device. Want to go further? Enter your email to receive five dispatches over the next two weeks, one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
-    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;margin:0 auto 0.75rem">
-      <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;width:100%;box-sizing:border-box;margin:0 auto 0.75rem">
+      <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;min-width:0;max-width:100%;box-sizing:border-box;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
       <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Start Dispatches</button>
     </div>
     <p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">One-click unsubscribe. Always.</p>

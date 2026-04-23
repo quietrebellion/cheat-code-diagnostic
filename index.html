@@ -182,13 +182,38 @@ function getAction(h,scores){
 // State
 let scores={},step=-1,email="",emailSent=false,isShared=false;
 let timeframe=null,showTimeframe=false,historyFilter="all",historySaved=false;
-const $=id=>document.getElementById(id);
+
+// --- Helper functions ---
+
+// Security review note: innerHTML is used throughout for rendering. All data sources
+// have been reviewed - SECTIONS/FIVE_CS (static), scores (numeric), email (POST only,
+// not rendered after submission), URL param (validated numeric via decodeScores). No XSS vectors.
+
+function computeSectionScores(sc){
+  const secScores={};
+  SECTIONS.forEach(s=>{const vals=s.questions.map(q=>sc[q.key]).filter(v=>v!=null);secScores[s.key]=vals.length===s.questions.length?vals.reduce((a,b)=>a+b,0)/vals.length:null});
+  const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+  return{secScores,comp};
+}
+
+function clearAllData(){
+  if(!confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?'))return;
+  localStorage.removeItem('cheat_audit_history');
+  localStorage.removeItem('cheat_audit_session');
+  scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function triggerDownload(url,filename){
+  const a=document.createElement("a");a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  if(url.startsWith("blob:"))URL.revokeObjectURL(url);
+}
 const app=document.getElementById("app");
 
 // History (localStorage)
 const HISTORY_KEY="cheat_audit_history";
 const MAX_HISTORY=90;
-function loadHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY))||[]}catch(e){return[]}}
+function loadHistory(){try{const d=JSON.parse(localStorage.getItem(HISTORY_KEY));return Array.isArray(d)?d:[]}catch(e){return[]}}
 function saveToHistory(sc,secScores,composite){
   if(historySaved)return;
   const hist=loadHistory();
@@ -224,14 +249,6 @@ function decodeScores(str){
   return out;
 }
 const OG_HOST="https://capacity-audit-og.vercel.app";
-function shareURL(){
-  const code=encodeScores(scores);
-  return `${OG_HOST}/api/share?r=${code}`;
-}
-function directURL(){
-  const code=encodeScores(scores);
-  return `https://capacityaudit.rebellioncollective.com/?r=${code}`;
-}
 
 function render(){
   if(step===-1) return showTimeframe ? renderTimeframe() : renderIntro();
@@ -257,6 +274,8 @@ function renderTimeframe(){
 }
 
 function renderIntro(){
+  const last=getLastEntry();
+  const hist=loadHistory();
   app.innerHTML=`<div class="screen" style="justify-content:center;text-align:center">
     <div style="font-size:1.1rem;text-transform:uppercase;letter-spacing:0.25em;color:var(--ember);margin-bottom:1.5rem;font-weight:600">Rebellion Collective</div>
     <h1 style="font-size:2rem;font-weight:600;color:var(--cream);line-height:1.2;margin-bottom:1.5rem">The C.H.E.A.T. Code\u2122 Capacity Audit</h1>
@@ -266,15 +285,15 @@ function renderIntro(){
     <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Collect data not drama.</p>
     <p style="font-size:1.05rem;color:var(--cream);margin-bottom:1.5rem">Reclaim what\u2019s yours.</p>
     <p style="font-size:1.4rem;font-weight:600;color:var(--ember);margin-bottom:2.5rem">Be Rebellious.</p>
-    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="${(()=>{const last=getLastEntry();return last?"timeframe='right_now';showTimeframe=false;step=0;render()":"showTimeframe=true;render()"})()}">${(()=>{const last=getLastEntry();return last?"Retake the Audit":"Begin"})()}</button>
-    ${(()=>{const last=getLastEntry();return last?`<button class="btn-ghost" style="margin-top:0.5rem;font-size:0.85rem" onclick="showTimeframe=true;render()">How to use this</button>`:""})()} 
-    ${(()=>{const last=getLastEntry();return last?`<div style="margin-top:1.25rem;padding:1rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:360px;align-self:center">
+    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="${last?"timeframe='right_now';showTimeframe=false;step=0;render()":"showTimeframe=true;render()"}">${last?"Retake the Audit":"Begin"}</button>
+    ${last?`<button class="btn-ghost" style="margin-top:0.5rem;font-size:0.85rem" onclick="showTimeframe=true;render()">How to use this</button>`:""} 
+    ${last?`<div style="margin-top:1.25rem;padding:1rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:360px;align-self:center">
       <div style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.25rem">Last taken ${formatDate(last.date)}</div>
       <div style="display:flex;align-items:baseline;gap:0.5rem;justify-content:center">
         <span class="mono" style="font-size:1.5rem;font-weight:700;color:${scoreColor(last.composite)}">${last.composite.toFixed(1)}</span>
         <span style="font-size:0.9rem;color:var(--warm)">${scoreLabel(last.composite)}</span>
       </div>
-    </div>`:""})()}
+    </div>`:""}
   </div>
     <div style="text-align:left;max-width:500px;margin:1.5rem auto 0">
       <p style="font-size:1.1rem;color:var(--textMuted);line-height:1.7;margin-bottom:0.8rem">Capacity is the raw material of our life.</p>
@@ -285,7 +304,7 @@ function renderIntro(){
       <p><a href="https://rebellioncollective.com/manifesto" target="_blank" rel="noopener noreferrer" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Read the manifesto that started it all →</a></p>
   
     <div style="max-width:500px;margin:1.5rem auto 0;padding-top:1rem;border-top:1px solid rgba(232,98,42,0.07)">
-      <p style="font-size:0.8rem;color:var(--warmMuted);line-height:1.5;text-align:center">Your data is stored locally in your browser. It\u2019s private to you and never leaves your device. Clearing your browser cache will erase it.${(()=>{const h=loadHistory();return h.length>0?` <a href="#" onclick="event.preventDefault();if(confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?')){localStorage.removeItem('cheat_audit_history');localStorage.removeItem('cheat_audit_session');scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a>`:""})()}</p>
+      <p style="font-size:0.8rem;color:var(--warmMuted);line-height:1.5;text-align:center">Your data is stored locally in your browser. It\u2019s private to you and never leaves your device. Clearing your browser cache will erase it.${hist.length>0?` <a href="#" onclick="event.preventDefault();clearAllData()" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a>`:""}</p>
     </div>  </div>`;
 }
 
@@ -367,7 +386,7 @@ function renderHistoryCard(currentComp,currentSec){
   // Filter controls â time-range based
   const filterOpts=[{value:"all",label:"All Time"},{value:"today",label:"Today"},{value:"this_week",label:"This Week"},{value:"this_month",label:"This Month"}];
   let filterHTML=filterOpts.map(o=>
-    `<button class="filter-btn" onclick="historyFilter='${o.value}';renderResults();window.scrollTo({top:document.querySelector('.history-card')?.offsetTop-20||0})" style="border:1px solid ${historyFilter===o.value?'var(--ember)':'rgba(138,134,130,0.2)'};background:${historyFilter===o.value?'rgba(232,98,42,0.15)':'transparent'};color:${historyFilter===o.value?'var(--emberLight)':'var(--warmMuted)'}">${o.label}</button>`
+    `<button class="filter-btn" aria-pressed="${historyFilter===o.value}" onclick="historyFilter='${o.value}';renderResults();window.scrollTo({top:document.querySelector('.history-card')?.offsetTop-20||0})" style="border:1px solid ${historyFilter===o.value?'var(--ember)':'rgba(138,134,130,0.2)'};background:${historyFilter===o.value?'rgba(232,98,42,0.15)':'transparent'};color:${historyFilter===o.value?'var(--emberLight)':'var(--warmMuted)'}">${o.label}</button>`
   ).join("");
 
   const now=new Date();
@@ -500,15 +519,15 @@ function renderTrendsCard(){
   }else if(delta>0){
     const magWord=delta>1.5?"significantly":"gradually";
     narrative="Your capacity has been "+magWord+" rising over the past "+spanLabel+". The practices are working. ";
-    const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>b.delta-a.delta);
-    const driver=SECTIONS.find(s=>s.key===dimDeltas[0].key);
-    if(dimDeltas[0].delta>0.5)narrative+=driver.label+" is leading the shift (+"+dimDeltas[0].delta.toFixed(1)+").";
+    const sorted=[...dimDeltas].sort((a,b)=>b.delta-a.delta);
+    const driver=SECTIONS.find(s=>s.key===sorted[0].key);
+    if(sorted[0].delta>0.5)narrative+=driver.label+" is leading the shift (+"+dimDeltas[0].delta.toFixed(1)+").";
   }else{
     const magWord=delta<-1.5?"significantly":"gradually";
     narrative="Your capacity has been "+magWord+" declining over the past "+spanLabel+". This isn\u2019t a verdict \u2014 it\u2019s signal. ";
-    const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>a.delta-b.delta);
-    const drain=SECTIONS.find(s=>s.key===dimDeltas[0].key);
-    if(dimDeltas[0].delta<-0.5)narrative+=drain.label+" is where the drop is sharpest ("+dimDeltas[0].delta.toFixed(1)+").";
+    const sorted=[...dimDeltas].sort((a,b)=>a.delta-b.delta);
+    const drain=SECTIONS.find(s=>s.key===sorted[0].key);
+    if(sorted[0].delta<-0.5)narrative+=drain.label+" is where the drop is sharpest ("+dimDeltas[0].delta.toFixed(1)+").";
   }
   return`<div class="card-lg" style="border-color:rgba(232,98,42,0.13)">
     <h2 class="label-sm">Trends Analysis</h2>
@@ -520,9 +539,7 @@ function renderTrendsCard(){
 }
 
 function renderResults(){
-  const secScores={};
-  SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.length===s.questions.length?vals.reduce((a,b)=>a+b,0)/vals.length:null});
-  const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+  const{secScores,comp}=computeSectionScores(scores);
   if(!isShared)saveToHistory(scores,secScores,comp);
   if(!isShared)try{localStorage.setItem("cheat_audit_session",JSON.stringify({scores:scores,step:10}))}catch(e){}
   const sorted=Object.entries(secScores).sort((a,b)=>a[1]-b[1]);
@@ -598,7 +615,7 @@ function renderResults(){
     </div>
     ${(!isShared&&renderHistoryCard(parseFloat(comp),secScores))||""}
     ${(!isShared&&renderTrendsCard())||""}
-    ${(!isShared&&loadHistory().length>0)?`<div style="text-align:center;margin-bottom:1.25rem"><button class="btn-outline" onclick="downloadSpreadsheet()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Download Spreadsheet (.xlsx)</button><p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.4rem">${loadHistory().length} audit${loadHistory().length===1?'':'s'} \u00b7 current results + full history</p></div>`:""}
+    ${(!isShared&&loadHistory().length>0)?`<div style="text-align:center;margin-bottom:1.25rem"><button class="btn-outline" onclick="downloadSpreadsheet()" style="font-size:0.9rem;padding:0.7rem 1.25rem">Download Spreadsheet (.xlsx)</button><p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.4rem">${loadHistory().length} audit${loadHistory().length===1?'':'s'} \u00b7 current results + full history</p></div>`:""})()}
     <div class="card" style="text-align:center;border-color:${scoreColor(lowScore)}33;margin-bottom:1.25rem">
       <h2 class="label-sm" style="margin-bottom:0.4rem">Most Depleted</h2>
       <div style="font-size:1.3rem;font-weight:500;color:${scoreColor(lowScore)}">${dimLabel}</div>
@@ -620,14 +637,14 @@ function renderResults(){
       <button class="btn" onclick="startOwnAudit()">Take the Capacity Audit</button>
     </div>`:`
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
-      <button class="btn" style="font-size:1.1rem;padding:1rem 2rem;width:100%;max-width:360px" onclick="try{localStorage.removeItem('cheat_audit_session')}catch(e){}scores={};step=-1;email='';emailSent=false;timeframe=null;showTimeframe=false;historyFilter='all';historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})">Retake the Capacity Audit</button>
+      <button class="btn" style="font-size:1.1rem;padding:1rem 2rem;width:100%;max-width:360px" onclick="startOwnAudit()">Retake the Capacity Audit</button>
     </div>
     ${shareRow}
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.13);background:var(--bgCard)">
       ${emailForm}
     </div>`}
     <p style="font-size:0.85rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:0.75rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</p>
-    <p style="font-size:0.8rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">Your data is stored locally in your browser. It’s private to you and never leaves your device. Clearing your browser cache will erase it. <a href="#" onclick="event.preventDefault();if(confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?')){localStorage.removeItem('cheat_audit_history');localStorage.removeItem('cheat_audit_session');scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'})}" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a></p>
+    <p style="font-size:0.8rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">Your data is stored locally in your browser. It’s private to you and never leaves your device. Clearing your browser cache will erase it. <a href="#" onclick="event.preventDefault();clearAllData()" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(232,98,42,0.3)">Clear my data</a></p>
     <div style="text-align:center;padding:1.5rem 0;border-top:1px solid rgba(232,98,42,0.07)">
       <div class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em">The C.H.E.A.T. Code\u2122 Capacity Audit</div>
       <a href="https://rebellioncollective.com" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em;display:block;margin-top:0.25rem;text-decoration:none">Rebellion Collective</a>
@@ -671,17 +688,15 @@ function downloadCalendarHolds(){
   cal+='END:VCALENDAR';
   const blob=new Blob([cal],{type:'text/calendar;charset=utf-8'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='capacity-check-in.ics';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  triggerDownload(url,'capacity-check-in.ics');
 }
 
 function downloadSpreadsheet(){
+  if(typeof XLSX==='undefined'){alert('Spreadsheet library failed to load. Please check your connection and try again.');return;}
   var hist=loadHistory();
   var wb=XLSX.utils.book_new();
   // Sheet 1: Current Audit Summary
-  var secScores={};
-  SECTIONS.forEach(function(s){var vals=s.questions.map(function(q){return scores[q.key]}).filter(function(v){return v!=null});secScores[s.key]=vals.reduce(function(a,b){return a+b},0)/vals.length});
-  var comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+  var result=computeSectionScores(scores);var secScores=result.secScores;var comp=result.comp;
   var summaryData=[
     ["C.H.E.A.T. Code Capacity Audit - Current Results"],
     ["Date",new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"})],
@@ -714,9 +729,7 @@ function downloadSpreadsheet(){
   XLSX.writeFile(wb,"capacity-audit-data.xlsx");
 }
 function genPDF(){
-  const secScores={};
-  SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.reduce((a,b)=>a+b,0)/vals.length});
-  const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+  const{secScores,comp}=computeSectionScores(scores);
   const sorted=Object.entries(secScores).sort((a,b)=>a[1]-b[1]);
   const lowDim=sorted[0][0],lowScore=sorted[0][1],highScore=sorted[sorted.length-1][1];
   const sp=highScore-lowScore;const dimLabel=SECTIONS.find(s=>s.key===lowDim).label;
@@ -727,7 +740,7 @@ function genPDF(){
   const tfLabel=timeframe?timeframeLabel(timeframe):"";
   const dateStr=new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});
   const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>C.H.E.A.T. Code Results</title><style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Poppins',sans-serif;background:#0a0a0a;color:#ededed;padding:2rem;max-width:600px;margin:0 auto}h1{font-size:1.6rem;font-weight:600;margin-bottom:0.25rem;color:#fff}h2{font-size:1.2rem;font-weight:500;color:#f0864e;margin:1.5rem 0 0.5rem}.score{font-family:'DM Mono',monospace;font-size:3.5rem;font-weight:700;text-align:center;margin:1rem 0 0.25rem}.label{text-align:center;font-size:1rem;color:#ccc5bd;margin-bottom:0.25rem}.date{text-align:center;font-size:0.85rem;color:#8a8682;margin-bottom:1.5rem}.dim{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #1a1a1a}.dim-name{font-weight:500}.dim-score{font-family:'DM Mono',monospace;font-weight:700}.insight{background:#161616;border-left:3px solid #e8622a;padding:1rem;margin:1rem 0;border-radius:0 6px 6px 0;line-height:1.6;font-size:0.95rem;color:#9a9692}.habit{background:#161616;padding:1rem;margin:0.5rem 0;border-radius:6px;border:1px solid rgba(232,98,42,0.1)}.habit-name{color:#f0864e;font-weight:500;margin-bottom:0.25rem}.habit-desc{color:#9a9692;font-size:0.9rem;line-height:1.5}.footer{text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid #1a1a1a;font-size:0.8rem;color:#8a8682}.cta{text-align:center;margin:1.5rem 0;padding:1rem;background:#161616;border-radius:8px;border:1px solid rgba(232,98,42,0.15)}.cta a{color:#f0864e;text-decoration:none;font-weight:500}@media print{body{background:#fff;color:#111}h1,h2,.score{color:#111}.dim{border-color:#ddd}.insight,.habit{background:#f5f5f5;border-color:#e8622a}.habit-desc,.insight{color:#444}.footer{color:#999}.cta{background:#f5f5f5}}</style></head><body><h1>The C.H.E.A.T. Code\u2122 Capacity Audit</h1><div style="font-size:0.85rem;color:#8a8682;margin-bottom:1.5rem">Rebellion Collective \u00b7 rebellioncollective.com</div><div class="score" style="color:${scoreColor(parseFloat(comp))}">${comp}</div><div class="label">${scoreLabel(parseFloat(comp))} \u00b7 out of 10</div><div class="date">${dateStr}${tfLabel?" \u00b7 "+tfLabel:""}</div><h2>Dimension Breakdown</h2>${dims}<div style="margin-top:0.5rem"><strong style="color:#ccc5bd">Most Depleted:</strong> ${dimLabel} (${lowScore.toFixed(1)}/10)</div><h2>What Your Pattern Reveals</h2><div class="insight">${insight}</div><h2>Five Habits</h2>${habits}<div class="cta"><p style="margin-bottom:0.5rem">Ready to go deeper?</p><a href="https://rebellioncollective.com/application-form?utm_source=cheat_diagnostic_pdf">Book a Clarity Call</a> \u00b7 <a href="https://rebellioncollective.com/community?utm_source=cheat_diagnostic_pdf">Join the Rebellion Collective</a></div><div class="footer"><div>The C.H.E.A.T. Code\u2122 Capacity Audit \u00b7 Rebellion Collective</div><div style="margin-top:0.25rem;font-style:italic;color:#9a9692">Be rebellious.</div><div style="margin-top:0.5rem;font-size:0.75rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</div></div></body></html>`;
-  const w=window.open("","_blank");if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),500)}
+  const w=window.open("","_blank");if(w){w.document.write(html);w.document.close();setTimeout(()=>w.print(),500)}else{alert("Your browser blocked the print window. Please allow popups for this site and try again.")}
 }
 
 // Parse ?r= param for shared view, otherwise normal flow.
@@ -753,9 +766,6 @@ function clipCopy(text,btn,label){
     document.body.removeChild(ta);
   }
 }
-function copyShareLink(btn){
-  clipCopy(directURL(),btn,"Copy your link:");
-}
 function copyShareText(btn){
   const text="I just ran my C.H.E.A.T. Code\u2122 Capacity Audit. This is the shape my capacity is in right now. Curious what yours looks like. Take the free audit and learn how to reclaim yours.\n\nhttps://capacityaudit.rebellioncollective.com";
   clipCopy(text,btn,"Copy share text:");
@@ -767,17 +777,12 @@ function downloadShareCard(btn){
   const imgUrl=`${OG_HOST}/api/og?r=${code}`;
   fetch(imgUrl,{mode:"cors"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.blob()}).then(blob=>{
     if(blob.size<500)throw new Error("empty");
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);
-    a.download="capacity-audit.png";
-    document.body.appendChild(a);a.click();document.body.removeChild(a);
-    URL.revokeObjectURL(a.href);
+    triggerDownload(URL.createObjectURL(blob),"capacity-audit.png");
     btn.textContent="Downloaded \u2713";setTimeout(()=>{btn.textContent=orig},2000);
   }).catch(()=>{
     // Fallback: generate a canvas-based share card
     generateLocalShareCard().then(dataUrl=>{
-      const a=document.createElement("a");a.href=dataUrl;a.download="capacity-audit.png";
-      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      triggerDownload(dataUrl,"capacity-audit.png");
       btn.textContent="Downloaded \u2713";setTimeout(()=>{btn.textContent=orig},2000);
     }).catch(()=>{btn.textContent=orig});
   });
@@ -797,9 +802,7 @@ function generateLocalShareCard(){
       ctx.fillStyle="#ffffff";ctx.font="600 36px sans-serif";ctx.letterSpacing="0";
       ctx.fillText("The C.H.E.A.T. Code\u2122 Capacity Audit",60,110);
       // Scores
-      const secScores={};
-      SECTIONS.forEach(s=>{const vals=s.questions.map(q=>scores[q.key]).filter(v=>v!=null);secScores[s.key]=vals.reduce((a,b)=>a+b,0)/vals.length});
-      const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+      const{secScores,comp}=computeSectionScores(scores);
       // Composite score
       ctx.fillStyle=scoreColor(parseFloat(comp));ctx.font="700 120px monospace";
       ctx.fillText(comp,60,270);

@@ -667,29 +667,7 @@ async function submitEmail(){
   try{await fetch("https://app.convertkit.com/forms/"+CONVERTKIT_FORM_ID+"/subscriptions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email_address:email})})}catch(e){}
 }
 
-function downloadCalendarHolds(){
-  const pad=n=>String(n).padStart(2,'0');
-  const now=new Date();
-  const y=now.getFullYear(),m=pad(now.getMonth()+1),d=pad(now.getDate());
-  const stamp=y+m+d+'T'+pad(now.getHours())+pad(now.getMinutes())+pad(now.getSeconds());
-  const times=[{h:'08',label:'Morning'},{h:'12',label:'Midday'},{h:'18',label:'Evening'}];
-  let cal='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Rebellion Collective//Capacity Audit//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n';
-  times.forEach((t,i)=>{
-    cal+='BEGIN:VEVENT\r\n';
-    cal+='DTSTART:'+y+m+d+'T'+t.h+'0000\r\n';
-    cal+='DTEND:'+y+m+d+'T'+t.h+'0500\r\n';
-    cal+='RRULE:FREQ=DAILY\r\n';
-    cal+='SUMMARY:Capacity Check-in ('+t.label+')\r\n';
-    cal+='DESCRIPTION:Take 2 minutes. Notice where your energy\\, attention\\, and time are going.\\nhttps://capacityaudit.rebellioncollective.com\r\n';
-    cal+='UID:capacity-audit-'+t.label.toLowerCase()+'-'+stamp+'@rebellioncollective.com\r\n';
-    cal+='BEGIN:VALARM\r\nTRIGGER:-PT1M\r\nACTION:DISPLAY\r\nDESCRIPTION:Capacity Check-in\r\nEND:VALARM\r\n';
-    cal+='END:VEVENT\r\n';
-  });
-  cal+='END:VCALENDAR';
-  const blob=new Blob([cal],{type:'text/calendar;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  triggerDownload(url,'capacity-check-in.ics');
-}
+function downloadCalendarHolds(){const pad=n=>String(n).padStart(2,'0');const now=new Date();const y=now.getFullYear(),m=pad(now.getMonth()+1),d=pad(now.getDate());const stamp=y+m+d+'T'+pad(now.getHours())+pad(now.getMinutes())+pad(now.getSeconds());const times=[{h:'08',label:'Morning'},{h:'12',label:'Midday'},{h:'18',label:'Evening'}];let cal='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Rebellion Collective//Capacity Audit//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n';times.forEach((t,i)=>{cal+='BEGIN:VEVENT\r\n';cal+='DTSTART:'+y+m+d+'T'+t.h+'0000\r\n';cal+='DTEND:'+y+m+d+'T'+t.h+'0500\r\n';cal+='RRULE:FREQ=DAILY\r\n';cal+='SUMMARY:Capacity Check-in ('+t.label+')\r\n';cal+='DESCRIPTION:Take 2 minutes. Notice where your energy\\, attention\\, and time are going.\\nhttps://capacityaudit.rebellioncollective.com\r\n';cal+='UID:capacity-audit-'+t.label.toLowerCase()+'-'+stamp+'@rebellioncollective.com\r\n';cal+='BEGIN:VALARM\r\nTRIGGER:-PT1M\r\nACTION:DISPLAY\r\nDESCRIPTION:Capacity Check-in\r\nEND:VALARM\r\n';cal+='END:VEVENT\r\n'});cal+='END:VCALENDAR';const blob=new Blob([cal],{type:'text/calendar;charset=utf-8'});const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);if(isMobile){const reader=new FileReader();reader.onload=function(){const a=document.createElement('a');a.href=reader.result;a.download='capacity-check-in.ics';a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a)};reader.readAsDataURL(blob)}else{const url=URL.createObjectURL(blob);triggerDownload(url,'capacity-check-in.ics')}}
 
 function downloadSpreadsheet(){
   if(typeof XLSX==='undefined'){alert('Spreadsheet library failed to load. Please check your connection and try again.');return;}
@@ -766,10 +744,7 @@ function clipCopy(text,btn,label){
     document.body.removeChild(ta);
   }
 }
-function copyShareText(btn){
-  const text="I just ran my C.H.E.A.T. Code\u2122 Capacity Audit. This is the shape my capacity is in right now. Curious what yours looks like. Take the free audit and learn how to reclaim yours.\n\nhttps://capacityaudit.rebellioncollective.com";
-  clipCopy(text,btn,"Copy share text:");
-}
+function copyShareText(btn){const encoded=encodeScores(scores);const url="https://capacityaudit.rebellioncollective.com"+(encoded?"?r="+encoded:"");const text="I just ran my C.H.E.A.T. Code\u2122 Capacity Audit. Curious what yours looks like.\n\n"+url;clipCopy(text,btn,"Copy share text:")}
 function downloadShareCard(btn){
   const orig=btn.textContent;
   btn.textContent="Generating\u2026";

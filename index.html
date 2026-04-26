@@ -15,6 +15,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0a;--bgCard:#161616;--ember:#e8622a;--emberLight:#f0864e;--warm:#ccc5bd;--warmMuted:#8a8682;--text:#ededed;--textMuted:#9a9692;--cream:#fff;--red:#c44d3f;--amber:#d4a843;--green:#6b9b5e}
+body.parchment{--bg:#f0e8da;--bgCard:#faf6ef;--ember:#a85520;--emberLight:#a85520;--warm:#3a3420;--warmMuted:#6b6350;--text:#2c2610;--textMuted:#4a4230;--cream:#2c2610;--red:#b5453a;--amber:#b8922e;--green:#5a8a3d}
+body.parchment .card,body.parchment .card-lg{background:var(--bgCard);border-color:rgba(180,160,120,0.2)!important;box-shadow:0 1px 2px rgba(0,0,0,0.03)}
+body.parchment .try-this{border-left-color:rgba(168,85,32,0.25)!important;background:rgba(168,85,32,0.04)!important;color:#4a4230}
+body.parchment .dim-bar{background:rgba(168,85,32,0.08)}
+body.parchment .btn{color:#faf6ef}
+body.parchment .btn-outline{color:var(--ember);border-color:rgba(168,85,32,0.3)!important}
+body.parchment input[type="email"]{background:#faf6ef!important;border-color:rgba(180,160,120,0.3)!important;color:#2c2610!important}
+body.parchment input[type="email"]:focus{border-color:#a85520!important}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -61,6 +69,9 @@ h2.label-sm,h3.label-sm{font-weight:400}
 <script>
 const CONVERTKIT_FORM_ID="9331134";
 const C={bg:"#0a0a0a",bgCard:"#161616",ember:"#e8622a",emberLight:"#f0864e",warm:"#ccc5bd",warmMuted:"#8a8682",text:"#ededed",textMuted:"#9a9692",cream:"#ffffff",red:"#c44d3f",amber:"#d4a843",green:"#6b9b5e"};
+const DARK={bg:"#0a0a0a",bgCard:"#161616",ember:"#e8622a",emberLight:"#f0864e",warm:"#ccc5bd",warmMuted:"#8a8682",text:"#ededed",textMuted:"#9a9692",cream:"#ffffff",red:"#c44d3f",amber:"#d4a843",green:"#6b9b5e"};
+const PARCH={bg:"#f0e8da",bgCard:"#faf6ef",ember:"#a85520",emberLight:"#a85520",warm:"#3a3420",warmMuted:"#6b6350",text:"#2c2610",textMuted:"#4a4230",cream:"#2c2610",red:"#b5453a",amber:"#b8922e",green:"#5a8a3d"};
+function setTheme(t){Object.assign(C,t);document.body.classList.toggle("parchment",t===PARCH)}
 const SECTIONS=[
 {key:"energy",label:"Energy",icon:"\u26A1",intro:"Energy lives in four domains: mental, physical, emotional, and alignment (the felt sense that your energy is going where it matters). When one collapses, the others compensate until they can\u2019t.",questions:[
 {key:"mental",label:"Mental Energy",question:"How clear is your thinking right now?",low:"Foggy. Too many tabs open in my head.",high:"Sharp. Decisions come easily."},
@@ -257,6 +268,7 @@ function render(){
 }
 
 function renderTimeframe(){
+  setTheme(DARK);
   app.innerHTML=`<div class="screen" style="justify-content:center">
     <div class="label-sm" style="text-align:center;margin-bottom:1.5rem">Before you begin</div>
     <div style="padding:1.25rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:500px;text-align:left;margin:0 auto 2rem">
@@ -274,6 +286,7 @@ function renderTimeframe(){
 }
 
 function renderIntro(){
+  setTheme(DARK);
   const last=getLastEntry();
   const hist=loadHistory();
   app.innerHTML=`<div class="screen" style="justify-content:center;text-align:center">
@@ -309,6 +322,7 @@ function renderIntro(){
 }
 
 function renderQuestion(){
+  setTheme(DARK);
   const q=ALL_Q[step];const sec=q.section;
   const prev=step>0?ALL_Q[step-1]:null;
   const isNew=step===0||(prev&&prev.section.key!==sec.key);
@@ -539,6 +553,7 @@ function renderTrendsCard(){
 }
 
 function renderResults(){
+  setTheme(PARCH);
   const{secScores,comp}=computeSectionScores(scores);
   if(!isShared)saveToHistory(scores,secScores,comp);
   if(!isShared)try{localStorage.setItem("cheat_audit_session",JSON.stringify({scores:scores,step:10}))}catch(e){}

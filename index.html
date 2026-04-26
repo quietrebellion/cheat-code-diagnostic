@@ -224,7 +224,7 @@ const app=document.getElementById("app");
 // History (localStorage)
 const HISTORY_KEY="cheat_audit_history";
 const MAX_HISTORY=90;
-function loadHistory(){try{const d=JSON.parse(localStorage.getItem(HISTORY_KEY));return Array.isArray(d)?d:[]}catch(e){return[]}}
+function loadHistory(){try{const d=JSON.parse(localStorage.getItem(HISTORY_KEY));return Array.isArray(d)?d.filter(e=>e&&e.sections&&e.composite!=null):[]}catch(e){return[]}}
 function saveToHistory(sc,secScores,composite){
   if(historySaved)return;
   const hist=loadHistory();

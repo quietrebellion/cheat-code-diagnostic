@@ -12,6 +12,7 @@
 <meta property="og:image" content="https://capacityaudit.rebellioncollective.com/og-image.png">
 <meta property="og:url" content="https://capacityaudit.rebellioncollective.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0a;--bgCard:#161616;--ember:#e8622a;--emberLight:#f0864e;--warm:#ccc5bd;--warmMuted:#8a8682;--text:#ededed;--textMuted:#9a9692;--cream:#fff;--red:#c44d3f;--amber:#d4a843;--green:#6b9b5e}
@@ -193,6 +194,7 @@ function getAction(h,scores){
 // State
 let scores={},step=-1,email="",emailSent=false,isShared=false;
 let timeframe=null,showTimeframe=false,historyFilter="all",historySaved=false;
+let predictedCapacity=null,showPrediction=false;
 
 // --- Helper functions ---
 
@@ -211,7 +213,7 @@ function clearAllData(){
   if(!confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?'))return;
   localStorage.removeItem('cheat_audit_history');
   localStorage.removeItem('cheat_audit_session');
-  scores={};step=-1;historySaved=false;render();window.scrollTo({top:0,behavior:'smooth'});
+  scores={};step=-1;historySaved=false;predictedCapacity=null;showPrediction=false;render();window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function triggerDownload(url,filename){
@@ -262,7 +264,7 @@ function decodeScores(str){
 const OG_HOST="https://capacity-audit-og.vercel.app";
 
 function render(){
-  if(step===-1) return showTimeframe ? renderTimeframe() : renderIntro();
+  if(step===-1) return showPrediction ? renderPrediction() : (showTimeframe ? renderTimeframe() : renderIntro());
   if(step>=0&&step<totalQ) return renderQuestion();
   if(step>=totalQ) return renderResults();
 }
@@ -280,9 +282,54 @@ function renderTimeframe(){
       <button onclick="downloadCalendarHolds()" style="display:inline-flex;align-items:center;gap:0.5rem;font-family:inherit;font-size:0.9rem;font-weight:500;color:var(--ember);background:transparent;text-decoration:none;border:1px solid rgba(232,98,42,0.3);border-radius:6px;padding:0.5rem 1rem;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='rgba(232,98,42,0.08)'" onmouseout="this.style.background='transparent'">📅 Download Calendar Holds</button>
       </div>
     </div>
-    <button class="btn" style="align-self:center" onclick="timeframe='right_now';showTimeframe=false;step=0;render()">Continue</button>
+    <button class="btn" style="align-self:center" onclick="timeframe='right_now';showTimeframe=false;showPrediction=true;render()">Continue</button>
     <button class="btn-ghost" style="margin-top:1rem;font-size:0.9rem" onclick="showTimeframe=false;step=-1;render()">Back</button>
   </div>`;
+}
+
+function renderPrediction(){
+  setTheme(DARK);
+  const hasVal=predictedCapacity!=null;
+  const col=hasVal?C.ember:C.warmMuted;
+  const pct=hasVal?((predictedCapacity/10)*100):50;
+  app.innerHTML=`<div class="screen" style="justify-content:center">
+    <div class="label-sm" style="text-align:center;margin-bottom:1rem">Before we begin</div>
+    <h2 style="font-size:1.4rem;font-weight:500;color:var(--cream);line-height:1.35;text-align:center;margin-bottom:0.5rem">How would you rate your capacity right now?</h2>
+    <p style="font-size:1rem;color:var(--textMuted);line-height:1.55;text-align:center;margin-bottom:1.5rem;max-width:460px;margin-left:auto;margin-right:auto">Your gut sense. No overthinking. We’ll compare this to what the audit reveals.</p>
+    <div style="max-width:460px;margin:0 auto 1rem;width:100%">
+      ${!hasVal?'<div class="slide-hint" style="text-align:center;font-size:0.9rem;color:var(--warmMuted);margin-bottom:0.5rem">Slide to rate</div>':""}
+      <div class="track">
+        <div class="track-fill" style="width:calc(14px + ${hasVal?pct:0} * (100% - 28px) / 100);background:${hasVal?col:"transparent"}"></div>
+        <div class="thumb" style="left:calc(14px + ${pct} * (100% - 28px) / 100);background:${col};box-shadow:${hasVal?"0 0 10px "+col+"55":"0 0 12px rgba(232,98,42,0.2)"};${!hasVal?"animation:pulseGlow 2s ease infinite":""}"></div>
+        <input type="range" min="0" max="10" value="${predictedCapacity??5}" aria-label="Your predicted capacity score" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${predictedCapacity??5}" oninput="onPredictionSlide(this.value)">
+      </div>
+      <div aria-live="polite" class="mono" style="text-align:center;font-size:2.5rem;font-weight:700;color:${col};transition:color 0.25s ease">${hasVal?predictedCapacity:"—"}</div>
+      <div style="display:flex;justify-content:space-between;gap:2rem;margin-top:0.25rem">
+        <div style="flex:1"><div class="mono" style="font-size:0.85rem;color:var(--warmMuted)">0</div><div style="font-size:0.9rem;color:var(--warmMuted);line-height:1.4">Running on empty</div></div>
+        <div style="flex:1;text-align:right"><div class="mono" style="font-size:0.85rem;color:var(--warmMuted)">10</div><div style="font-size:0.9rem;color:var(--warmMuted);line-height:1.4">Fully resourced</div></div>
+      </div>
+    </div>
+    <button onclick="showPrediction=false;step=0;render()" ${!hasVal?"disabled":""} class="btn" style="align-self:center;margin-top:1rem;${hasVal?"":"opacity:0.4;cursor:default"}">Start the Audit</button>
+    <button class="btn-ghost" style="margin-top:0.75rem;font-size:0.9rem" onclick="showPrediction=false;showTimeframe=true;render()">Back</button>
+  </div>`;
+}
+function onPredictionSlide(v){
+  const val=parseInt(v);
+  predictedCapacity=val;
+  const pct=(val/10)*100;
+  const calcLeft="calc(14px + "+pct+" * (100% - 28px) / 100)";
+  const screen=app.querySelector(".screen");
+  if(!screen)return;
+  const thumb=screen.querySelector(".thumb");
+  const fill=screen.querySelector(".track-fill");
+  const num=screen.querySelector('[aria-live="polite"]');
+  const hint=screen.querySelector(".slide-hint");
+  const btn=screen.querySelector(".btn");
+  if(thumb){thumb.style.left=calcLeft;thumb.style.background=C.ember;thumb.style.boxShadow="0 0 10px "+C.ember+"55";thumb.style.animation="none"}
+  if(fill){fill.style.width=calcLeft;fill.style.background=C.ember}
+  if(num){num.textContent=val;num.style.color=C.ember}
+  if(hint)hint.remove();
+  if(btn){btn.disabled=false;btn.style.opacity="1";btn.style.cursor="pointer"}
 }
 
 function renderIntro(){
@@ -298,7 +345,7 @@ function renderIntro(){
     <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Collect data not drama.</p>
     <p style="font-size:1.05rem;color:var(--cream);margin-bottom:1.5rem">Reclaim what\u2019s yours.</p>
     <p style="font-size:1.4rem;font-weight:600;color:var(--ember);margin-bottom:2.5rem">Be Rebellious.</p>
-    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="${last?"timeframe='right_now';showTimeframe=false;step=0;render()":"showTimeframe=true;render()"}">${last?"Retake the Audit":"Begin"}</button>
+    <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="${last?"timeframe='right_now';showTimeframe=false;showPrediction=true;render()":"showTimeframe=true;render()"}">${last?"Retake the Audit":"Begin"}</button>
     ${last?`<button class="btn-ghost" style="margin-top:0.5rem;font-size:0.85rem" onclick="showTimeframe=true;render()">How to use this</button>`:""} 
     ${last?`<div style="margin-top:1.25rem;padding:1rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(232,98,42,0.09);max-width:360px;align-self:center">
       <div style="font-size:0.85rem;color:var(--warmMuted);margin-bottom:0.25rem">Last taken ${formatDate(last.date)}</div>
@@ -586,6 +633,28 @@ function renderResults(){
     </div>`;
   });
 
+  // Delta card: predicted vs actual
+  let deltaHTML="";
+  if(predictedCapacity!=null&&!isShared){
+    const actual=parseFloat(comp);
+    const diff=actual-predictedCapacity;
+    const absDiff=Math.abs(diff).toFixed(1);
+    const direction=diff>0.5?"higher":diff<-0.5?"lower":"aligned";
+    let deltaMsg="";
+    if(direction==="higher") deltaMsg=`Your actual capacity came in <strong style="color:${C.green}">${absDiff} points higher</strong> than your gut sense. You may be carrying more than you think, or undervaluing what you have available. That gap is worth noticing.`;
+    else if(direction==="lower") deltaMsg=`Your actual capacity came in <strong style="color:${C.red}">${absDiff} points lower</strong> than your gut sense. This is common. We adapt to depletion and call it normal. The delta between what you feel and what the data shows is where the real work begins.`;
+    else deltaMsg=`Your gut sense and your audit landed in the same place. That self-awareness is a resource in itself. You see your situation clearly.`;
+    deltaHTML=`<div class="card-lg" style="border-color:rgba(232,98,42,0.13);text-align:center;margin-bottom:1.25rem">
+      <h2 class="label-sm" style="margin-bottom:0.75rem">The Delta</h2>
+      <div style="display:flex;justify-content:center;align-items:baseline;gap:1.5rem;margin-bottom:0.75rem">
+        <div><div class="mono" style="font-size:1rem;color:var(--warmMuted)">You predicted</div><div class="mono" style="font-size:2.5rem;font-weight:700;color:var(--warm)">${predictedCapacity}</div></div>
+        <div style="font-size:1.5rem;color:var(--warmMuted)">→</div>
+        <div><div class="mono" style="font-size:1rem;color:var(--warmMuted)">Actual</div><div class="mono" style="font-size:2.5rem;font-weight:700;color:${scoreColor(actual)}">${comp}</div></div>
+      </div>
+      <p style="font-size:1rem;color:var(--textMuted);line-height:1.6;max-width:460px;margin:0 auto">${deltaMsg}</p>
+    </div>`;
+  }
+
   const emailForm=emailSent?`
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">You\u2019re in.</p>
     <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.5;margin-bottom:1rem">Your results are saved. Five dispatches arriving over the next two weeks, one for each habit.</p>
@@ -624,6 +693,7 @@ function renderResults(){
       <div style="font-size:1.1rem;color:var(--warm);margin-top:0.25rem">${scoreLabel(parseFloat(comp))}</div>
       <div style="font-size:0.85rem;color:var(--warmMuted);margin-top:0.5rem">${isShared?"Shared result":new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"})+" at "+new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}</div>
     </div>
+    ${deltaHTML}
     <div class="card-lg" style="border-color:rgba(232,98,42,0.07)">
       <h2 class="label-sm">Dimension Breakdown</h2>
       ${dimHTML}
@@ -645,6 +715,13 @@ function renderResults(){
       <p style="font-size:1rem;color:var(--textMuted);margin-bottom:1.25rem;line-height:1.5">These are sequential. Each one builds on the last. The practices below are personalized to your pattern.</p>
       ${habitsHTML}
     </div>
+    ${!isShared?`<div class="card-lg" style="border-color:rgba(232,98,42,0.13);margin-bottom:1.25rem">
+      <h2 class="label-sm" style="margin-bottom:0.75rem">One More Thing</h2>
+      <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.75rem;line-height:1.45">Knowing where you stand is not the same as being willing to move.</p>
+      <p style="font-size:1rem;color:var(--textMuted);line-height:1.65;margin-bottom:0.75rem">This audit reveals the shape of your capacity. The habits above offer a path. But the gap between insight and action is real, and it has a name: willingness.</p>
+      <p style="font-size:1rem;color:var(--textMuted);line-height:1.65;margin-bottom:0.75rem">${parseFloat(comp)<=4?"When capacity is this depleted, willingness often feels impossible. That makes sense. Start with one question: what is the smallest thing I could do differently tomorrow?":"When you can see the pattern clearly, the question shifts from <em>what do I need to change</em> to <em>am I ready to</em>. Readiness isn\u2019t all-or-nothing. It starts with one habit, one conversation, one choice to stop performing capacity you don\u2019t have."}</p>
+      <p style="font-size:1rem;color:var(--ember);line-height:1.65;font-style:italic">The audit measures where you are. Only you decide where you go next.</p>
+    </div>`:""}
     ${isShared?`
     <div class="card-lg" style="text-align:center;border-color:rgba(232,98,42,0.27);background:var(--bgCard)">
       <h2 style="font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">This isn\u2019t your pattern.</h2>
@@ -783,38 +860,38 @@ function generateLocalShareCard(){
       const c=document.createElement("canvas");c.width=1200;c.height=630;
       const ctx=c.getContext("2d");
       // Background
-      ctx.fillStyle="#0a0a0a";ctx.fillRect(0,0,1200,630);
+      ctx.fillStyle="#f0e8da";ctx.fillRect(0,0,1200,630);
       // Border accent
-      ctx.fillStyle="#e8622a";ctx.fillRect(0,0,1200,4);
+      ctx.fillStyle="#a85520";ctx.fillRect(0,0,1200,4);
       // Title
-      ctx.fillStyle="#e8622a";ctx.font="600 16px sans-serif";ctx.letterSpacing="0.15em";
+      ctx.fillStyle="#a85520";ctx.font="600 16px sans-serif";ctx.letterSpacing="0.15em";
       ctx.fillText("REBELLION COLLECTIVE",60,60);
-      ctx.fillStyle="#ffffff";ctx.font="600 36px sans-serif";ctx.letterSpacing="0";
+      ctx.fillStyle="#2c2610";ctx.font="600 36px sans-serif";ctx.letterSpacing="0";
       ctx.fillText("The C.H.E.A.T. Code\u2122 Capacity Audit",60,110);
       // Scores
       const{secScores,comp}=computeSectionScores(scores);
       // Composite score
       ctx.fillStyle=scoreColor(parseFloat(comp));ctx.font="700 120px monospace";
       ctx.fillText(comp,60,270);
-      ctx.fillStyle="#ccc5bd";ctx.font="400 24px sans-serif";
+      ctx.fillStyle="#3a3420";ctx.font="400 24px sans-serif";
       ctx.fillText(scoreLabel(parseFloat(comp))+" / 10",60,310);
       // Dimension scores
       let dy=370;
       SECTIONS.forEach(s=>{
         const sc=secScores[s.key];
-        ctx.fillStyle="#ededed";ctx.font="500 20px sans-serif";
+        ctx.fillStyle="#2c2610";ctx.font="500 20px sans-serif";
         ctx.fillText(s.icon+" "+s.label,60,dy);
         ctx.fillStyle=scoreColor(sc);ctx.font="700 20px monospace";
         ctx.fillText(sc.toFixed(1),350,dy);
         // Bar
-        ctx.fillStyle="rgba(232,98,42,0.15)";ctx.fillRect(420,dy-14,500,16);
+        ctx.fillStyle="rgba(168,85,32,0.12)";ctx.fillRect(420,dy-14,500,16);
         ctx.fillStyle=scoreColor(sc);ctx.fillRect(420,dy-14,(sc/10)*500,16);
         dy+=40;
       });
       // Footer
-      ctx.fillStyle="#8a8682";ctx.font="400 16px sans-serif";
+      ctx.fillStyle="#6b6350";ctx.font="400 16px sans-serif";
       ctx.fillText("capacityaudit.rebellioncollective.com",60,590);
-      ctx.fillStyle="#9a9692";ctx.font="italic 400 16px sans-serif";
+      ctx.fillStyle="#4a4230";ctx.font="italic 400 16px sans-serif";
       ctx.fillText("Be rebellious.",450,590);
       resolve(c.toDataURL("image/png"));
     }catch(e){reject(e)}
@@ -822,7 +899,7 @@ function generateLocalShareCard(){
 }
 function startOwnAudit(){
   isShared=false;scores={};step=-1;try{localStorage.removeItem("cheat_audit_session")}catch(e){}email="";emailSent=false;
-  timeframe=null;showTimeframe=false;historyFilter="all";historySaved=false;
+  timeframe=null;showTimeframe=false;showPrediction=false;predictedCapacity=null;historyFilter="all";historySaved=false;
   try{history.replaceState(null,"",window.location.pathname)}catch(e){}
   render();window.scrollTo({top:0,behavior:"smooth"});
 }

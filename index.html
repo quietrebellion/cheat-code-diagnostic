@@ -11,12 +11,17 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://capacityaudit.rebellioncollective.com/og-image.png">
 <meta property="og:url" content="https://capacityaudit.rebellioncollective.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The C.H.E.A.T. Code™ Capacity Audit">
+<meta name="twitter:description" content="Ten questions. Two minutes. Find out where your capacity is being extracted.">
+<meta name="twitter:image" content="https://capacityaudit.rebellioncollective.com/og-image.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f0f2ec;--bgCard:#e8ebe3;--ember:#4a6444;--emberLight:#4a6444;--warm:#2a3528;--warmMuted:#646b5e;--text:#1e2a1c;--textMuted:#3a4238;--cream:#1e2a1c;--red:#a8453a;--amber:#a89030;--green:#4a6444}
-body.parchment{--bg:#e8ebe3;--bgCard:#f0f2ec;--ember:#3d5638;--emberLight:#3d5638;--warm:#2a3528;--warmMuted:#5a6354;--text:#1e2a1c;--textMuted:#3a4238;--cream:#1e2a1c;--red:#a8453a;--amber:#a89030;--green:#4a6444}
+:root{--bg:#f0f2ec;--bgCard:#e8ebe3;--ember:#4a6444;--emberLight:#4a6444;--warm:#2a3528;--warmMuted:#545c4e;--text:#1e2a1c;--textMuted:#3a4238;--cream:#1e2a1c;--red:#a8453a;--amber:#7d6e22;--green:#4a6444}
+body.parchment{--bg:#e8ebe3;--bgCard:#f0f2ec;--ember:#3d5638;--emberLight:#3d5638;--warm:#2a3528;--warmMuted:#4a5244;--text:#1e2a1c;--textMuted:#3a4238;--cream:#1e2a1c;--red:#a8453a;--amber:#7d6e22;--green:#4a6444}
 body.parchment .card,body.parchment .card-lg{background:var(--bgCard);border-color:rgba(72,94,68,0.12)!important;box-shadow:0 1px 2px rgba(0,0,0,0.03)}
 body.parchment .try-this{border-left-color:rgba(74,100,68,0.25)!important;background:rgba(74,100,68,0.04)!important;color:#3a4238}
 body.parchment .dim-bar{background:rgba(74,100,68,0.08)}
@@ -56,7 +61,7 @@ h2.label-sm,h3.label-sm{font-weight:400}
 .try-this{padding:0.85rem;background:rgba(74,100,68,0.06);border-radius:6px;border-left:3px solid rgba(74,100,68,0.27);line-height:1.6;color:var(--warm)}
 .tf-btn{display:block;width:100%;text-align:left;padding:1.1rem 1.25rem;background:var(--bgCard);border:1px solid rgba(74,100,68,0.13);border-radius:8px;cursor:pointer;font-family:inherit;margin-bottom:0.5rem;transition:border-color 0.2s ease}
 .tf-btn:hover{border-color:var(--ember)}
-.filter-btn{padding:0.4rem 0.75rem;font-family:inherit;font-size:0.75rem;border-radius:4px;cursor:pointer;transition:all 0.15s ease}
+.filter-btn{padding:0.6rem 0.9rem;font-family:inherit;font-size:0.75rem;border-radius:4px;cursor:pointer;transition:all 0.15s ease;min-height:44px;min-width:44px}
 .nav-row{display:flex;gap:0.75rem;padding-top:0.5rem;flex-shrink:0;padding-bottom:calc(0.5rem + env(safe-area-inset-bottom,0px))}
 .q-content{flex:1;display:flex;flex-direction:column;overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch}
 .sec-icon{font-size:1.3rem;line-height:1;vertical-align:middle}
@@ -66,12 +71,12 @@ h2.label-sm,h3.label-sm{font-weight:400}
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
 <main id="main"><div class="wrap" id="app"></div></main>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script>function loadSheetJS(){return new Promise((resolve,reject)=>{if(window.XLSX)return resolve();const s=document.createElement('script');s.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}</script>
 <script>
 const CONVERTKIT_FORM_ID="9331134";
-const C={bg:"#f0f2ec",bgCard:"#e8ebe3",ember:"#4a6444",emberLight:"#4a6444",warm:"#2a3528",warmMuted:"#646b5e",text:"#1e2a1c",textMuted:"#3a4238",cream:"#1e2a1c",red:"#a8453a",amber:"#a89030",green:"#4a6444"};
-const DARK={bg:"#f0f2ec",bgCard:"#e8ebe3",ember:"#4a6444",emberLight:"#4a6444",warm:"#2a3528",warmMuted:"#646b5e",text:"#1e2a1c",textMuted:"#3a4238",cream:"#1e2a1c",red:"#a8453a",amber:"#a89030",green:"#4a6444"};
-const PARCH={bg:"#e8ebe3",bgCard:"#f0f2ec",ember:"#3d5638",emberLight:"#3d5638",warm:"#2a3528",warmMuted:"#5a6354",text:"#1e2a1c",textMuted:"#3a4238",cream:"#1e2a1c",red:"#a8453a",amber:"#a89030",green:"#4a6444"};
+const C={bg:"#f0f2ec",bgCard:"#e8ebe3",ember:"#4a6444",emberLight:"#4a6444",warm:"#2a3528",warmMuted:"#545c4e",text:"#1e2a1c",textMuted:"#3a4238",cream:"#1e2a1c",red:"#a8453a",amber:"#7d6e22",green:"#4a6444"};
+const DARK={bg:"#f0f2ec",bgCard:"#e8ebe3",ember:"#4a6444",emberLight:"#4a6444",warm:"#2a3528",warmMuted:"#545c4e",text:"#1e2a1c",textMuted:"#3a4238",cream:"#1e2a1c",red:"#a8453a",amber:"#7d6e22",green:"#4a6444"};
+const PARCH={bg:"#e8ebe3",bgCard:"#f0f2ec",ember:"#3d5638",emberLight:"#3d5638",warm:"#2a3528",warmMuted:"#4a5244",text:"#1e2a1c",textMuted:"#3a4238",cream:"#1e2a1c",red:"#a8453a",amber:"#7d6e22",green:"#4a6444"};
 function setTheme(t){Object.assign(C,t);document.body.classList.toggle("parchment",t===PARCH)}
 const SECTIONS=[
 {key:"energy",label:"Energy",icon:"\u26A1",intro:"Energy lives in four domains: mental, physical, emotional, and alignment (the felt sense that your energy is going where it matters). When one collapses, the others compensate until they can\u2019t.",questions:[
@@ -86,7 +91,7 @@ const SECTIONS=[
 {key:"time",label:"Time",icon:"\u23F1\uFE0F",intro:"Time breaks down into three types: committed, recovered, and protected. How yours is distributed tells the real story.",questions:[
 {key:"committed",label:"Committed Time",question:"How much of your calendar was decided for you?",low:"Almost all of it. My time was handed to me.",high:"Very little. Most of how I spend my time is chosen."},
 {key:"recovered",label:"Recovered Time",question:"How much have you let go of that is no longer worth your time?",low:"Nothing. I\u2019m holding on to a lot right now.",high:"A lot. I\u2019ve dropped what doesn\u2019t serve me."},
-{key:"protected",label:"Protected Time",question:"Do you have time that\u2019s genuinely yours, that nothing gets to touch?",low:"No. Everything is up for grabs.",high:"Yes. And I protect it."}]}
+{key:"protected",label:"Protected Time",question:"Do you have time that\u2019s truly yours, that nothing gets to touch?",low:"No. Everything is up for grabs.",high:"Yes. And I protect it."}]}
 ];
 const FIVE_CS=[
 {name:"Curiosity",description:"The starting point. Noticing what\u2019s actually happening without judgment. Looking at what\u2019s running your equation before trying to change it.",actions:{
@@ -148,7 +153,7 @@ _default:{critical:"If you have capacity for one thing right now, try a brief ch
 
 {name:"Connection",description:"Presence with yourself, with others, and with the world around you. Connection restores meaning. It also requires vulnerability, which requires safety. Both matter.",actions:{
 committed:{
-critical:"Your committed time score is low, which often means obligations are taking up most of the calendar. When that happens, connection tends to be the first thing that gets squeezed, and that isolation compounds everything else. If it feels possible, look at your week: is there one block you could reclaim for time with someone who fills you up? If your schedule genuinely isn\u2019t yours to rearrange right now, that\u2019s worth seeing clearly too. The constraint is real.",
+critical:"Your committed time score is low, which often means obligations are taking up most of the calendar. When that happens, connection tends to be the first thing that gets squeezed, and that isolation compounds everything else. If it feels possible, look at your week: is there one block you could reclaim for time with someone who fills you up? If your schedule really isn\u2019t yours to rearrange right now, that\u2019s worth seeing clearly too. The constraint is real.",
 depleted:"Your committed time score suggests a mix of chosen and unchosen obligations. When the calendar gets tight, connection is often what gives first. This week, consider protecting one hour for a conversation with no agenda. Someone you trust. See what opens up when you\u2019re not performing productivity.",
 resourced:"Your committed time score is high. Most of how you spend your time is chosen. The practice now is depth. Pick one relationship this week and go past the update, past the catching up. Ask a question you actually want the answer to. Connection deepens in the moments we stop performing."
 },
@@ -157,7 +162,7 @@ critical:"Your alignment score suggests a gap between what you\u2019re doing and
 depleted:"Your alignment score is in the middle. Some of your relationships may be nourishing while others run on autopilot. This week, pay attention to how you feel after your interactions. Notice who you become around different people. That awareness is everything.",
 resourced:"Your alignment score is high. The people around you are likely the right people. The practice now is reciprocity. Ask yourself: what do I bring to their equation? Am I showing up the way I want to be shown up for? Connection is about what you put into the field."
 },
-_default:{critical:"Connection can feel like the hardest thing to reach for when you\u2019re depleted. If reaching out feels possible, try one person today. Someone you trust. Tell them something true about where you are right now. If it doesn\u2019t feel possible, that\u2019s okay. Notice what\u2019s making it hard. That\u2019s information too.",depleted:"Your scores suggest connection could use some attention. This week, go past the surface with one person. Ask how they really are. Then answer the same question honestly when they ask you back. Connection lives in the exchange.",resourced:"Your connections are strong. The practice now is tending them. Reach out to someone you haven\u2019t talked to in a while. Not because you need something. Because the relationship matters."}
+_default:{critical:"Connection can feel like the hardest thing to reach for when you\u2019re depleted. If reaching out feels possible, try one person today. Someone you trust. Tell them something true about where you are right now. If it doesn\u2019t feel possible, that\u2019s okay. Notice what\u2019s making it hard. That\u2019s information too.",depleted:"Your scores suggest connection could use some attention. This week, go past the surface with one person. Ask how they really are. Then answer the same question truthfully when they ask you back. Connection lives in the exchange.",resourced:"Your connections are strong. The practice now is tending them. Reach out to someone you haven\u2019t talked to in a while. Not because you need something. Because the relationship matters."}
 },subKeys:["committed","alignment"]},
 
 {name:"Commitment",description:"Protecting your capacity over time. Staying curious, courageous, compassionate, and connected. Not perfectly. Not constantly. At whatever pace your system can sustain.",actions:{
@@ -167,7 +172,7 @@ depleted:"Your protected time score is in the middle. You have some boundaries b
 resourced:"Your protected time score is high. You\u2019ve built real boundaries and they hold. The commitment practice now is auditing what you\u2019re protecting that time for. Is it being used in service of what matters? Protected time without intention is empty space. Fill it with what you said you cared about."
 },
 recovered:{
-critical:"Your recovered time score is very low. You may still be carrying obligations that no longer serve you. Some of them might be genuinely hard to let go of for reasons that are real: identity, loyalty, financial necessity, fear of what happens if you stop. If you can name one thing that no longer fits, that\u2019s a start. Drop it, delegate it, or renegotiate it when you\u2019re ready. If you can\u2019t let go of anything right now, ask yourself what would need to be true for you to. That question is worth sitting with.",
+critical:"Your recovered time score is very low. You may still be carrying obligations that no longer serve you. Some of them might be hard to let go of for reasons that are real: identity, loyalty, financial necessity, fear of what happens if you stop. If you can name one thing that no longer fits, that\u2019s a start. Drop it, delegate it, or renegotiate it when you\u2019re ready. If you can\u2019t let go of anything right now, ask yourself what would need to be true for you to. That question is worth sitting with.",
 depleted:"Your recovered time score is in the middle. You\u2019ve let go of some things, but there may be more to drop. Pick one recurring commitment this week and ask: if I weren\u2019t already doing this, would I choose to start? If the answer is no, that\u2019s your signal. Renegotiate it when the timing is right.",
 resourced:"Your recovered time score is high. You\u2019ve done real work letting go. The practice now is staying honest about what creeps back in. New obligations disguise themselves as opportunities. This week, before you say yes to anything new, ask: what am I saying no to in order to say yes to this?"
 },
@@ -179,7 +184,7 @@ const totalQ=ALL_Q.length;
 
 function scoreColor(s){return s<=3?C.red:s<=6?C.amber:C.green}
 function scoreLabel(s){return s<=2?"Critical":s<=4?"Depleted":s<=6?"Stretched":s<=8?"Resourced":"Thriving"}
-function spreadInsight(sp,dim,low){const n=SECTIONS.find(s=>s.key===dim)?.label||dim;if(sp<=1.5){if(low<=4)return"All three dimensions are running low. This is systemic depletion. The whole system needs tending. When everything is equally drained, the intervention is rest and reconnection before strategy.";if(low<=6)return"Your capacity is stretched evenly across all three dimensions. There\u2019s no single point of collapse, but there\u2019s also no reserve. You\u2019re managing, but the margin is thin. Small disruptions hit harder from here.";return"Your three dimensions are holding steady. That\u2019s a stable foundation. The work from here is about protecting what you\u2019ve built and deepening the habits that sustain it.";}if(sp<=4)return"Your "+n.toLowerCase()+" is the constraint. The other dimensions are compensating for it right now, and that compensation has a cost. This is where the pattern becomes visible. When you address "+n.toLowerCase()+" specifically, the whole equation shifts.";return"Your "+n.toLowerCase()+" has collapsed while the rest of your system is still standing. In the C.H.E.A.T. Code\u2122, capacity is multiplicative. One dimension at this level constrains everything else, regardless of how strong the others are. This is where you begin."}
+function spreadInsight(sp,dim,low){const n=SECTIONS.find(s=>s.key===dim)?.label||dim;if(sp<=1.5){if(low<=3)return"All three dimensions are running low. This is systemic depletion. The whole system needs tending. When everything is equally drained, the intervention is rest and reconnection before strategy.";if(low<=6)return"Your capacity is stretched evenly across all three dimensions. There\u2019s no single point of collapse, but there\u2019s also no reserve. You\u2019re managing, but the margin is thin. Small disruptions hit harder from here.";return"Your three dimensions are holding steady. That\u2019s a stable foundation. The work from here is about protecting what you\u2019ve built and deepening the habits that sustain it.";}if(sp<=4)return"Your "+n.toLowerCase()+" is the constraint. The other dimensions are compensating for it right now, and that compensation has a cost. This is where the pattern becomes visible. When you address "+n.toLowerCase()+" specifically, the whole equation shifts.";return"Your "+n.toLowerCase()+" has collapsed while the rest of your system is still standing. In the C.H.E.A.T. Code\u2122, capacity is multiplicative. One dimension at this level constrains everything else, regardless of how strong the others are. This is where you begin."}
 function subInsight(section,scores){const items=section.questions.map(q=>({...q,score:scores[q.key]})).filter(q=>q.score!=null);if(items.length<2)return null;const sorted=[...items].sort((a,b)=>a.score-b.score);if(sorted[sorted.length-1].score-sorted[0].score<=1)return null;return{lowest:sorted[0],highest:sorted[sorted.length-1]}}
 function getAction(h,scores){
   const rs=h.subKeys.filter(k=>scores[k]!=null).sort((a,b)=>scores[a]-scores[b]);
@@ -272,10 +277,10 @@ function render(){
 function renderTimeframe(){
   setTheme(DARK);
   app.innerHTML=`<div class="screen" style="justify-content:center">
-    <div class="label-sm" style="text-align:center;margin-bottom:1.5rem">Before you begin</div>
+    <h2 class="label-sm" style="text-align:center;margin-bottom:1.5rem">Before you begin</h2>
     <div style="padding:1.25rem;background:var(--bgCard);border-radius:8px;border:1px solid rgba(74,100,68,0.09);max-width:500px;text-align:left;margin:0 auto 2rem">
       <div style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--ember);margin-bottom:0.75rem;font-weight:600">How to use this</div>
-      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">This audit works best as a practice, as opposed to a one-time snapshot.</p>
+      <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">This audit works best as a practice, not a one-time snapshot.</p>
       <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Three times a day is ideal. Once a day works if that’s what you’ve got. Anytime you notice the signals (drained, scattered, short on time, reacting instead of choosing) that’s your cue.</p>
       <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin-bottom:1rem">Pay attention to what keeps showing up.</p>
       <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Download three daily calendar holds (8am, 12pm, 6pm) to build the habit. Each one is five minutes. Open the file and your calendar app will do the rest.</p>
@@ -293,7 +298,7 @@ function renderPrediction(){
   const col=hasVal?C.ember:C.warmMuted;
   const pct=hasVal?((predictedCapacity/10)*100):50;
   app.innerHTML=`<div class="screen" style="justify-content:center">
-    <div class="label-sm" style="text-align:center;margin-bottom:1rem">Before we begin</div>
+    <h2 class="label-sm" style="text-align:center;margin-bottom:1rem">Before we begin</h2>
     <h2 style="font-size:1.4rem;font-weight:500;color:var(--cream);line-height:1.35;text-align:center;margin-bottom:0.5rem">How would you rate your capacity right now?</h2>
     <p style="font-size:1rem;color:var(--textMuted);line-height:1.55;text-align:center;margin-bottom:1.5rem;max-width:460px;margin-left:auto;margin-right:auto">Your gut sense. No overthinking. We'll compare this to what the audit reveals.</p>
     <div style="max-width:460px;margin:0 auto 1rem;width:100%">
@@ -330,6 +335,7 @@ function onPredictionSlide(v){
   if(num){num.textContent=val;num.style.color=C.ember}
   if(hint)hint.remove();
   if(btn){btn.disabled=false;btn.style.opacity="1";btn.style.cursor="pointer"}
+  const ri=screen.querySelector('input[type="range"]');if(ri)ri.setAttribute('aria-valuenow',val);
 }
 
 function renderIntroDashboard(last,hist){
@@ -450,7 +456,7 @@ function renderIntroDashboard(last,hist){
     const trendDelta=recentAvg-olderAvg;
     let narrative="";
     if(Math.abs(trendDelta)<0.3){
-      narrative="Your capacity has been holding steady over the past "+spanLabel+". Stability is data too — it means your current habits are maintaining the system at this level.";
+      narrative="Your capacity has been holding steady over the past "+spanLabel+". Stability is data too. It means your current habits are maintaining the system at this level.";
     }else if(trendDelta>0){
       const magWord=trendDelta>1.5?"significantly":"gradually";
       narrative="Your capacity has been "+magWord+" rising over the past "+spanLabel+". The practices are working. ";
@@ -459,7 +465,7 @@ function renderIntroDashboard(last,hist){
       if(dimDeltas[0].delta>0.5)narrative+=driver.label+" is leading the shift (+"+dimDeltas[0].delta.toFixed(1)+").";
     }else{
       const magWord=trendDelta<-1.5?"significantly":"gradually";
-      narrative="Your capacity has been "+magWord+" declining over the past "+spanLabel+". This isn’t a verdict — it’s signal. ";
+      narrative="Your capacity has been "+magWord+" declining over the past "+spanLabel+". This isn’t a verdict. It’s signal. ";
       const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>a.delta-b.delta);
       const drain=SECTIONS.find(s=>s.key===dimDeltas[0].key);
       if(dimDeltas[0].delta<-0.5)narrative+=drain.label+" is where the drop is sharpest ("+dimDeltas[0].delta.toFixed(1)+").";
@@ -507,7 +513,7 @@ function renderIntro(){
       <p><a href="https://rebellioncollective.com/manifesto" target="_blank" rel="noopener noreferrer" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Read the manifesto that started it all →</a></p>
   
     <div style="max-width:500px;margin:1.5rem auto 0;padding-top:1rem;border-top:1px solid rgba(74,100,68,0.07)">
-      <p style="font-size:0.8rem;color:var(--warmMuted);line-height:1.5;text-align:center">Your data is stored locally in your browser. It\u2019s private to you and never leaves your device. Clearing your browser cache will erase it.${hist.length>0?` <a href="#" onclick="event.preventDefault();clearAllData()" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Clear my data</a>`:""}</p>
+      <p style="font-size:0.8rem;color:var(--warmMuted);line-height:1.5;text-align:center">Your data is stored locally in your browser. It\u2019s private to you and never leaves your device. Clearing your browser cache will erase it.${hist.length>0?` <button onclick="clearAllData()" style="color:var(--ember);background:none;border:none;border-bottom:1px solid rgba(74,100,68,0.3);font-family:inherit;font-size:inherit;cursor:pointer;padding:0">Clear my data</button>`:""}</p>
     </div>  </div>`;
 }
 
@@ -575,11 +581,14 @@ function onSlide(v){
     const btns=screen.querySelectorAll("button");
     const nextBtn=btns[btns.length-1];
     if(nextBtn&&nextBtn.hasAttribute("disabled")){nextBtn.removeAttribute("disabled");nextBtn.style.color="var(--bg)";nextBtn.style.background="var(--ember)";nextBtn.style.border="none";nextBtn.style.cursor="pointer"}
+    const ri=screen.querySelector('input[type="range"]');if(ri)ri.setAttribute('aria-valuenow',val);
     return;
   }
   if(thumb)thumb.style.left=calcLeft;
   if(fill)fill.style.width=calcWidth;
   if(num)num.textContent=val;
+  const rangeInput=screen.querySelector('input[type="range"]');
+  if(rangeInput)rangeInput.setAttribute('aria-valuenow',val);
 }
 function advance(){if(step<totalQ-1){step++;render()}else{step=totalQ;render();window.scrollTo({top:0,behavior:"smooth"})}}
 
@@ -805,6 +814,7 @@ function renderResults(){
     <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">Go Deeper</p>
     <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Your results are already saved to this device. Want to go further? Enter your email to receive five dispatches over the next two weeks, one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
     <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;width:100%;box-sizing:border-box;margin:0 auto 0.75rem">
+      <label for="emailInput" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">Email address</label>
       <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;min-width:0;max-width:100%;box-sizing:border-box;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
       <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Start Dispatches</button>
     </div>
@@ -881,7 +891,7 @@ function renderResults(){
       ${emailForm}
     </div>`}
     <p style="font-size:0.85rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:0.75rem">This is a self-reflection tool, not a clinical assessment or substitute for professional care.</p>
-    <p style="font-size:0.8rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">Your data is stored locally in your browser. It’s private to you and never leaves your device. Clearing your browser cache will erase it. <a href="#" onclick="event.preventDefault();clearAllData()" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Clear my data</a></p>
+    <p style="font-size:0.8rem;color:var(--warmMuted);text-align:center;line-height:1.5;margin-bottom:1.5rem">Your data is stored locally in your browser. It’s private to you and never leaves your device. Clearing your browser cache will erase it. <button onclick="clearAllData()" style="color:var(--ember);background:none;border:none;border-bottom:1px solid rgba(74,100,68,0.3);font-family:inherit;font-size:inherit;cursor:pointer;padding:0">Clear my data</button></p>
     <div style="text-align:center;padding:1.5rem 0;border-top:1px solid rgba(74,100,68,0.07)">
       <div class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em">The C.H.E.A.T. Code\u2122 Capacity Audit</div>
       <a href="https://rebellioncollective.com" target="_blank" rel="noopener noreferrer" class="mono" style="font-size:0.8rem;color:var(--warmMuted);letter-spacing:0.05em;display:block;margin-top:0.25rem;text-decoration:none">Rebellion Collective</a>
@@ -906,8 +916,8 @@ async function submitEmail(){
 
 function downloadCalendarHolds(){const pad=n=>String(n).padStart(2,'0');const now=new Date();const y=now.getFullYear(),m=pad(now.getMonth()+1),d=pad(now.getDate());const stamp=y+m+d+'T'+pad(now.getHours())+pad(now.getMinutes())+pad(now.getSeconds());const times=[{h:'08',label:'Morning'},{h:'12',label:'Midday'},{h:'18',label:'Evening'}];let cal='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Rebellion Collective//Capacity Audit//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n';times.forEach((t,i)=>{cal+='BEGIN:VEVENT\r\n';cal+='DTSTART:'+y+m+d+'T'+t.h+'0000\r\n';cal+='DTEND:'+y+m+d+'T'+t.h+'0500\r\n';cal+='RRULE:FREQ=DAILY\r\n';cal+='SUMMARY:Capacity Check-in ('+t.label+')\r\n';cal+='DESCRIPTION:Take 2 minutes. Notice where your energy\\, attention\\, and time are going.\\nhttps://capacityaudit.rebellioncollective.com\r\n';cal+='UID:capacity-audit-'+t.label.toLowerCase()+'-'+stamp+'@rebellioncollective.com\r\n';cal+='BEGIN:VALARM\r\nTRIGGER:-PT1M\r\nACTION:DISPLAY\r\nDESCRIPTION:Capacity Check-in\r\nEND:VALARM\r\n';cal+='END:VEVENT\r\n'});cal+='END:VCALENDAR';const blob=new Blob([cal],{type:'text/calendar;charset=utf-8'});const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);if(isMobile){const reader=new FileReader();reader.onload=function(){const a=document.createElement('a');a.href=reader.result;a.download='capacity-check-in.ics';a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a)};reader.readAsDataURL(blob)}else{const url=URL.createObjectURL(blob);triggerDownload(url,'capacity-check-in.ics')}}
 
-function downloadSpreadsheet(){
-  if(typeof XLSX==='undefined'){alert('Spreadsheet library failed to load. Please check your connection and try again.');return;}
+async function downloadSpreadsheet(){
+  if(typeof XLSX==='undefined'){try{await loadSheetJS()}catch(e){alert('Spreadsheet library failed to load. Please check your connection and try again.');return;}}
   var hist=loadHistory();
   var wb=XLSX.utils.book_new();
   // Sheet 1: Current Audit Summary

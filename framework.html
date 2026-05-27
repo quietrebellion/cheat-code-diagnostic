@@ -74,9 +74,18 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;hei
   .mult-box .val{font-size:1.2rem}
   .mult-result{width:75px;height:75px}
   .mult-result .val{font-size:1.4rem}
-  .five-c-grid{grid-template-columns:repeat(3,1fr)}
+  .practice-grid{grid-template-columns:repeat(3,1fr)}
   .card-lg{padding:1.25rem 1rem}
 }
+.practice-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0.5rem;text-align:center;margin-bottom:1rem}
+.practice-item{padding:0.75rem 0.25rem;border-radius:8px;border:1px solid rgba(74,100,68,0.12);background:var(--bgCard);cursor:pointer;transition:all 0.3s ease;font-family:inherit;min-height:44px;min-width:44px}
+.practice-item:hover{border-color:var(--ember)}
+.practice-item.active{background:var(--ember);color:var(--bg);border-color:var(--ember)}
+.practice-item .icon{font-size:1.3rem;margin-bottom:0.25rem}
+.practice-item .name{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+.practice-item .effect{font-size:0.6rem;margin-top:0.2rem;opacity:0.7}
+.practice-item.active .effect{opacity:0.9}
+.bonus-tag{font-size:0.75rem;color:var(--green);font-weight:500;margin-left:0.25rem}
 </style>
 </head>
 <body>
@@ -96,6 +105,7 @@ const state={
   energy:5, attention:5, time:5,
   habits:"conscious", // conscious | unconscious
   scenario:null,
+  practices:{curiosity:false,courage:false,compassion:false,connection:false,commitment:false},
   fromAudit:false,
   auditScores:null
 };
@@ -113,6 +123,17 @@ const state={
   }
 })();
 
+// ── Practice Toggles ──
+function togglePractice(key){
+  state.practices[key]=!state.practices[key];
+  updatePractices();
+  ["energy","attention","time"].forEach(function(dim){
+    var bonusEl=document.getElementById("sl-bonus-"+dim);
+    if(bonusEl){var b=totalPracticeBonus(dim);bonusEl.textContent=b>0?" +"+b.toFixed(1):""}
+  });
+  updateMultViz();
+}
+
 // ── Scenarios ──
 const SCENARIOS={
   balanced:{label:"Balanced",e:7,a:7,t:7,desc:"All three dimensions at the same level. Notice how even modest, balanced scores produce solid capacity."},
@@ -123,15 +144,15 @@ const SCENARIOS={
   custom:{label:"Custom",e:null,a:null,t:null,desc:"Set your own values and explore the model."}
 };
 
-// ── Compute ──
-function computeCapacity(){
-  const e=state.energy, a=state.attention, t=state.time;
-  return parseFloat(Math.pow(e*a*t, 1/3).toFixed(1));
-}
+// ── Practice Effects ──
+const PRACTICE_EFFECTS={curiosity:{attention:1.0},courage:{time:1.0},compassion:{energy:1.0},connection:{energy:0.5,attention:0.5},commitment:{time:0.5,attention:0.5}};
+function getEffective(dim){var base=state[dim],bonus=0;Object.keys(state.practices).forEach(function(p){if(state.practices[p]&&PRACTICE_EFFECTS[p]&&PRACTICE_EFFECTS[p][dim]){bonus+=PRACTICE_EFFECTS[p][dim]}});return Math.min(10,base+bonus)}
+function totalPracticeBonus(dim){var bonus=0;Object.keys(state.practices).forEach(function(p){if(state.practices[p]&&PRACTICE_EFFECTS[p]&&PRACTICE_EFFECTS[p][dim]){bonus+=PRACTICE_EFFECTS[p][dim]}});return bonus}
 
-function computeRawGM(){
-  return parseFloat(Math.pow(state.energy*state.attention*state.time, 1/3).toFixed(1));
-}
+// ── Compute ──
+function computeCapacity(){var e=getEffective("energy"),a=getEffective("attention"),t=getEffective("time");return parseFloat(Math.pow(e*a*t,1/3).toFixed(1))}
+
+function computeRawGM(){var e=getEffective("energy"),a=getEffective("attention"),t=getEffective("time");return parseFloat(Math.pow(e*a*t,1/3).toFixed(1))}
 
 // ── Render ──
 function render(){
@@ -160,11 +181,11 @@ function render(){
           <div class="eq">
             <span style="font-size:0.85em;font-weight:400">C</span><span style="font-size:0.65em;font-weight:400;vertical-align:sub">(h)</span>
             <span class="eq-op">=</span>
-            <span class="eq-dim" id="eq-e" style="color:${scoreColor(state.energy)}">E</span>
+            <span class="eq-dim" id="eq-e" style="color:${scoreColor(getEffective('energy'))}">E</span>
             <span class="eq-op">&times;</span>
-            <span class="eq-dim" id="eq-a" style="color:${scoreColor(state.attention)}">A</span>
+            <span class="eq-dim" id="eq-a" style="color:${scoreColor(getEffective('attention'))}">A</span>
             <span class="eq-op">&times;</span>
-            <span class="eq-dim" id="eq-t" style="color:${scoreColor(state.time)}">T</span>
+            <span class="eq-dim" id="eq-t" style="color:${scoreColor(getEffective('time'))}">T</span>
           </div>
           <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">
             Capacity as a function of Habits = Energy &times; Attention &times; Time
@@ -200,18 +221,18 @@ function render(){
 
         <!-- Multiplier Visualization -->
         <div class="mult-viz" id="mult-viz">
-          <div class="mult-box" style="border-color:${scoreColor(state.energy)}30">
-            <div class="val" style="color:${scoreColor(state.energy)}">${state.energy.toFixed(1)}</div>
+          <div class="mult-box" style="border-color:${scoreColor(getEffective('energy'))}30">
+            <div class="val" style="color:${scoreColor(getEffective('energy'))}">${getEffective('energy').toFixed(1)}</div>
             <div class="lbl">Energy</div>
           </div>
           <div class="mult-op">&times;</div>
-          <div class="mult-box" style="border-color:${scoreColor(state.attention)}30">
-            <div class="val" style="color:${scoreColor(state.attention)}">${state.attention.toFixed(1)}</div>
+          <div class="mult-box" style="border-color:${scoreColor(getEffective('attention'))}30">
+            <div class="val" style="color:${scoreColor(getEffective('attention'))}">${getEffective('attention').toFixed(1)}</div>
             <div class="lbl">Attn</div>
           </div>
           <div class="mult-op">&times;</div>
-          <div class="mult-box" style="border-color:${scoreColor(state.time)}30">
-            <div class="val" style="color:${scoreColor(state.time)}">${state.time.toFixed(1)}</div>
+          <div class="mult-box" style="border-color:${scoreColor(getEffective('time'))}30">
+            <div class="val" style="color:${scoreColor(getEffective('time'))}">${getEffective('time').toFixed(1)}</div>
             <div class="lbl">Time</div>
           </div>
           <div class="mult-op">=</div>
@@ -231,17 +252,18 @@ function render(){
     </div>
 
     <!-- Section 4: Habits as the Allocator -->
+    <!-- Section 6: The Practices -->
     <div class="section">
       <div class="card-lg">
-        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">What Becomes Available</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">The 5 C's are capacities that become available when the equation is healthy. You create the conditions for them to emerge.</p>
+        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">The Practices</h2>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">The 5 C's aren't rewards you unlock at some capacity threshold. They're practices you cultivate, and each one feeds the equation back. In a system built for extraction, practicing these is how you rebuild.</p>
 
-        <div class="five-c-grid" id="five-cs">
-          ${renderFiveCs(cap)}
+        <div class="practice-grid" id="practices-grid">
+          ${renderPractices()}
         </div>
 
-        <div style="font-size:0.85rem;color:var(--warmMuted);text-align:center;margin-top:1rem;line-height:1.6" id="five-c-note">
-          ${getFiveCNote(cap)}
+        <div style="font-size:0.85rem;color:var(--warmMuted);text-align:center;margin-top:0.75rem;line-height:1.6" id="practice-note">
+          ${getPracticeNote()}
         </div>
       </div>
     </div>
@@ -331,7 +353,7 @@ function renderSlider(key, label, icon, val){
   return `<div style="margin-bottom:1.25rem">
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.3rem">
       <span style="font-size:1rem;font-weight:600"><span aria-hidden="true">${icon}</span> ${label}</span>
-      <span class="mono" id="sl-val-${key}" style="font-size:1.1rem;font-weight:700;color:${col}">${val.toFixed(1)}</span>
+      <span class="mono" id="sl-val-${key}" style="font-size:1.1rem;font-weight:700;color:${col}">${val.toFixed(1)}</span><span class="bonus-tag" id="sl-bonus-${key}">${(function(){var b=totalPracticeBonus(key);return b>0?" +"+b.toFixed(1):""}())}</span>
     </div>
     <div style="position:relative;height:10px;margin-bottom:0.15rem">
       <div class="track" style="margin-bottom:0">
@@ -359,13 +381,17 @@ function onSlide(key, val){
   if(fill){fill.style.width=(val/10)*100+"%";fill.style.background=col}
   if(thumb){thumb.style.left=(val/10)*100+"%";thumb.style.background=col}
 
-  // Update equation letters
+  // Update bonus tag
+  var bonusEl=document.getElementById("sl-bonus-"+key);
+  if(bonusEl){var b=totalPracticeBonus(key);bonusEl.textContent=b>0?" +"+b.toFixed(1):""}
+  // Update equation letters (using effective color)
+  var effCol=scoreColor(getEffective(key));
   const eqEl=document.getElementById("eq-"+key.charAt(0));
-  if(eqEl) eqEl.style.color=col;
+  if(eqEl) eqEl.style.color=effCol;
 
   // Update multiplier viz
   updateMultViz();
-  updateFiveCs();
+  updatePractices();
   updateScenarioButtons();
 }
 
@@ -376,9 +402,9 @@ function updateMultViz(){
   if(!viz) return;
 
   const dims=[
-    {key:"energy",label:"Energy",val:state.energy},
-    {key:"attention",label:"Attn",val:state.attention},
-    {key:"time",label:"Time",val:state.time}
+    {key:"energy",label:"Energy",val:getEffective("energy")},
+    {key:"attention",label:"Attn",val:getEffective("attention")},
+    {key:"time",label:"Time",val:getEffective("time")}
   ];
 
   let html="";
@@ -410,13 +436,11 @@ function updateHabitsDisplay(){
   // We'll do a targeted update if the elements exist
 }
 
-function updateFiveCs(){
-  const cap=computeCapacity();
-  const grid=document.getElementById("five-cs");
-  const note=document.getElementById("five-c-note");
-  if(grid) grid.innerHTML=renderFiveCs(cap);
-  if(note) note.textContent=getFiveCNote(cap);
-}
+function updatePractices(){
+  var grid=document.getElementById("practices-grid");
+  var note=document.getElementById("practice-note");
+  if(grid) grid.innerHTML=renderPractices();
+  if(note) note.textContent=getPracticeNote()}
 
 function updateScenarioButtons(){
   document.querySelectorAll(".scenario-btn").forEach(btn=>{
@@ -442,10 +466,22 @@ function setHabits(mode){
   }
 }
 
+// ── Practice Toggles ──
+function togglePractice(key){
+  state.practices[key]=!state.practices[key];
+  updatePractices();
+  ["energy","attention","time"].forEach(function(dim){
+    var bonusEl=document.getElementById("sl-bonus-"+dim);
+    if(bonusEl){var b=totalPracticeBonus(dim);bonusEl.textContent=b>0?" +"+b.toFixed(1):""}
+  });
+  updateMultViz();
+}
+
 // ── Scenarios ──
 function loadScenario(key){
   const s=SCENARIOS[key];
   if(!s||s.e===null) return;
+  Object.keys(state.practices).forEach(function(p){state.practices[p]=false});
   state.energy=s.e;
   state.attention=s.a;
   state.time=s.t;
@@ -463,29 +499,9 @@ function resetToAudit(){
 }
 
 // ── 5 C's rendering ──
-function renderFiveCs(cap){
-  const cs=[
-    {name:"Curiosity",icon:"🔍",threshold:3},
-    {name:"Courage",icon:"🔥",threshold:4.5},
-    {name:"Compassion",icon:"💚",threshold:4},
-    {name:"Connection",icon:"🤝",threshold:5},
-    {name:"Commitment",icon:"⚡",threshold:5}
-  ];
-  return cs.map(c=>{
-    const available=cap>=c.threshold;
-    return `<div class="five-c-item${available?"":" dim"}">
-      <div class="icon" aria-hidden="true">${c.icon}</div>
-      <div class="name">${c.name}</div>
-    </div>`;
-  }).join("");
-}
+function renderPractices(){var ps=[{key:"curiosity",name:"Curiosity",icon:"\u{1F50D}",effect:"+1 Attn"},{key:"courage",name:"Courage",icon:"\u{1F525}",effect:"+1 Time"},{key:"compassion",name:"Compassion",icon:"\u{1F49A}",effect:"+1 Energy"},{key:"connection",name:"Connection",icon:"\u{1F91D}",effect:"+0.5 E, +0.5 A"},{key:"commitment",icon:"\u26A1",effect:"+0.5 T, +0.5 A"}];return ps.map(function(p){var active=state.practices[p.key];return '<button class="practice-item'+(active?' active':'')+'" onclick="togglePractice(\''+p.key+'\')" aria-pressed="'+active+'">'+'<div class="icon" aria-hidden="true">'+p.icon+'</div>'+'<div class="name">'+p.name+'</div>'+'<div class="effect">'+p.effect+'</div></button>'}).join("")}
 
-function getFiveCNote(cap){
-  if(cap<=3) return "At this capacity, survival takes priority. The 5 C's are waiting, not gone.";
-  if(cap<=5) return "Some capacities are starting to come online. Curiosity and Compassion are often first.";
-  if(cap<=7) return "Most of the 5 C's are available to you. Connection and Commitment emerge as capacity stabilizes.";
-  return "Full range. When capacity is healthy, the 5 C's stop being aspirations and start being expressions of who you already are.";
-}
+function getPracticeNote(){var count=Object.values(state.practices).filter(Boolean).length;if(count===0) return "Toggle a practice to see how it shifts your capacity. Each one feeds specific dimensions of the equation.";if(count<=2) return count+" practice"+(count>1?"s":"")+" active. Notice how each one creates a measurable shift in the equation.";if(count<=4) return count+" practices active. The effects compound. This is what rebuilding looks like.";return "All five practices active. This is the full counter to extraction: not just awareness, but action."}
 
 function getTierNote(gm){
   if(gm<=2) return "The system is extracting faster than you can replenish. This is where the body starts keeping score.";

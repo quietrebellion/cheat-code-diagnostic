@@ -83,8 +83,8 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;hei
 .practice-item.active{background:var(--ember);color:var(--bg);border-color:var(--ember)}
 .practice-item .icon{font-size:1.3rem;margin-bottom:0.25rem}
 .practice-item .name{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
-.practice-item .effect{font-size:0.6rem;margin-top:0.2rem;opacity:0.7}
-.practice-item.active .effect{opacity:0.9}
+
+
 .bonus-tag{font-size:0.75rem;color:var(--green);font-weight:500;margin-left:0.25rem}
 </style>
 </head>
@@ -145,7 +145,7 @@ const SCENARIOS={
 };
 
 // ── Practice Effects ──
-const PRACTICE_EFFECTS={curiosity:{attention:1.0},courage:{time:1.0},compassion:{energy:1.0},connection:{energy:0.5,attention:0.5},commitment:{time:0.5,attention:0.5}};
+const PRACTICE_EFFECTS={curiosity:{attention:2.0},courage:{time:2.0},compassion:{energy:2.0},connection:{energy:1.0,attention:1.0},commitment:{time:1.0,attention:1.0}};
 function getEffective(dim){var base=state[dim],bonus=0;Object.keys(state.practices).forEach(function(p){if(state.practices[p]&&PRACTICE_EFFECTS[p]&&PRACTICE_EFFECTS[p][dim]){bonus+=PRACTICE_EFFECTS[p][dim]}});return Math.min(10,base+bonus)}
 function totalPracticeBonus(dim){var bonus=0;Object.keys(state.practices).forEach(function(p){if(state.practices[p]&&PRACTICE_EFFECTS[p]&&PRACTICE_EFFECTS[p][dim]){bonus+=PRACTICE_EFFECTS[p][dim]}});return bonus}
 
@@ -499,7 +499,7 @@ function resetToAudit(){
 }
 
 // ── 5 C's rendering ──
-function renderPractices(){var ps=[{key:"curiosity",name:"Curiosity",icon:"\u{1F50D}",effect:"+1 Attn"},{key:"courage",name:"Courage",icon:"\u{1F525}",effect:"+1 Time"},{key:"compassion",name:"Compassion",icon:"\u{1F49A}",effect:"+1 Energy"},{key:"connection",name:"Connection",icon:"\u{1F91D}",effect:"+0.5 E, +0.5 A"},{key:"commitment",name:"Commitment",icon:"\u26A1",effect:"+0.5 T, +0.5 A"}];return ps.map(function(p){var active=state.practices[p.key];return '<button class="practice-item'+(active?' active':'')+'" onclick="togglePractice(\''+p.key+'\')" aria-pressed="'+active+'">'+'<div class="icon" aria-hidden="true">'+p.icon+'</div>'+'<div class="name">'+p.name+'</div>'+'<div class="effect">'+p.effect+'</div></button>'}).join("")}
+function renderPractices(){var ps=[{key:"curiosity",name:"Curiosity",icon:"\u{1F50D}"},{key:"courage",name:"Courage",icon:"\u{1F525}"},{key:"compassion",name:"Compassion",icon:"\u{1F49A}"},{key:"connection",name:"Connection",icon:"\u{1F91D}"},{key:"commitment",name:"Commitment",icon:"\u26A1"}];return ps.map(function(p){var active=state.practices[p.key];return '<button class="practice-item'+(active?' active':'')+'" onclick="togglePractice(\''+p.key+'\')" aria-pressed="'+active+'">'+'<div class="icon" aria-hidden="true">'+p.icon+'</div>'+'<div class="name">'+p.name+'</div>'+'</button>'}).join("")}
 
 function getPracticeNote(){var count=Object.values(state.practices).filter(Boolean).length;if(count===0) return "Toggle a practice to see how it shifts your capacity. Each one feeds specific dimensions of the equation.";if(count<=2) return count+" practice"+(count>1?"s":"")+" active. Notice how each one creates a measurable shift in the equation.";if(count<=4) return count+" practices active. The effects compound. This is what rebuilding looks like.";return "All five practices active. This is the full counter to extraction: not just awareness, but action."}
 

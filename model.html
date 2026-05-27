@@ -190,7 +190,7 @@ function render(){
               return `<button class="scenario-btn${state.scenario===k?" active":""}" onclick="loadScenario('${k}')">${v.label}</button>`;
             }).join("")}
           </div>
-          <div id="scenario-desc" style="font-size:0.9rem;color:var(--textMuted);line-height:1.55;min-height:2em">${state.scenario&&SCENARIOS[state.scenario]?SCENARIOS[state.scenario].desc:""}</div>
+          <div id="scenario-desc" style="font-size:0.9rem;color:var(--textMuted);line-height:1.55;min-height:2em">${state.scenario&&SCENARIOS[state.scenario]?SCENARIOS[state.scenario].desc:"Pick a scenario above to see how different patterns shape the equation."}</div>
         </div>
 
         <!-- Sliders -->
@@ -243,7 +243,7 @@ function render(){
           <button class="q-toggle${state.habits==="unconscious"?" active":""}" onclick="setHabits('unconscious')">Unconscious Habits</button>
         </div>
 
-        <div style="padding:1rem;background:rgba(74,100,68,0.04);border-radius:8px">
+        <div id="habits-desc" style="padding:1rem;background:rgba(74,100,68,0.04);border-radius:8px;transition:all 0.3s ease">
           <p style="font-size:0.95rem;color:var(--text);line-height:1.7;margin:0">${state.habits==="conscious"
             ?"Conscious habits are chosen, examined, and aligned with what you actually want. When habits are conscious, your Energy, Attention, and Time flow where you intend them to. The equation expresses fully."
             :"Unconscious habits are inherited, reactive, running on autopilot. When habits are unconscious, your inputs get redirected. Energy goes to coping instead of creating. Attention gets captured instead of chosen. Time fills with obligations that aren't yours. Same raw capacity, different allocation."
@@ -427,7 +427,19 @@ function updateScenarioButtons(){
 // ── Habits toggle ──
 function setHabits(mode){
   state.habits=mode;
-  render(); // full re-render for habits since it affects multiple sections
+  // Targeted update: only update habits section elements
+  document.querySelectorAll('.q-toggle').forEach(btn=>{
+    const isConscious=btn.textContent.trim().startsWith('Conscious');
+    const isActive=(mode==='conscious'&&isConscious)||(mode==='unconscious'&&!isConscious);
+    btn.classList.toggle('active',isActive);
+  });
+  const desc=document.getElementById('habits-desc');
+  if(desc){
+    const p=desc.querySelector('p');
+    if(p) p.textContent=mode==="conscious"
+      ?"Conscious habits are chosen, examined, and aligned with what you actually want. When habits are conscious, your Energy, Attention, and Time flow where you intend them to. The equation expresses fully."
+      :"Unconscious habits are inherited, reactive, running on autopilot. When habits are unconscious, your inputs get redirected. Energy goes to coping instead of creating. Attention gets captured instead of chosen. Time fills with obligations that aren'''t yours. Same raw capacity, different allocation.";
+  }
 }
 
 // ── Scenarios ──

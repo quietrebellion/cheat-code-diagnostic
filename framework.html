@@ -233,6 +233,22 @@ function render(){
     <!-- Section 4: Habits as the Allocator -->
     <div class="section">
       <div class="card-lg">
+        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">What Becomes Available</h2>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">The 5 C's are capacities that become available when the equation is healthy. You create the conditions for them to emerge.</p>
+
+        <div class="five-c-grid" id="five-cs">
+          ${renderFiveCs(cap)}
+        </div>
+
+        <div style="font-size:0.85rem;color:var(--warmMuted);text-align:center;margin-top:1rem;line-height:1.6" id="five-c-note">
+          ${getFiveCNote(cap)}
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 7: The Macro Message -->
+    <div class="section">
+      <div class="card-lg">
         <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">Habits: The Allocator</h2>
         <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">The (h) in C(h) is function notation, the same way f(x) means "a function of x." Capacity is a function of your Habits. Habits aren't a fourth variable you multiply into the equation. They're the context the equation operates inside.</p>
         <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Habits determine where your Energy goes, what captures your Attention, and how your Time gets spent. They're the patterns running underneath everything, allocating your three dimensions before you've made a single conscious choice about them.</p>
@@ -287,22 +303,6 @@ function render(){
     </div>
 
     <!-- Section 6: The 5 C's -->
-    <div class="section">
-      <div class="card-lg">
-        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">What Becomes Available</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">The 5 C's are capacities that become available when the equation is healthy. You create the conditions for them to emerge.</p>
-
-        <div class="five-c-grid" id="five-cs">
-          ${renderFiveCs(cap)}
-        </div>
-
-        <div style="font-size:0.85rem;color:var(--warmMuted);text-align:center;margin-top:1rem;line-height:1.6" id="five-c-note">
-          ${getFiveCNote(cap)}
-        </div>
-      </div>
-    </div>
-
-    <!-- Section 7: The Macro Message -->
     <div class="section">
       <div class="card-lg" style="text-align:center">
         <p style="font-size:1.1rem;color:var(--warm);line-height:1.7;font-style:italic;max-width:480px;margin:0 auto">"In a system built for extraction, reclaiming your Clarity, Capacity, and Sovereignty is an act of Rebellion."</p>

@@ -254,7 +254,7 @@ function renderWhatIf(secScores,comp){
       <div id="wif-msg" style="font-size:0.9rem;color:var(--textMuted);margin-top:0.6rem;line-height:1.5;min-height:1.5em"></div>
     </div>
     <div style="text-align:center;margin-top:0.75rem">
-      <button class="btn-ghost" style="font-size:0.85rem" onclick="resetWhatIf()">Reset to your actual scores</button><div style="margin-top:0.5rem"><a href="model.html" onclick="this.href='model.html?e='+document.getElementById('wif-val-energy').textContent+'&a='+document.getElementById('wif-val-attention').textContent+'&t='+document.getElementById('wif-val-time').textContent" class="btn-ghost" style="font-size:0.85rem;color:var(--ember)">Explore the full C.H.E.A.T. Code model →</a></div>
+      <button class="btn-ghost" style="font-size:0.85rem" onclick="resetWhatIf()">Reset to your actual scores</button><div style="margin-top:0.5rem"><a href="framework.html" onclick="this.href='framework.html?e='+document.getElementById('wif-val-energy').textContent+'&a='+document.getElementById('wif-val-attention').textContent+'&t='+document.getElementById('wif-val-time').textContent" class="btn-ghost" style="font-size:0.85rem;color:var(--ember)">Explore the full C.H.E.A.T. Code model →</a></div>
     </div>
   </div>`;
 }
@@ -370,7 +370,7 @@ function renderTimeframe(){
       <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin-bottom:1rem">Pay attention to what keeps showing up.</p>
       <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Download three daily calendar holds (8am, 12pm, 6pm) to build the habit. Each one is five minutes. Open the file and your calendar app will do the rest.</p>
       <button onclick="downloadCalendarHolds()" style="display:inline-flex;align-items:center;gap:0.5rem;font-family:inherit;font-size:0.9rem;font-weight:500;color:var(--ember);background:transparent;text-decoration:none;border:1px solid rgba(74,100,68,0.3);border-radius:6px;padding:0.5rem 1rem;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='rgba(74,100,68,0.08)'" onmouseout="this.style.background='transparent'">📅 Download Calendar Holds</button>
-      <div style="margin-top:1rem"><a href="model.html" style="font-size:0.9rem;color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)" onmouseover="this.style.borderBottomColor='var(--ember)'" onmouseout="this.style.borderBottomColor='rgba(74,100,68,0.3)'">Learn about the C.H.E.A.T. Code framework</a></div>
+      <div style="margin-top:1rem"><a href="framework.html" style="font-size:0.9rem;color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)" onmouseover="this.style.borderBottomColor='var(--ember)'" onmouseout="this.style.borderBottomColor='rgba(74,100,68,0.3)'">Learn about the C.H.E.A.T. Code framework</a></div>
       </div>
     </div>
     <button class="btn" style="align-self:center" onclick="timeframe='right_now';showTimeframe=false;showPrediction=true;render()">Continue</button>
@@ -597,7 +597,7 @@ function renderIntro(){
       <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">This Capacity Audit tells you where your capacity is being drained, how, and what to do about it.</p>
     
       <p><a href="https://rebellioncollective.com/manifesto" target="_blank" rel="noopener noreferrer" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Read the manifesto that started it all →</a></p>
-      <p style="margin-top:0.5rem"><a href="model.html" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Learn about the C.H.E.A.T. Code →</a></p>
+      <p style="margin-top:0.5rem"><a href="framework.html" style="color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Learn about the C.H.E.A.T. Code →</a></p>
   
     <div style="max-width:500px;margin:1.5rem auto 0;padding-top:1rem;border-top:1px solid rgba(74,100,68,0.07)">
       <p style="font-size:0.8rem;color:var(--warmMuted);line-height:1.5;text-align:center">Your data is stored locally in your browser. It\u2019s private to you and never leaves your device. Clearing your browser cache will erase it.${hist.length>0?` <button onclick="clearAllData()" style="color:var(--ember);background:none;border:none;border-bottom:1px solid rgba(74,100,68,0.3);font-family:inherit;font-size:inherit;cursor:pointer;padding:0">Clear my data</button>`:""}</p>
@@ -968,7 +968,7 @@ function renderResults(){
     ${!isShared?`<div class="card-lg" style="text-align:center;border-color:rgba(74,100,68,0.2);background:rgba(74,100,68,0.04);margin-bottom:1.25rem">
       <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.75rem">Explore the Full Model</h2>
       <p style="font-size:1.05rem;color:var(--text);line-height:1.65;margin-bottom:1.25rem;max-width:480px;margin-left:auto;margin-right:auto">Your scores are inputs to a larger equation. The C.H.E.A.T. Code model shows how Energy, Attention, and Time interact, and what happens when you move even one of them. Bring your numbers and see for yourself.</p>
-      <a href="model.html" onclick="this.href='model.html?e='+document.getElementById('wif-val-energy').textContent+'&a='+document.getElementById('wif-val-attention').textContent+'&t='+document.getElementById('wif-val-time').textContent" class="btn-outline" style="font-size:1rem;padding:0.85rem 2rem;display:inline-block;text-decoration:none;max-width:360px;width:100%">Explore the C.H.E.A.T. Code Model</a>
+      <a href="framework.html" onclick="this.href='framework.html?e='+document.getElementById('wif-val-energy').textContent+'&a='+document.getElementById('wif-val-attention').textContent+'&t='+document.getElementById('wif-val-time').textContent" class="btn-outline" style="font-size:1rem;padding:0.85rem 2rem;display:inline-block;text-decoration:none;max-width:360px;width:100%">Explore the C.H.E.A.T. Code Model</a>
     </div>`:""}
     ${isShared?`
     <div class="card-lg" style="text-align:center;border-color:rgba(74,100,68,0.27);background:var(--bgCard)">

@@ -210,7 +210,7 @@ let predictedCapacity=null,showPrediction=false;
 function computeSectionScores(sc){
   const secScores={};
   SECTIONS.forEach(s=>{const vals=s.questions.map(q=>sc[q.key]).filter(v=>v!=null);secScores[s.key]=vals.length===s.questions.length?vals.reduce((a,b)=>a+b,0)/vals.length:null});
-  const comp=((secScores.energy+secScores.attention+secScores.time)/3).toFixed(1);
+  const comp=Math.pow(secScores.energy*secScores.attention*secScores.time,1/3).toFixed(1);
   return{secScores,comp};
 }
 
@@ -231,7 +231,7 @@ const app=document.getElementById("app");
 // History (localStorage)
 const HISTORY_KEY="cheat_audit_history";
 const MAX_HISTORY=90;
-function loadHistory(){try{const d=JSON.parse(localStorage.getItem(HISTORY_KEY));return Array.isArray(d)?d.filter(e=>e&&e.sections&&e.composite!=null):[]}catch(e){return[]}}
+function loadHistory(){try{const d=JSON.parse(localStorage.getItem(HISTORY_KEY));if(!Array.isArray(d))return[];const cleaned=d.filter(e=>e&&e.sections&&e.composite!=null);let changed=false;cleaned.forEach(e=>{if(e.sections.energy!=null&&e.sections.attention!=null&&e.sections.time!=null){const gm=parseFloat(Math.pow(e.sections.energy*e.sections.attention*e.sections.time,1/3).toFixed(1));if(gm!==e.composite){e.composite=gm;changed=true}}});if(changed){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(cleaned))}catch(x){}}return cleaned}catch(e){return[]}}
 function saveToHistory(sc,secScores,composite){
   if(historySaved)return;
   const hist=loadHistory();

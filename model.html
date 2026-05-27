@@ -233,30 +233,6 @@ function render(){
       </div>
     </div>
 
-    <!-- Section 3: Why Multiplicative -->
-    <div class="section">
-      <div class="card-lg">
-        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">Why Multiplicative, Not Additive</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">If capacity were additive, a person with Energy=2, Attention=8, Time=8 would score <span class="mono" style="color:var(--warm)">6.0</span>. "Stretched" but functional. That doesn't match reality.</p>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Multiplicative scoring gives them <span class="mono" style="color:var(--warm)">${Math.pow(2*8*8,1/3).toFixed(1)}</span>. "${scoreLabel(Math.pow(2*8*8,1/3))}." That's closer to the truth: you can't think clearly on two hours of sleep, no matter how much time or focus you have.</p>
-
-        <div style="display:flex;gap:1rem;margin:1rem 0;flex-wrap:wrap">
-          <div style="flex:1;min-width:200px;padding:1rem;border-radius:8px;border:1px solid rgba(74,100,68,0.12)">
-            <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--warmMuted);margin-bottom:0.5rem">Additive (Average)</div>
-            <div class="mono" style="font-size:0.9rem;color:var(--textMuted)">( 2 + 8 + 8 ) / 3 = <span style="color:var(--amber);font-weight:700">6.0</span></div>
-            <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.25rem">Hides the collapse</div>
-          </div>
-          <div style="flex:1;min-width:200px;padding:1rem;border-radius:8px;border:1px solid rgba(74,100,68,0.12)">
-            <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--warmMuted);margin-bottom:0.5rem">Multiplicative (Geometric Mean)</div>
-            <div class="mono" style="font-size:0.9rem;color:var(--textMuted)">( 2 &times; 8 &times; 8 )<sup>1/3</sup> = <span style="color:${scoreColor(Math.pow(2*8*8,1/3))};font-weight:700">${Math.pow(2*8*8,1/3).toFixed(1)}</span></div>
-            <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.25rem">Reveals the bottleneck</div>
-          </div>
-        </div>
-
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7">The implication: raising your lowest dimension does more than raising your highest. The system rewards balance, and it punishes extraction.</p>
-      </div>
-    </div>
-
     <!-- Section 4: Habits as the Allocator -->
     <div class="section">
       <div class="card-lg">

@@ -254,7 +254,7 @@ function renderWhatIf(secScores,comp){
       <div id="wif-msg" style="font-size:0.9rem;color:var(--textMuted);margin-top:0.6rem;line-height:1.5;min-height:1.5em"></div>
     </div>
     <div style="text-align:center;margin-top:0.75rem">
-      <button class="btn-ghost" style="font-size:0.85rem" onclick="resetWhatIf()">Reset to your actual scores</button>
+      <button class="btn-ghost" style="font-size:0.85rem" onclick="resetWhatIf()">Reset to your actual scores</button><div style="margin-top:0.5rem"><a href="model.html" onclick="this.href='model.html?e='+document.getElementById('wif-val-energy').textContent+'&a='+document.getElementById('wif-val-attention').textContent+'&t='+document.getElementById('wif-val-time').textContent" class="btn-ghost" style="font-size:0.85rem;color:var(--ember)">Explore the full C.H.E.A.T. Code model →</a></div>
     </div>
   </div>`;
 }

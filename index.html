@@ -299,7 +299,7 @@ function resetWhatIf(){
     if(slider){slider.value=wifOriginal[k].toFixed(1);onWhatIfSlide(k,wifOriginal[k])}
   });
 }
-function clearAllData({
+function clearAllData(){
   if(!confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?'))return;
   localStorage.removeItem('cheat_audit_history');
   localStorage.removeItem('cheat_audit_session');

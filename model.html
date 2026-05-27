@@ -126,10 +126,7 @@ const SCENARIOS={
 // ── Compute ──
 function computeCapacity(){
   const e=state.energy, a=state.attention, t=state.time;
-  const raw=Math.pow(e*a*t, 1/3);
-  // Habits modifier: conscious habits = full expression, unconscious = 20% drag
-  const modifier=state.habits==="conscious"?1.0:0.8;
-  return parseFloat((raw*modifier).toFixed(1));
+  return parseFloat(Math.pow(e*a*t, 1/3).toFixed(1));
 }
 
 function computeRawGM(){
@@ -236,28 +233,21 @@ function render(){
     <!-- Section 4: Habits as the Allocator -->
     <div class="section">
       <div class="card-lg">
-        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">Habits: The Hidden Variable</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">The (h) in C(h) matters. Habits are the allocator. They determine how your Energy, Attention, and Time get distributed, often before you're awake enough to notice.</p>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">You already have habits. The real variable is whether they're <strong>conscious</strong> (chosen, examined, serving you) or <strong>unconscious</strong> (inherited, reactive, running on autopilot).</p>
+        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">Habits: The Allocator</h2>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">The (h) in C(h) is function notation, the same way f(x) means "a function of x." Capacity is a function of your Habits. Habits aren't a fourth variable you multiply into the equation. They're the context the equation operates inside.</p>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Habits determine where your Energy goes, what captures your Attention, and how your Time gets spent. They're the patterns running underneath everything, allocating your three dimensions before you've made a single conscious choice about them.</p>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">The question isn't whether you have habits. You do. The question is whether they're <strong>conscious</strong> or <strong>unconscious</strong>.</p>
 
         <div style="display:flex;gap:0.75rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap">
           <button class="q-toggle${state.habits==="conscious"?" active":""}" onclick="setHabits('conscious')">Conscious Habits</button>
           <button class="q-toggle${state.habits==="unconscious"?" active":""}" onclick="setHabits('unconscious')">Unconscious Habits</button>
         </div>
 
-        <div style="text-align:center;padding:1rem 0">
-          <div style="display:flex;align-items:baseline;justify-content:center;gap:0.5rem">
-            <span style="font-size:0.85rem;color:var(--warmMuted)">Raw capacity:</span>
-            <span class="mono" style="font-size:1.1rem;color:${scoreColor(gm)}">${gm.toFixed(1)}</span>
-            <span style="font-size:0.85rem;color:var(--warmMuted)">&times;</span>
-            <span class="mono" style="font-size:1.1rem;color:var(--warm)">${state.habits==="conscious"?"1.0":"0.8"}</span>
-            <span style="font-size:0.85rem;color:var(--warmMuted)">=</span>
-            <span class="mono" style="font-size:1.4rem;font-weight:700;color:${scoreColor(cap)}">${cap.toFixed(1)}</span>
-          </div>
-          <div style="font-size:0.85rem;color:var(--textMuted);margin-top:0.5rem">${state.habits==="conscious"
-            ?"Conscious habits express your full capacity. What you have is what you get."
-            :"Unconscious habits leak ~20% of your capacity before you even notice. Same raw inputs, less actual output."
-          }</div>
+        <div style="padding:1rem;background:rgba(74,100,68,0.04);border-radius:8px">
+          <p style="font-size:0.95rem;color:var(--text);line-height:1.7;margin:0">${state.habits==="conscious"
+            ?"Conscious habits are chosen, examined, and aligned with what you actually want. When habits are conscious, your Energy, Attention, and Time flow where you intend them to. The equation expresses fully."
+            :"Unconscious habits are inherited, reactive, running on autopilot. When habits are unconscious, your inputs get redirected. Energy goes to coping instead of creating. Attention gets captured instead of chosen. Time fills with obligations that aren't yours. Same raw capacity, different allocation."
+          }</p>
         </div>
       </div>
     </div>
@@ -266,7 +256,8 @@ function render(){
     <div class="section">
       <div class="card-lg">
         <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">Quality Layers</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">Each dimension has a structural layer (what it's made of) and a quality layer (what state it's in). The number on the slider captures both, but knowing which layer is dragging you down changes where you intervene.</p>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">The sliders above capture each dimension as a single number. But when you look closer, each one is composed of different structures. Energy isn't one thing. Attention isn't one thing. Time isn't one thing.</p>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">Each structure also has a quality: a state it can be in that changes how it functions. Knowing which structure is strong and which is dragging you down changes where you intervene. The <a href="/" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Capacity Audit</a> breaks each dimension into these structures so you can see exactly where your capacity is being held and where it's leaking.</p>
 
         <div class="card" style="margin-bottom:0.75rem">
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">

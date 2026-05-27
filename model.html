@@ -438,7 +438,7 @@ function setHabits(mode){
     const p=desc.querySelector('p');
     if(p) p.textContent=mode==="conscious"
       ?"Conscious habits are chosen, examined, and aligned with what you actually want. When habits are conscious, your Energy, Attention, and Time flow where you intend them to. The equation expresses fully."
-      :"Unconscious habits are inherited, reactive, running on autopilot. When habits are unconscious, your inputs get redirected. Energy goes to coping instead of creating. Attention gets captured instead of chosen. Time fills with obligations that aren'''t yours. Same raw capacity, different allocation.";
+      :"Unconscious habits are inherited, reactive, running on autopilot. When habits are unconscious, your inputs get redirected. Energy goes to coping instead of creating. Attention gets captured instead of chosen. Time fills with obligations that aren't yours. Same raw capacity, different allocation.";
   }
 }
 
@@ -469,7 +469,7 @@ function renderFiveCs(cap){
     {name:"Courage",icon:"🔥",threshold:4.5},
     {name:"Compassion",icon:"💚",threshold:4},
     {name:"Connection",icon:"🤝",threshold:5},
-    {name:"Commitment",icon:"⚡",threshold:6}
+    {name:"Commitment",icon:"⚡",threshold:5}
   ];
   return cs.map(c=>{
     const available=cap>=c.threshold;

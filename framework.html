@@ -62,10 +62,11 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;hei
 .flow-arrow{text-align:center;font-size:1.3rem;color:var(--warmMuted);padding:0.5rem 0;opacity:0.5}
 
 /* Scenario presets */
-.scenario-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem}
-.scenario-btn{padding:0.5rem 0.9rem;border-radius:6px;font-size:0.8rem;font-family:inherit;cursor:pointer;border:1px solid rgba(74,100,68,0.2);background:transparent;color:var(--textMuted);transition:all 0.2s ease;min-height:44px}
+.scenario-row{display:grid;grid-template-columns:repeat(5,1fr);gap:0.4rem;margin-bottom:1rem}
+.scenario-btn{padding:0.5rem 0.5rem;border-radius:6px;font-size:0.78rem;font-family:inherit;cursor:pointer;border:1px solid rgba(74,100,68,0.2);background:transparent;color:var(--textMuted);transition:all 0.2s ease;min-height:44px;text-align:center;line-height:1.2;white-space:nowrap}
 .scenario-btn:hover{border-color:var(--ember);color:var(--ember)}
 .scenario-btn.active{background:var(--ember);color:var(--bg);border-color:var(--ember)}
+@media(max-width:560px){.scenario-row{grid-template-columns:repeat(2,1fr)}.scenario-btn{white-space:normal}}
 
 @media(max-width:500px){
   .eq{font-size:1.3rem}
@@ -86,6 +87,32 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;hei
 
 
 .bonus-tag{font-size:0.75rem;color:var(--green);font-weight:500;margin-left:0.25rem}
+
+/* ── Section 7: V.O.I.D. ── */
+.void-eq-wrap{text-align:center;padding:1rem 0}
+.void-eq{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--red);line-height:1.6}
+.void-eq-op{color:var(--warmMuted);font-weight:400;margin:0 0.35rem}
+.void-eq-sub{font-size:0.8rem;color:var(--warmMuted);margin-top:0.4rem}
+.void-force-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:1rem}
+.void-force-card{background:var(--bgCard);border:1px solid rgba(74,100,68,0.12);border-radius:8px;padding:0.85rem 1rem;display:grid;grid-template-columns:36px 1fr auto;gap:0.85rem;align-items:center}
+.void-force-card .letter{font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--red);text-align:center}
+.void-force-card .body .name{font-weight:600;font-size:0.92rem;color:var(--warm)}
+.void-force-card .body .attacks{font-size:0.72rem;color:var(--textMuted);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.1rem}
+.void-force-card .pressure{font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:600;color:var(--red);opacity:0.85;min-width:38px;text-align:right;transition:opacity 0.2s ease}
+.void-iso-row{display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap}
+.void-iso-toggle{padding:0.5rem 1rem;border-radius:6px;font-size:0.85rem;font-family:inherit;cursor:pointer;border:1px solid rgba(74,100,68,0.2);background:transparent;color:var(--textMuted);transition:all 0.2s ease;min-height:44px;flex:1}
+.void-iso-toggle.active{background:var(--ember);color:var(--bg);border-color:var(--ember)}
+.void-iso-toggle.alone.active{background:var(--red);border-color:var(--red)}
+.void-collective-note{margin-top:1.5rem;padding:1rem 1.15rem;border-left:3px solid var(--ember);background:rgba(61,86,56,0.06);border-radius:4px}
+.void-collective-note p{font-size:0.92rem;color:var(--warm);line-height:1.6;margin:0}
+.void-collective-note p + p{margin-top:0.5rem;color:var(--textMuted);font-style:italic;font-size:0.85rem}
+@media(max-width:520px){.void-force-grid{grid-template-columns:1fr}}
+
+/* ── Explore the Model: sub-cards ── */
+.sub-card{background:rgba(255,255,255,0.45);border:1px solid rgba(74,100,68,0.10);border-radius:10px;padding:1.25rem 1.15rem;margin-top:1rem}
+.sub-card:first-of-type{margin-top:1.25rem}
+.sub-card .sub-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--ember);font-weight:600;margin-bottom:0.75rem}
+.sub-card .sub-lead{font-size:0.92rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem}
 </style>
 </head>
 <body>
@@ -98,7 +125,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;hei
 // ── Color + scoring utilities (shared with audit) ──
 const C={bg:"#e8ebe3",bgCard:"#f0f2ec",ember:"#3d5638",emberLight:"#3d5638",warm:"#2a3528",warmMuted:"#4a5244",text:"#1e2a1c",textMuted:"#3a4238",red:"#a8453a",amber:"#7d6e22",green:"#4a6444"};
 function scoreColor(s){return s<=3?C.red:s<=6?C.amber:C.green}
-function scoreLabel(s){return s<=2?"Critical":s<=4?"Depleted":s<=6?"Stretched":s<=8?"Resourced":"Thriving"}
+function scoreLabel(s){return s<=2?"Critical":s<=4?"Depleted":s<=6?"Stretched":s<=8?"Steady":"Thriving"}
 
 // ── State ──
 const state={
@@ -132,16 +159,18 @@ function togglePractice(key){
     if(bonusEl){var b=totalPracticeBonus(dim);bonusEl.textContent=b>0?" +"+b.toFixed(1):""}
   });
   updateMultViz();
+  // Section 4 (V.O.I.D.) reacts to practice toggles
+  if(typeof voidUpdate === 'function') voidUpdate();
 }
 
 // ── Scenarios ──
 const SCENARIOS={
-  balanced:{label:"Balanced",e:7,a:7,t:7,desc:"All three dimensions at the same level. Notice how even modest, balanced scores produce solid capacity."},
-  burnout:{label:"Burnout",e:3,a:4,t:2,desc:"This is what extraction looks like. Time is gone, energy is crashing, and attention is just trying to survive. The geometric mean shows how one collapsed dimension drags everything down."},
-  hyperfocus:{label:"Hyperfocus Trap",e:4,a:9,t:3,desc:"Attention is locked in, but at what cost? When energy and time can't keep up, high focus becomes a liability. The equation reveals what willpower alone can't sustain."},
-  sunday:{label:"Sunday Reset",e:8,a:6,t:8,desc:"Good rest, reclaimed time. Attention is still warming up. This is often what recovery feels like before it compounds."},
-  newjob:{label:"New Role Energy",e:8,a:8,t:4,desc:"Fresh energy, high engagement, but the calendar isn't yours yet. Common in career transitions: the excitement is real, but the structure hasn't caught up."},
-  custom:{label:"Custom",e:null,a:null,t:null,desc:"Set your own values and explore the model."}
+  balanced:{label:"Balanced",e:7,a:7,t:7,desc:"All three steady. Notice how even decent, even numbers add up to solid capacity. You do not need to be peak in any one of them."},
+  burnout:{label:"Burnout",e:3,a:4,t:2,desc:"Time is gone. Energy is crashing. Attention is just trying to survive. One low number drags the whole thing down. This is what running on fumes actually does to the math."},
+  hyperfocus:{label:"Hyperfocus Trap",e:4,a:9,t:3,desc:"Attention is locked in. But the cost is showing up in the other two. Willpower alone cannot hold this together for long."},
+  sunday:{label:"Sunday Reset",e:8,a:6,t:8,desc:"Good rest. Time back in your hands. Attention still waking up. This is what recovery feels like before it lands."},
+  flow:{label:"Flow State",e:8,a:9,t:7,desc:"Attention is locked in, and Energy and Time can keep up with it. The work feels alive. Hours pass without you noticing. This is what high focus looks like when it is not costing you."},
+  custom:{label:"Custom",e:null,a:null,t:null,desc:"Set your own numbers and see what happens."}
 };
 
 // ── Practice Effects ──
@@ -167,16 +196,21 @@ function render(){
       <h1 style="font-size:1.7rem;font-weight:700;line-height:1.3;color:var(--warm);margin-bottom:0.75rem">How Capacity Actually Works</h1>
       <p style="font-size:1rem;color:var(--textMuted);line-height:1.6;max-width:520px;margin:0 auto">
         ${state.fromAudit
-          ? "Your audit scores are loaded below. This is the math behind your number, and the levers you can pull to change it."
-          : "Most people think capacity is a gas tank: full or empty, fixed or draining. Capacity is a live equation, and every variable is yours to shift."}
+          ? "Your audit scores are loaded below. This is the math behind your number, and what you can shift to change it."
+          : "Capacity is something you build. You have more control over it than you think."}
       </p>
+      ${state.fromAudit ? "" : `
+      <div style="margin-top:1.5rem">
+        <a href="https://capacityaudit.rebellioncollective.com/" class="btn" style="text-decoration:none">Take The Capacity Audit</a>
+      </div>
+      `}
     </div>
 
     <!-- Section 1: The Equation -->
     <div class="section">
       <div class="card-lg">
-        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">The Equation</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">Capacity is a function of three dimensions, multiplied together. When one dimension collapses, the whole equation collapses with it.</p>
+        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">The Cheat Code</h2>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">Three things make up your capacity. Energy. Attention. Time. They multiply. Drop any one of them to zero and the whole thing collapses.</p>
         <div class="equation-wrap">
           <div class="eq">
             <span style="font-size:0.85em;font-weight:400">C</span><span style="font-size:0.65em;font-weight:400;vertical-align:sub">(h)</span>
@@ -188,17 +222,17 @@ function render(){
             <span class="eq-dim" id="eq-t" style="color:${scoreColor(getEffective('time'))}">T</span>
           </div>
           <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">
-            Capacity as a function of Habits = Energy &times; Attention &times; Time
+            Capacity, shaped by your Habits = Energy &times; Attention &times; Time
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Section 2: Interactive Model -->
+    <!-- Section 2: Explore the Model (unified: capacity + drain + practices) -->
     <div class="section">
       <div class="card-lg" id="model-card">
-        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.25rem">Explore the Model</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1.25rem">Drag any dimension and watch the equation respond. Pay attention to what happens when one drops toward zero.</p>
+        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.25rem">Explore The Cheat Code</h2>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1.25rem">One model, three views. Set your numbers, watch what builds your capacity, what drains it, and what rebuilds it. All driven by the same three sliders.</p>
 
         ${state.fromAudit?`<div style="font-size:0.8rem;color:var(--warmMuted);margin-bottom:1rem;padding:0.5rem 0.75rem;background:rgba(74,100,68,0.04);border-radius:6px">Loaded from your audit: E=${state.auditScores.energy.toFixed(1)}, A=${state.auditScores.attention.toFixed(1)}, T=${state.auditScores.time.toFixed(1)}</div>`:""}
 
@@ -214,117 +248,165 @@ function render(){
           <div id="scenario-desc" style="font-size:0.9rem;color:var(--textMuted);line-height:1.55;min-height:2em">${state.scenario&&SCENARIOS[state.scenario]?SCENARIOS[state.scenario].desc:"Pick a scenario above to see how different patterns shape the equation."}</div>
         </div>
 
-        <!-- Sliders -->
-        ${renderSlider("energy","Energy","⚡",state.energy)}
-        ${renderSlider("attention","Attention","🎯",state.attention)}
-        ${renderSlider("time","Time","⏱️",state.time)}
+        <!-- Sub-card 1: Your Capacity -->
+        <div class="sub-card">
+          <div class="sub-title">Your Capacity</div>
+          <p class="sub-lead">Move any of the three and watch what happens. Pay attention to what one low number does to the rest.</p>
 
-        <!-- Multiplier Visualization -->
-        <div class="mult-viz" id="mult-viz">
-          <div class="mult-box" style="border-color:${scoreColor(getEffective('energy'))}30">
-            <div class="val" style="color:${scoreColor(getEffective('energy'))}">${getEffective('energy').toFixed(1)}</div>
-            <div class="lbl">Energy</div>
+          ${renderSlider("energy","Energy","⚡",state.energy)}
+          ${renderSlider("attention","Attention","🎯",state.attention)}
+          ${renderSlider("time","Time","⏱️",state.time)}
+
+          <div class="mult-viz" id="mult-viz" style="margin-top:1.25rem">
+            <div class="mult-box" style="border-color:${scoreColor(getEffective('energy'))}30">
+              <div class="val" style="color:${scoreColor(getEffective('energy'))}">${getEffective('energy').toFixed(1)}</div>
+              <div class="lbl">Energy</div>
+            </div>
+            <div class="mult-op">&times;</div>
+            <div class="mult-box" style="border-color:${scoreColor(getEffective('attention'))}30">
+              <div class="val" style="color:${scoreColor(getEffective('attention'))}">${getEffective('attention').toFixed(1)}</div>
+              <div class="lbl">Attn</div>
+            </div>
+            <div class="mult-op">&times;</div>
+            <div class="mult-box" style="border-color:${scoreColor(getEffective('time'))}30">
+              <div class="val" style="color:${scoreColor(getEffective('time'))}">${getEffective('time').toFixed(1)}</div>
+              <div class="lbl">Time</div>
+            </div>
+            <div class="mult-op">=</div>
+            <div class="mult-result" style="border-color:${scoreColor(gm)}">
+              <div class="val" id="gm-display" style="color:${scoreColor(gm)}">${gm.toFixed(1)}</div>
+              <div class="lbl">Capacity</div>
+            </div>
           </div>
-          <div class="mult-op">&times;</div>
-          <div class="mult-box" style="border-color:${scoreColor(getEffective('attention'))}30">
-            <div class="val" style="color:${scoreColor(getEffective('attention'))}">${getEffective('attention').toFixed(1)}</div>
-            <div class="lbl">Attn</div>
-          </div>
-          <div class="mult-op">&times;</div>
-          <div class="mult-box" style="border-color:${scoreColor(getEffective('time'))}30">
-            <div class="val" style="color:${scoreColor(getEffective('time'))}">${getEffective('time').toFixed(1)}</div>
-            <div class="lbl">Time</div>
-          </div>
-          <div class="mult-op">=</div>
-          <div class="mult-result" style="border-color:${scoreColor(gm)}">
-            <div class="val" id="gm-display" style="color:${scoreColor(gm)}">${gm.toFixed(1)}</div>
-            <div class="lbl">Capacity</div>
+
+          <div style="text-align:center;margin-top:0.25rem">
+            <div id="tier-display" style="font-size:1rem;font-weight:600;color:var(--warm)">${scoreLabel(gm)}</div>
+            <div id="tier-note" style="font-size:0.85rem;color:var(--textMuted);margin-top:0.25rem;line-height:1.5">${getTierNote(gm)}</div>
           </div>
         </div>
 
-        <div style="text-align:center;margin-top:0.25rem">
-          <div id="tier-display" style="font-size:1rem;font-weight:600;color:var(--warm)">${scoreLabel(gm)}</div>
-          <div id="tier-note" style="font-size:0.85rem;color:var(--textMuted);margin-top:0.25rem;line-height:1.5">${getTierNote(gm)}</div>
+        <!-- Sub-card 2: What Drains It -->
+        <div class="sub-card">
+          <div class="sub-title">What Drains It</div>
+          <p class="sub-lead">The same math that builds your capacity also describes how it leaks. V.O.I.D. is the other side. Four forces. Each one touches all three, but each one hits one of them hardest. And when you are alone with them, they hit harder still.</p>
+
+          <div class="void-eq-wrap">
+            <div class="void-eq">
+              <span>V</span><span class="void-eq-op">&times;</span>
+              <span>O</span><span class="void-eq-op">&times;</span>
+              <span style="font-size:0.85em;font-weight:400">(</span><span style="font-size:0.65em;font-weight:400;vertical-align:sub">i</span><span style="font-size:0.85em;font-weight:400">)</span><span>D</span>
+            </div>
+            <div class="void-eq-sub">Volatility &times; Overwhelm &times; Isolation &times; Distraction</div>
+          </div>
+
+          <div class="void-force-grid" id="void-force-grid" style="margin-top:1rem"></div>
+
+          <p class="label-sm" style="margin-top:1.5rem">When you are alone</p>
+          <div class="void-iso-row">
+            <button class="void-iso-toggle" id="void-with-others" onclick="voidSetIsolation('with')">With others</button>
+            <button class="void-iso-toggle alone active" id="void-on-own" onclick="voidSetIsolation('alone')">On your own</button>
+          </div>
+          <p id="void-iso-desc" style="font-size:0.88rem;color:var(--textMuted);line-height:1.6;margin-top:0.65rem">When you are on your own with it, the other three forces hit harder. All at once. With no one to help you catch them.</p>
         </div>
 
-        ${state.fromAudit?`<div style="text-align:center;margin-top:1rem"><button class="btn-ghost" onclick="resetToAudit()">Reset to your audit scores</button></div>`:""}
+        <!-- Closing: the Collective note -->
+        <div class="void-collective-note" style="margin-top:1.5rem">
+          <p>Connection is the way through. Isolation is the only one of the four you can't face alone. The <a href="https://rebellioncollective.com" target="_blank" rel="noopener" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Rebellion Collective</a> is built for this. People doing the work together. Coming back to themselves. And to each other.</p>
+          <p>The way through is not more effort. It is coming back to connection.</p>
+        </div>
+
+        ${state.fromAudit?`<div style="text-align:center;margin-top:1.5rem"><button class="btn-ghost" onclick="resetToAudit()">Reset to your audit scores</button></div>`:""}
       </div>
     </div>
 
-    <!-- Section 4: Habits as the Allocator -->
-    <!-- Section 6: The Practices -->
+
+
+    <!-- Go Deeper: Habits + Quality Layers as paired sub-cards -->
     <div class="section">
       <div class="card-lg">
-        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">The Practices</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">The 5 C's aren't rewards you unlock at some capacity threshold. They're practices you cultivate, and each one feeds the equation back. In a system built for extraction, practicing these is how you rebuild.</p>
+        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.25rem">Go Deeper</h2>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:0.5rem">Two ways to look under the hood. What runs the show. And what each of the three is really made of.</p>
 
-        <div class="practice-grid" id="practices-grid">
-          ${renderPractices()}
+        <!-- Sub-card: Habits -->
+        <div class="sub-card">
+          <div class="sub-title">Habits</div>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">The little (h) next to the C tells you Capacity runs through your Habits. The (h) sits outside the multiplication. Underneath it. Habits are the thing the whole equation runs inside.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Your habits decide where your Energy goes. What grabs your Attention. How your Time gets spent. They are running the show under the surface, long before you make a single conscious choice.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">Yea have habits. Everyone does. Some are <strong>on autopilot</strong>. Some are <strong>chosen</strong>. Both shape the same equation. Differently.</p>
+
+          <div style="display:grid;grid-template-columns:1fr;gap:0.75rem;margin-bottom:1rem">
+            <div style="padding:1rem 1.15rem;background:rgba(168,69,58,0.06);border-left:3px solid var(--red);border-radius:4px">
+              <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--red);font-weight:600;margin-bottom:0.5rem">On Autopilot</div>
+              <p style="font-size:0.95rem;color:var(--text);line-height:1.7;margin:0">Habits on autopilot are inherited. Reactive. Running by default. Your Energy gets spent on coping. Your Attention gets grabbed. Your Time fills with obligations you never agreed to. Same raw capacity. Very different result.</p>
+            </div>
+            <div style="padding:1rem 1.15rem;background:rgba(61,86,56,0.06);border-left:3px solid var(--ember);border-radius:4px">
+              <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--ember);font-weight:600;margin-bottom:0.5rem">Chosen</div>
+              <p style="font-size:0.95rem;color:var(--text);line-height:1.7;margin:0">Chosen habits are the ones you have actually thought about. They line up with what you want. Your Energy, Attention, and Time go where you mean for them to go.</p>
+            </div>
+          </div>
+
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:0">The chosen ones already have names. Curiosity. Courage. Compassion. Connection. Commitment. These are the 5 C's. The Practices and the Habits are the same thing in two languages. Practices is the softer doorway. Habits is what they become when they stick.</p>
         </div>
 
-        <div style="font-size:0.85rem;color:var(--warmMuted);text-align:center;margin-top:0.75rem;line-height:1.6" id="practice-note">
-          ${getPracticeNote()}
+        <!-- Sub-card: The Practices (interactive) -->
+        <div class="sub-card">
+          <div class="sub-title">The Practices</div>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Here are the five. Toggle one. Watch your capacity score lift, and the force it drains ease.</p>
+
+          <div class="practice-grid" id="practices-grid">
+            ${renderPractices()}
+          </div>
+          <div style="font-size:0.85rem;color:var(--warmMuted);text-align:center;margin-top:0.75rem;line-height:1.6" id="practice-note">
+            ${getPracticeNote()}
+          </div>
+
+          <!-- Compact capacity readout (mirrors the one above, updates live) -->
+          <div id="compact-readout" style="margin-top:1.25rem;padding:1rem 1.15rem;background:rgba(74,100,68,0.05);border-radius:8px;text-align:center">
+            <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--textMuted);margin-bottom:0.35rem">Your capacity right now</div>
+            <div style="display:flex;align-items:baseline;justify-content:center;gap:0.6rem;flex-wrap:wrap">
+              <span id="compact-cap" style="font-family:'DM Mono',monospace;font-size:1.8rem;font-weight:700;color:${scoreColor(gm)}">${gm.toFixed(1)}</span>
+              <span id="compact-tier" style="font-size:0.95rem;font-weight:600;color:var(--warm)">${scoreLabel(gm)}</span>
+            </div>
+            <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.4rem">Set your numbers in Explore above. The practices lift them from here.</div>
+          </div>
         </div>
+
+        <!-- Sub-card: Quality Layers -->
+        <div class="sub-card">
+          <div class="sub-title">Quality Layers</div>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Each letter in CHEAT is a system of parts. Here is what's underneath Energy, Attention, and Time.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">Each piece can also be in different states. The state changes how it functions. Knowing which piece is steady and which is shifting tells you where to put your attention. The <a href="/" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Capacity Audit</a> breaks each of the three down so you can see exactly where your capacity is being held and where it is leaking.</p>
+
+          <div class="card" style="margin-bottom:0.75rem">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+              <span style="font-size:1.2rem" aria-hidden="true">⚡</span>
+              <span style="font-weight:600">Energy</span>
+            </div>
+            <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.5rem"><strong>Structure:</strong> Mental, physical, emotional, alignment</div>
+            <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6"><strong>Quality:</strong> <span style="color:${C.green}">Regulated</span> (steady, renewable, yours to direct) vs. <span style="color:${C.red}">Dysregulated</span> (spiking, crashing, reactive)</div>
+          </div>
+          <div class="card" style="margin-bottom:0.75rem">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+              <span style="font-size:1.2rem" aria-hidden="true">🎯</span>
+              <span style="font-weight:600">Attention</span>
+            </div>
+            <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.5rem"><strong>Structure:</strong> Chosen, captured, present</div>
+            <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6"><strong>Quality:</strong> <span style="color:${C.green}">Chosen</span> (directed, intentional) vs. <span style="color:${C.red}">Captured</span> (hijacked, scattered, not yours)</div>
+          </div>
+          <div class="card" style="margin-bottom:0">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+              <span style="font-size:1.2rem" aria-hidden="true">⏱️</span>
+              <span style="font-weight:600">Time</span>
+            </div>
+            <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.5rem"><strong>Structure:</strong> Committed, recovered, protected</div>
+            <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6"><strong>Quality:</strong> <span style="color:${C.green}">Present-oriented</span> (here, now, this) vs. <span style="color:${C.red}">Past/future-oriented</span> (replaying, rehearsing, never arriving)</div>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- Section 7: The Macro Message -->
-    <div class="section">
-      <div class="card-lg">
-        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">Habits: The Allocator</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">The (h) in C(h) is function notation, the same way f(x) means "a function of x." Capacity is a function of your Habits. Habits aren't a fourth variable you multiply into the equation. They're the context the equation operates inside.</p>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Habits determine where your Energy goes, what captures your Attention, and how your Time gets spent. They're the patterns running underneath everything, allocating your three dimensions before you've made a single conscious choice about them.</p>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">The question isn't whether you have habits. You do. The question is whether they're <strong>conscious</strong> or <strong>unconscious</strong>.</p>
-
-        <div style="display:flex;gap:0.75rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap">
-          <button class="q-toggle${state.habits==="conscious"?" active":""}" onclick="setHabits('conscious')">Conscious Habits</button>
-          <button class="q-toggle${state.habits==="unconscious"?" active":""}" onclick="setHabits('unconscious')">Unconscious Habits</button>
-        </div>
-
-        <div id="habits-desc" style="padding:1rem;background:rgba(74,100,68,0.04);border-radius:8px;transition:all 0.3s ease">
-          <p style="font-size:0.95rem;color:var(--text);line-height:1.7;margin:0">${state.habits==="conscious"
-            ?"Conscious habits are chosen, examined, and aligned with what you actually want. When habits are conscious, your Energy, Attention, and Time flow where you intend them to. The equation expresses fully."
-            :"Unconscious habits are inherited, reactive, running on autopilot. When habits are unconscious, your inputs get redirected. Energy goes to coping instead of creating. Attention gets captured instead of chosen. Time fills with obligations that aren't yours. Same raw capacity, different allocation."
-          }</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Section 5: Quality Layers -->
-    <div class="section">
-      <div class="card-lg">
-        <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">Quality Layers</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">The sliders above capture each dimension as a single number. But when you look closer, each one is composed of different structures. Energy isn't one thing. Attention isn't one thing. Time isn't one thing.</p>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">Each structure also has a quality: a state it can be in that changes how it functions. Knowing which structure is strong and which is dragging you down changes where you intervene. The <a href="/" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Capacity Audit</a> breaks each dimension into these structures so you can see exactly where your capacity is being held and where it's leaking.</p>
-
-        <div class="card" style="margin-bottom:0.75rem">
-          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
-            <span style="font-size:1.2rem" aria-hidden="true">⚡</span>
-            <span style="font-weight:600">Energy</span>
-          </div>
-          <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.5rem"><strong>Structure:</strong> Mental, physical, emotional, alignment</div>
-          <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6"><strong>Quality:</strong> <span style="color:${C.green}">Regulated</span> (steady, renewable, yours to direct) vs. <span style="color:${C.red}">Dysregulated</span> (spiking, crashing, reactive)</div>
-        </div>
-        <div class="card" style="margin-bottom:0.75rem">
-          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
-            <span style="font-size:1.2rem" aria-hidden="true">🎯</span>
-            <span style="font-weight:600">Attention</span>
-          </div>
-          <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.5rem"><strong>Structure:</strong> Chosen, captured, present</div>
-          <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6"><strong>Quality:</strong> <span style="color:${C.green}">Chosen</span> (directed, intentional) vs. <span style="color:${C.red}">Captured</span> (hijacked, scattered, not yours)</div>
-        </div>
-        <div class="card" style="margin-bottom:0.75rem">
-          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
-            <span style="font-size:1.2rem" aria-hidden="true">⏱️</span>
-            <span style="font-weight:600">Time</span>
-          </div>
-          <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.5rem"><strong>Structure:</strong> Committed, recovered, protected</div>
-          <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6"><strong>Quality:</strong> <span style="color:${C.green}">Present-oriented</span> (here, now, this) vs. <span style="color:${C.red}">Past/future-oriented</span> (replaying, rehearsing, never arriving)</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Section 6: The 5 C's -->
+        <!-- Section 7: Macro Quote -->
     <div class="section">
       <div class="card-lg" style="text-align:center">
         <p style="font-size:1.1rem;color:var(--warm);line-height:1.7;font-style:italic;max-width:480px;margin:0 auto">"In a system built for extraction, reclaiming your Clarity, Capacity, and Sovereignty is an act of Rebellion."</p>
@@ -334,9 +416,9 @@ function render(){
     <!-- CTA -->
     <div class="section" style="text-align:center">
       <div style="margin-bottom:1.5rem">
-        <a href="https://capacityaudit.rebellioncollective.com/" class="btn" style="text-decoration:none">Take the Capacity Audit</a>
+        <a href="https://capacityaudit.rebellioncollective.com/" class="btn" style="text-decoration:none">Take The Capacity Audit</a>
       </div>
-      <p style="font-size:0.85rem;color:var(--warmMuted);line-height:1.5;max-width:400px;margin:0 auto">Ten questions. Two minutes. Find out where your capacity is being extracted and what to do about it.</p>
+      <p style="font-size:0.85rem;color:var(--warmMuted);line-height:1.5;max-width:400px;margin:0 auto">Ten questions. Two minutes. Find out where your capacity is being taken, and what to do about it.</p>
       <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(74,100,68,0.1)">
         <p style="font-size:0.8rem;color:var(--warmMuted)">
           <a href="https://rebellioncollective.com" style="color:var(--warmMuted)">Rebellion Collective</a>
@@ -393,6 +475,9 @@ function onSlide(key, val){
   updateMultViz();
   updatePractices();
   updateScenarioButtons();
+
+  // V.O.I.D. (Section 7) reacts to live slider changes
+  if(typeof voidUpdate === 'function') voidUpdate();
 }
 
 function updateMultViz(){
@@ -427,6 +512,15 @@ function updateMultViz(){
   if(tierEl) tierEl.textContent=scoreLabel(gm);
   if(noteEl) noteEl.textContent=getTierNote(gm);
 
+  // Update compact readout in Go Deeper (mirrors capacity + tier)
+  const compactCap=document.getElementById("compact-cap");
+  const compactTier=document.getElementById("compact-tier");
+  if(compactCap){
+    compactCap.textContent=gm.toFixed(1);
+    compactCap.style.color=scoreColor(gm);
+  }
+  if(compactTier) compactTier.textContent=scoreLabel(gm);
+
   // Update habits section
   updateHabitsDisplay();
 }
@@ -453,7 +547,7 @@ function setHabits(mode){
   state.habits=mode;
   // Targeted update: only update habits section elements
   document.querySelectorAll('.q-toggle').forEach(btn=>{
-    const isConscious=btn.textContent.trim().startsWith('Conscious');
+    const isConscious=btn.textContent.trim().startsWith('Chosen');
     const isActive=(mode==='conscious'&&isConscious)||(mode==='unconscious'&&!isConscious);
     btn.classList.toggle('active',isActive);
   });
@@ -461,8 +555,8 @@ function setHabits(mode){
   if(desc){
     const p=desc.querySelector('p');
     if(p) p.textContent=mode==="conscious"
-      ?"Conscious habits are chosen, examined, and aligned with what you actually want. When habits are conscious, your Energy, Attention, and Time flow where you intend them to. The equation expresses fully."
-      :"Unconscious habits are inherited, reactive, running on autopilot. When habits are unconscious, your inputs get redirected. Energy goes to coping instead of creating. Attention gets captured instead of chosen. Time fills with obligations that aren't yours. Same raw capacity, different allocation.";
+      ?"Chosen habits are the ones you have actually thought about. They line up with what you want. Your Energy, Attention, and Time go where you mean for them to go."
+      :"Habits on autopilot are inherited. Reactive. Running by default. Your Energy gets spent on coping. Your Attention gets grabbed. Your Time fills with obligations you never agreed to. Same raw capacity. Very different result.";
   }
 }
 
@@ -475,6 +569,8 @@ function togglePractice(key){
     if(bonusEl){var b=totalPracticeBonus(dim);bonusEl.textContent=b>0?" +"+b.toFixed(1):""}
   });
   updateMultViz();
+  // Section 4 (V.O.I.D.) reacts to practice toggles
+  if(typeof voidUpdate === 'function') voidUpdate();
 }
 
 // ── Scenarios ──
@@ -501,17 +597,90 @@ function resetToAudit(){
 // ── 5 C's rendering ──
 function renderPractices(){var ps=[{key:"curiosity",name:"Curiosity",icon:"\u{1F50D}"},{key:"courage",name:"Courage",icon:"\u{1F525}"},{key:"compassion",name:"Compassion",icon:"\u{1F49A}"},{key:"connection",name:"Connection",icon:"\u{1F91D}"},{key:"commitment",name:"Commitment",icon:"\u26A1"}];return ps.map(function(p){var active=state.practices[p.key];return '<button class="practice-item'+(active?' active':'')+'" onclick="togglePractice(\''+p.key+'\')" aria-pressed="'+active+'">'+'<div class="icon" aria-hidden="true">'+p.icon+'</div>'+'<div class="name">'+p.name+'</div>'+'</button>'}).join("")}
 
-function getPracticeNote(){var count=Object.values(state.practices).filter(Boolean).length;if(count===0) return "Toggle a practice to see how it shifts your capacity. Each one feeds specific dimensions of the equation.";if(count<=2) return count+" practice"+(count>1?"s":"")+" active. Notice how each one creates a measurable shift in the equation.";if(count<=4) return count+" practices active. The effects compound. This is what rebuilding looks like.";return "All five practices active. This is the full counter to extraction: not just awareness, but action."}
+function getPracticeNote(){var count=Object.values(state.practices).filter(Boolean).length;if(count===0) return "Toggle a practice to see how it shifts your capacity. Each one lifts the score, and eases the force it counters.";if(count<=2) return count+" practice"+(count>1?"s":"")+" active. Notice how it lifts your capacity and eases the matching force.";if(count<=4) return count+" practices active. The effects add up. This is what rebuilding looks like.";return "All five practices active. This is the full move. Awareness in motion."}
 
 function getTierNote(gm){
-  if(gm<=2) return "The system is extracting faster than you can replenish. This is where the body starts keeping score.";
-  if(gm<=4) return "Running on reserves. Functional, but the cost is compounding somewhere you might not see yet.";
-  if(gm<=6) return "Managing, but stretched. There's room here, and it doesn't require more effort. Often less.";
-  if(gm<=8) return "Resourced. Your inputs are sustaining your output. The work now is protecting what's working.";
-  return "Thriving. Rare and worth noticing. This is what aligned capacity feels like.";
+  if(gm<=2) return "The system is taking more than you can put back. This is where the body starts keeping score.";
+  if(gm<=4) return "Running on reserves. Still functional, but it is costing you somewhere you might not see yet.";
+  if(gm<=6) return "Getting by, but stretched. There is room here, and it does not take more effort. Usually less.";
+  if(gm<=8) return "Steady. What you are putting in is keeping pace with what you put out. The work now is protecting what is working.";
+  return "Thriving. Rare and worth noticing. This is what real capacity feels like.";
 }
 
 // ── Init ──
 render();
+// ── Section 4: V.O.I.D. (namespaced to avoid collisions) ──
+const voidState = { alone: true };
+// Each force has a primary target (the dimension it hits hardest) plus
+// weighted contributions from all three. The page now teaches truthfully:
+// every force responds to every slider, weighted heaviest at its primary.
+// Weights for each force sum to 1.0 across {energy, attention, time}.
+const voidForces = [
+  { key:'V', name:'Volatility',  primary:'Time',         weights:{ energy:0.2, attention:0.2, time:0.6 } },
+  { key:'O', name:'Overwhelm',   primary:'Energy',       weights:{ energy:0.6, attention:0.2, time:0.2 } },
+  { key:'I', name:'Isolation',   primary:'Habits',       weights:{ energy:0.4, attention:0.3, time:0.3 } },
+  { key:'D', name:'Distraction', primary:'Attention',    weights:{ energy:0.2, attention:0.6, time:0.2 } }
+];
+// Each practice eases the force it counters. Values are subtracted from pressure.
+// Connection includes a small relief on Overwhelm because co-regulation calms the system.
+const PRACTICE_DAMPEN = {
+  curiosity:  { D: 2.0 },
+  courage:    { V: 1.5 },
+  compassion: { O: 2.0 },
+  connection: { I: 2.0, O: 0.5 },
+  commitment: { V: 1.0, D: 0.5 }
+};
+function voidTotalDampen(forceKey){
+  var total = 0;
+  Object.keys(state.practices).forEach(function(p){
+    if(state.practices[p] && PRACTICE_DAMPEN[p] && PRACTICE_DAMPEN[p][forceKey]){
+      total += PRACTICE_DAMPEN[p][forceKey];
+    }
+  });
+  return total;
+}
+function voidPressure(f){
+  const amp = voidState.alone ? 1.4 : 1.0;
+  // Weighted blend across all three sliders. Each force feels every slider,
+  // but is most sensitive to its primary.
+  const w = f.weights;
+  const blend = (state.energy * w.energy) + (state.attention * w.attention) + (state.time * w.time);
+  var raw = (10 - blend) * 0.9 * amp;
+  // Isolation also gets an additional bump from being alone (the (i) condition).
+  if(f.key === 'I' && voidState.alone) raw += 1.5;
+  raw -= voidTotalDampen(f.key);
+  return Math.max(0, Math.min(10, raw));
+}
+function voidRenderForces(){
+  const grid = document.getElementById('void-force-grid');
+  if(!grid) return;
+  grid.innerHTML = voidForces.map(function(f){
+    return '<div class="void-force-card">'
+      +'<div class="letter">'+f.key+'</div>'
+      +'<div class="body"><div class="name">'+f.name+'</div>'
+      +'<div class="attacks">primarily attacks '+f.primary+'</div></div>'
+      +'<div class="pressure">'+voidPressure(f).toFixed(1)+'</div>'
+    +'</div>';
+  }).join('');
+}
+function voidUpdate(){ voidRenderForces(); }
+function voidSetIsolation(mode){
+  voidState.alone = (mode === 'alone');
+  var aloneBtn = document.getElementById('void-on-own');
+  var withBtn  = document.getElementById('void-with-others');
+  var desc     = document.getElementById('void-iso-desc');
+  if(aloneBtn) aloneBtn.classList.toggle('active',  voidState.alone);
+  if(withBtn)  withBtn.classList.toggle('active', !voidState.alone);
+  if(desc) desc.textContent = voidState.alone
+    ? 'When you are on your own with it, the other three forces hit harder. All at once. With no one to help you catch them.'
+    : 'With others, the forces still hit. The difference is you have help carrying them.';
+  voidRenderForces();
+}
+// initial render after page mounts
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', voidRenderForces);
+} else {
+  setTimeout(voidRenderForces, 0);
+}
 </script>
 </body></html>

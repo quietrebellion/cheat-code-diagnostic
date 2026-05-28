@@ -427,7 +427,7 @@ function render(){
     </div>
   `;
   // V.O.I.D. force grid lives inside the template but needs JS to populate
-  if(typeof voidRenderForces === 'function') voidRenderForces();
+  try { if(typeof voidRenderForces === 'function') voidRenderForces(); } catch(e) {}
 }
 
 // ── Slider renderer ──

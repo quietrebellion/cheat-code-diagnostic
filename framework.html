@@ -114,6 +114,7 @@ input[type="range"]:focus{outline:none}
 .sub-card:first-of-type{margin-top:1.25rem}
 .sub-card .sub-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.18em;color:var(--ember);font-weight:600;margin-bottom:0.75rem}
 .sub-card .sub-lead{font-size:0.92rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem}
+.practice-item .name{overflow:visible;white-space:normal;word-break:break-word}
 </style>
 <link rel="canonical" href="https://rebellioncollective.com/capacity">
 </head>
@@ -199,7 +200,7 @@ function render(){
       <p style="font-size:1rem;color:var(--textMuted);line-height:1.6;max-width:520px;margin:0 auto">
         ${state.fromAudit
           ? "Your audit scores are loaded below. This is the math behind your number, and what you can shift to change it."
-          : "Capacity is something you build. You have more control over it than you think."}
+          : "Capacity is your mental, physical, or emotional power to do or understand something. It is a finite resource, but you have more control over it than you may think."}
       </p>
       ${state.fromAudit ? "" : `
       <div style="margin-top:1.5rem">
@@ -212,7 +213,8 @@ function render(){
     <div class="section">
       <div class="card-lg">
         <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.5rem">The Cheat Code</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">Three things make up your capacity. Energy. Attention. Time. They multiply. Drop any one of them to zero and the whole thing collapses.</p>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">Three things make up your capacity. Energy. Attention. Time.</p>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">They are multiplicative. If any one of them drops to zero, your capacity collapses.</p>
         <div class="equation-wrap">
           <div class="eq">
             <span style="font-size:0.85em;font-weight:400">C</span><span style="font-size:0.65em;font-weight:400;vertical-align:sub">(h)</span>
@@ -234,7 +236,7 @@ function render(){
     <div class="section">
       <div class="card-lg" id="model-card">
         <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.25rem">Explore The Cheat Code</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1.25rem">One model, three views. Set your numbers, watch what builds your capacity, what drains it, and what rebuilds it. All driven by the same three sliders.</p>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:1.25rem">One model, three views. Set your numbers, watch what drains your capacity, and what rebuilds it.</p>
 
         ${state.fromAudit?`<div style="font-size:0.8rem;color:var(--warmMuted);margin-bottom:1rem;padding:0.5rem 0.75rem;background:rgba(74,100,68,0.04);border-radius:6px">Loaded from your audit: E=${state.auditScores.energy.toFixed(1)}, A=${state.auditScores.attention.toFixed(1)}, T=${state.auditScores.time.toFixed(1)}</div>`:""}
 
@@ -290,7 +292,7 @@ function render(){
         <!-- Sub-card 2: What Drains It -->
         <div class="sub-card">
           <div class="sub-title">What Drains It</div>
-          <p class="sub-lead">The same math that builds your capacity also describes how it leaks. V.O.I.D. is the other side. Four forces. Each one touches all three, but each one hits one of them hardest. And when you are alone with them, they hit harder still.</p>
+          <p class="sub-lead">The same formula that builds your capacity also describes how it leaks. V.O.I.D. are the four forces that drain your capacity. Each one attacks your time, energy and attention, but each hits one of them hardest. In isolation, they hit harder.</p>
 
           <div class="void-eq-wrap">
             <div class="void-eq">
@@ -308,13 +310,13 @@ function render(){
             <button class="void-iso-toggle" id="void-with-others" onclick="voidSetIsolation('with')">With others</button>
             <button class="void-iso-toggle alone active" id="void-on-own" onclick="voidSetIsolation('alone')">On your own</button>
           </div>
-          <p id="void-iso-desc" style="font-size:0.88rem;color:var(--textMuted);line-height:1.6;margin-top:0.65rem">When you are on your own with it, the other three forces hit harder. All at once. With no one to help you catch them.</p>
+          <p id="void-iso-desc" style="font-size:0.88rem;color:var(--textMuted);line-height:1.6;margin-top:0.65rem">In isolation, the three forces hit harder. Often all at once, and without the support you need to thrive.</p>
         </div>
 
         <!-- Closing: the Collective note -->
         <div class="void-collective-note" style="margin-top:1.5rem">
-          <p>Connection is the way through. Isolation is the only one of the four you can't face alone. The <a href="https://rebellioncollective.com" target="_blank" rel="noopener" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Rebellion Collective</a> is built for this. People doing the work together. Coming back to themselves. And to each other.</p>
-          <p>The way through is not more effort. It is coming back to connection.</p>
+          <p>Connection is the way through. Isolation is the only one of the four variables you can\'t face alone, but it\'s very nature. The <a href="https://rebellioncollective.com" target="_blank" rel="noopener" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Rebellion Collective</a> is one space built for this. People doing the work together. Coming back to themselves, to each other, and something greater than themselves.</p>
+          <p>The way through is connection.</p>
         </div>
 
         ${state.fromAudit?`<div style="text-align:center;margin-top:1.5rem"><button class="btn-ghost" onclick="resetToAudit()">Reset to your audit scores</button></div>`:""}
@@ -327,33 +329,33 @@ function render(){
     <div class="section">
       <div class="card-lg">
         <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.25rem">Go Deeper</h2>
-        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:0.5rem">Two ways to look under the hood. What runs the show. And what each of the three is really made of.</p>
+        <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.55;margin-bottom:0.5rem">Take a look under the hood. See what runs the show. And what each of the three elements of C.H.E.A.T is really made of.</p>
 
         <!-- Sub-card: Habits -->
         <div class="sub-card">
           <div class="sub-title">Habits</div>
-          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">The little (h) next to the C tells you Capacity runs through your Habits. The (h) sits outside the multiplication. Underneath it. Habits are the thing the whole equation runs inside.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">The little (h) next to the C indicates that your Capacity is determined by your Habits.</p>
           <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Your habits decide where your Energy goes. What grabs your Attention. How your Time gets spent. They are running the show under the surface, long before you make a single conscious choice.</p>
-          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">You have habits. Everyone does. Some are <strong>on autopilot</strong>. Some are <strong>chosen</strong>. Both shape the same equation. Differently.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">You have habits. Everyone does. Some are <strong>on autopilot</strong>. Some are <strong>chosen</strong>. Both shape your Capacity.</p>
 
           <div style="display:grid;grid-template-columns:1fr;gap:0.75rem;margin-bottom:1rem">
             <div style="padding:1rem 1.15rem;background:rgba(168,69,58,0.06);border-left:3px solid var(--red);border-radius:4px">
               <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--red);font-weight:600;margin-bottom:0.5rem">On Autopilot</div>
-              <p style="font-size:0.95rem;color:var(--text);line-height:1.7;margin:0">Habits on autopilot are inherited. Reactive. Running by default. Your Energy gets spent on coping. Your Attention gets grabbed. Your Time fills with obligations you never agreed to. Same raw capacity. Very different result.</p>
+              <p style="font-size:0.95rem;color:var(--text);line-height:1.7;margin:0">Habits on autopilot are reactive. Running by default. Your Energy gets spent on coping. Your Attention gets grabbed. Your Time fills with obligations you never agreed to. Same raw capacity. Very different result.</p>
             </div>
             <div style="padding:1rem 1.15rem;background:rgba(61,86,56,0.06);border-left:3px solid var(--ember);border-radius:4px">
               <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--ember);font-weight:600;margin-bottom:0.5rem">Chosen</div>
-              <p style="font-size:0.95rem;color:var(--text);line-height:1.7;margin:0">Chosen habits are the ones you have actually thought about. They line up with what you want. Your Energy, Attention, and Time go where you mean for them to go.</p>
+              <p style="font-size:0.95rem;color:var(--text);line-height:1.7;margin:0">Chosen habits are the ones you have actually thought about. They line up with what matters to you.</p>
             </div>
           </div>
 
-          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:0">The chosen ones already have names. Curiosity. Courage. Compassion. Connection. Commitment. These are the 5 C's. The Practices and the Habits are the same thing in two languages. Practices is the softer doorway. Habits is what they become when they stick.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:0">The chosen ones already have names. These are the 5 C's. The practices that allow habits to change from autopilot to chosen.</p>
         </div>
 
         <!-- Sub-card: The Practices (interactive) -->
         <div class="sub-card">
           <div class="sub-title">The Practices</div>
-          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Here are the five. Toggle one. Watch your capacity score lift, and the force it drains ease.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Here are the five Cs. Toggle one. Watch how they impact your capacity.</p>
 
           <div class="practice-grid" id="practices-grid">
             ${renderPractices()}
@@ -369,7 +371,7 @@ function render(){
               <span id="compact-cap" style="font-family:'DM Mono',monospace;font-size:1.8rem;font-weight:700;color:${scoreColor(gm)}">${gm.toFixed(1)}</span>
               <span id="compact-tier" style="font-size:0.95rem;font-weight:600;color:var(--warm)">${scoreLabel(gm)}</span>
             </div>
-            <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.4rem">Set your numbers in Explore above. The practices lift them from here.</div>
+            <div style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.4rem"></div>
           </div>
         </div>
 
@@ -377,7 +379,7 @@ function render(){
         <div class="sub-card">
           <div class="sub-title">Quality Layers</div>
           <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Each letter in CHEAT is a system of parts. Here is what's underneath Energy, Attention, and Time.</p>
-          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">Each piece can also be in different states. The state changes how it functions. Knowing which piece is steady and which is shifting tells you where to put your attention. The <a href="/" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Capacity Audit</a> breaks each of the three down so you can see exactly where your capacity is being held and where it is leaking.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.25rem">Each piece can be in different states. The state changes how it functions. Knowing which piece is steady and which is shifting tells you where to put your attention. The <a href="/" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Capacity Audit</a> breaks each of the three down so you can see exactly where your capacity is being built and where it is leaking.</p>
 
           <div class="card" style="margin-bottom:0.75rem">
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
@@ -420,7 +422,7 @@ function render(){
       <div style="margin-bottom:1.5rem">
         <a href="https://capacityaudit.rebellioncollective.com/" class="btn" style="text-decoration:none">Take The Capacity Audit</a>
       </div>
-      <p style="font-size:0.85rem;color:var(--warmMuted);line-height:1.5;max-width:400px;margin:0 auto">Ten questions. Two minutes. Find out where your capacity is being taken, and what to do about it.</p>
+      <p style="font-size:0.85rem;color:var(--warmMuted);line-height:1.5;max-width:400px;margin:0 auto">Ten questions. Two minutes. Find out where your capacity is being extracted and what to do about it.</p>
       <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(74,100,68,0.1)">
         <p style="font-size:0.8rem;color:var(--warmMuted)">
           <a href="https://rebellioncollective.com" style="color:var(--warmMuted)">Rebellion Collective</a>
@@ -601,12 +603,12 @@ function resetToAudit(){
 // ── 5 C's rendering ──
 function renderPractices(){var ps=[{key:"curiosity",name:"Curiosity",icon:"\u{1F50D}"},{key:"courage",name:"Courage",icon:"\u{1F525}"},{key:"compassion",name:"Compassion",icon:"\u{1F49A}"},{key:"connection",name:"Connection",icon:"\u{1F91D}"},{key:"commitment",name:"Commitment",icon:"\u26A1"}];return ps.map(function(p){var active=state.practices[p.key];return '<button class="practice-item'+(active?' active':'')+'" onclick="togglePractice(\''+p.key+'\')" aria-pressed="'+active+'">'+'<div class="icon" aria-hidden="true">'+p.icon+'</div>'+'<div class="name">'+p.name+'</div>'+'</button>'}).join("")}
 
-function getPracticeNote(){var count=Object.values(state.practices).filter(Boolean).length;if(count===0) return "Toggle a practice to see how it shifts your capacity. Each one lifts the score, and eases the force it counters.";if(count<=2) return count+" practice"+(count>1?"s":"")+" active. Notice how it lifts your capacity and eases the matching force.";if(count<=4) return count+" practices active. The effects add up. This is what rebuilding looks like.";return "All five practices active. This is the full move. Awareness in motion."}
+function getPracticeNote(){var count=Object.values(state.practices).filter(Boolean).length;if(count===0) return "";if(count<=2) return count+" practice"+(count>1?"s":"")+" active. Notice how it lifts your capacity and eases the matching force.";if(count<=4) return count+" practices active. The effects add up. This is what rebuilding looks like.";return "All five practices active. This is the full move. Awareness in motion."}
 
 function getTierNote(gm){
-  if(gm<=2) return "The system is taking more than you can put back. This is where the body starts keeping score.";
+  if(gm<=2) return "The system is taking more than you can restore. This is where things start collapsing.";
   if(gm<=4) return "Running on reserves. Still functional, but it is costing you somewhere you might not see yet.";
-  if(gm<=6) return "Getting by, but stretched. There is room here, and it does not take more effort. Usually less.";
+  if(gm<=6) return "Getting by, but stretched. There is room here, but some adjustments need to be made to not fall into critical.";
   if(gm<=8) return "Steady. What you are putting in is keeping pace with what you put out. The work now is protecting what is working.";
   return "Thriving. Rare and worth noticing. This is what real capacity feels like.";
 }
@@ -677,7 +679,7 @@ function voidSetIsolation(mode){
   if(withBtn)  withBtn.classList.toggle('active', !voidState.alone);
   if(desc) desc.textContent = voidState.alone
     ? 'When you are on your own with it, the other three forces hit harder. All at once. With no one to help you catch them.'
-    : 'With others, the forces still hit. The difference is you have help carrying them.';
+    : 'When you have support, the forces still hit. The difference is you have help carrying the load.';
   voidRenderForces();
 }
 // initial render after page mounts

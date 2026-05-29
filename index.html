@@ -67,7 +67,7 @@ h2.label-sm,h3.label-sm{font-weight:400}
 .sec-icon{font-size:1.3rem;line-height:1;vertical-align:middle}
 @media(max-width:680px){.wrap{padding-bottom:calc(0.5rem + env(safe-area-inset-bottom,0px))}}
 </style>
-</head>
+<style>input[type="range"]::-webkit-slider-thumb{background:transparent!important;border-radius:50%!important}input[type="range"]:focus{outline:none}</style><link rel="canonical" href="https://capacityaudit.rebellioncollective.com/"></head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
 <main id="main"><div class="wrap" id="app"></div></main>
@@ -1156,5 +1156,8 @@ function startOwnAudit(){
 (function(){try{var s=localStorage.getItem("cheat_audit_session");if(s){var d=JSON.parse(s);if(d.scores&&Object.keys(d.scores).length===10){scores=d.scores;step=d.step||10;if(step>=10){step=-1;historySaved=true;try{localStorage.removeItem("cheat_audit_session")}catch(e){}}}}}catch(e){}})();
 render();
 </script>
+<script>document.addEventListener("touchstart",function(e){if(e.target.type==="range"){e.target.focus();var rect=e.target.getBoundingClientRect();var touch=e.touches[0];var pct=(touch.clientX-rect.left)/rect.width;var min=parseFloat(e.target.min);var max=parseFloat(e.target.max);var step=parseFloat(e.target.step)||1;var val=min+pct*(max-min);val=Math.round(val/step)*step;val=Math.max(min,Math.min(max,val));e.target.value=val;e.target.dispatchEvent(new Event("input",{bubbles:true}))}},{passive:true});</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZGJBWNGMB"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-4ZGJBWNGMB");</script>
 </body>
 </html>

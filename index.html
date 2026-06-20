@@ -67,7 +67,7 @@ h2.label-sm,h3.label-sm{font-weight:400}
 .sec-icon{font-size:1.3rem;line-height:1;vertical-align:middle}
 @media(max-width:680px){.wrap{padding-bottom:calc(0.5rem + env(safe-area-inset-bottom,0px))}}
 </style>
-<style>input[type="range"]::-webkit-slider-thumb{background:transparent!important;border-radius:50%!important}input[type="range"]:focus{outline:none}</style><link rel="canonical" href="https://capacityaudit.rebellioncollective.com/"><style>.screen{max-height:calc(100dvh - 2.75rem)!important;overflow:hidden!important;transform:none!important}.nav-row{position:static!important;flex-shrink:0!important;padding:0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom,0px))!important;background:var(--bg,#e8e3da)!important;box-shadow:0 -2px 8px rgba(0,0,0,0.06)!important}.q-content{flex:1!important;overflow-y:auto!important;min-height:0!important;-webkit-overflow-scrolling:touch!important;padding-bottom:0!important}.screen[style*="justify-content"]{justify-content:flex-start!important;padding-top:2rem}</style></head>
+<style>input[type="range"]::-webkit-slider-thumb{background:transparent!important;border-radius:50%!important}input[type="range"]:focus{outline:none}</style><link rel="canonical" href="https://capacityaudit.rebellioncollective.com/"><style>.nav-row{position:fixed!important;bottom:0!important;left:0!important;right:0!important;z-index:100!important;display:flex!important;gap:0.75rem!important;padding:0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom,0px))!important;background:var(--bg,#e8e3da)!important;box-shadow:0 -2px 8px rgba(0,0,0,0.06)!important;max-width:640px!important;margin:0 auto!important;box-sizing:border-box!important}.q-content{flex:1!important;overflow-y:auto!important;min-height:0!important;-webkit-overflow-scrolling:touch!important;padding-bottom:5rem!important}.screen[style*="justify-content"]{justify-content:flex-start!important;padding-top:2rem}</style></head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
 <main id="main"><div class="wrap" id="app"></div></main>
@@ -302,8 +302,7 @@ function resetWhatIf(){
 }
 function clearAllData(){
   if(!confirm('This will permanently erase all your Capacity Audit history from this device. Are you sure?'))return;
-  localStorage.removeItem('cheat_audit_history');
-  localStorage.removeItem('cheat_audit_session');
+  try{localStorage.removeItem('cheat_audit_history');localStorage.removeItem('cheat_audit_session')}catch(e){}
   scores={};step=-1;historySaved=false;predictedCapacity=null;showPrediction=false;render();window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -392,7 +391,7 @@ function renderPrediction(){
       <div class="track">
         <div class="track-fill" style="width:calc(14px + ${hasVal?pct:0} * (100% - 28px) / 100);background:${hasVal?col:"transparent"}"></div>
         <div class="thumb" style="left:calc(14px + ${pct} * (100% - 28px) / 100);background:${col};box-shadow:${hasVal?"0 0 10px "+col+"55":"0 0 12px rgba(74,100,68,0.2)"};${!hasVal?"animation:pulseGlow 2s ease infinite":""}"></div>
-        <input type="range" min="0" max="10" value="${predictedCapacity??5}" aria-label="Your predicted capacity score" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${predictedCapacity??5}" oninput="onPredictionSlide(this.value)">
+        <input type="range" min="0" max="10" value="${predictedCapacity??5}" aria-label="Your predicted capacity score" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${predictedCapacity??5}" oninput="onPredictionSlide(this.value)" onchange="onPredictionSlide(this.value)">
       </div>
       <div aria-live="polite" class="mono" style="text-align:center;font-size:2.5rem;font-weight:700;color:${col};transition:color 0.25s ease">${hasVal?predictedCapacity:"—"}</div>
       <div style="display:flex;justify-content:space-between;gap:2rem;margin-top:0.25rem">
@@ -630,7 +629,7 @@ function renderQuestion(){
           <div class="track">
             <div class="track-fill" style="width:calc(14px + ${has?pct:0} * (100% - 28px) / 100);background:${has?col:"transparent"}"></div>
             <div class="thumb" style="left:calc(14px + ${pct} * (100% - 28px) / 100);background:${col};box-shadow:${has?"0 0 10px "+col+"55":"0 0 12px rgba(74,100,68,0.2)"};${!has?"animation:pulseGlow 2s ease infinite":""}"></div>
-            <input type="range" min="0" max="10" value="${val??5}" aria-label="${q.question}" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${val??5}" oninput="onSlide(this.value)">
+            <input type="range" min="0" max="10" value="${val??5}" aria-label="${q.question}" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${val??5}" oninput="onSlide(this.value)" onchange="onSlide(this.value)">
           </div>
           <div aria-live="polite" class="mono" style="text-align:center;font-size:2.5rem;font-weight:700;color:${col};transition:color 0.25s ease">${has?val:"\u2014"}</div>
         </div>

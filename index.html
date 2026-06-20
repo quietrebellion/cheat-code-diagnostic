@@ -664,7 +664,7 @@ function onSlide(v){
     if(fill){fill.style.width=calcWidth;fill.style.background=C.ember}
     if(num){num.textContent=val;num.style.color=C.ember}
     if(hint)hint.style.display="none";
-    const btns=screen.querySelectorAll("button");
+    const btns=document.querySelectorAll(".nav-row button");
     const nextBtn=btns[btns.length-1];
     if(nextBtn&&nextBtn.hasAttribute("disabled")){nextBtn.removeAttribute("disabled");nextBtn.style.color="var(--bg)";nextBtn.style.background="var(--ember)";nextBtn.style.border="none";nextBtn.style.cursor="pointer"}
     const ri=screen.querySelector('input[type="range"]');if(ri)ri.setAttribute('aria-valuenow',val);

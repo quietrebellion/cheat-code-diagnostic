@@ -31,7 +31,7 @@ body.parchment input[type="email"]{background:#f0f2ec!important;border-color:rgb
 body.parchment input[type="email"]:focus{border-color:#4a6444!important}
 *{box-sizing:border-box;margin:0;padding:0}
 html{overflow-x:hidden}body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;width:100%}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes pulseGlow{0%,100%{box-shadow:0 0 20px rgba(74,100,68,0.25),0 0 60px rgba(74,100,68,0.1)}50%{box-shadow:0 0 30px rgba(74,100,68,0.5),0 0 80px rgba(74,100,68,0.2)}}
 input[type="range"]{-webkit-appearance:none;appearance:none;background:transparent;position:absolute;width:100%;height:56px;top:-23px;left:0;opacity:0;cursor:pointer;margin:0;touch-action:none}
 input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:36px;height:36px;cursor:pointer}
@@ -612,7 +612,7 @@ function renderQuestion(){
   const col=has?C.ember:C.warmMuted;
   const rawPct=has?((val/10)*100):50;
   const pct=rawPct;
-  app.innerHTML=`<div class="screen" style="max-height:100dvh;display:flex;flex-direction:column">
+  app.innerHTML=`<div class="screen" style="display:flex;flex-direction:column">
     <div style="margin-bottom:1.25rem;flex-shrink:0" role="group" aria-label="Question ${step+1} of ${totalQ}">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
         <span style="font-size:0.85rem;color:var(--warmMuted)"><span class="sec-icon" aria-hidden="true">${sec.icon}</span> ${sec.label}</span>

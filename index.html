@@ -358,6 +358,7 @@ function render(){
   if(step>=0&&step<totalQ) return renderQuestion();
   if(step>=totalQ) return renderResults();
 }
+function focusScreen(){var s=app.querySelector(".screen");if(s){s.setAttribute("tabindex","-1");s.focus({preventScroll:true})}}
 
 function renderTimeframe(){
   setTheme(DARK);
@@ -641,7 +642,7 @@ function renderQuestion(){
     </div>
   </div>
   <div class="nav-row">
-      ${step>0?'<button onclick="step--;render()" style="flex:1;padding:0.9rem;font-family:inherit;font-size:1rem;font-weight:500;color:var(--warmMuted);background:transparent;border:1px solid rgba(138,134,130,0.27);border-radius:8px;cursor:pointer">Back</button>':""}
+      ${step>0?'<button onclick="step--;render();focusScreen()" style="flex:1;padding:0.9rem;font-family:inherit;font-size:1rem;font-weight:500;color:var(--warmMuted);background:transparent;border:1px solid rgba(138,134,130,0.27);border-radius:8px;cursor:pointer">Back</button>':""}
       <button onclick="advance()" ${!has?"disabled":""} style="flex:2;padding:0.9rem;font-family:inherit;font-size:1.05rem;font-weight:600;color:${has?"var(--bg)":"var(--warmMuted)"};background:${has?"var(--ember)":"transparent"};border:${has?"none":"1px solid rgba(138,134,130,0.2)"};border-radius:8px;cursor:${has?"pointer":"default"};transition:all 0.2s ease">${step===totalQ-1?"See My Results":"Next"}</button>
   </div>`;
 }
@@ -652,7 +653,6 @@ function onSlide(v){
   scores[key]=val;
   const pct=(val/10)*100;
   const calcLeft="calc(14px + "+pct+" * (100% - 28px) / 100)";
-  const calcWidth="calc(14px + "+pct+" * (100% - 28px) / 100)";
   const screen=app.querySelector(".screen");
   if(!screen)return;
   const thumb=screen.querySelector(".thumb");
@@ -661,9 +661,9 @@ function onSlide(v){
   const hint=screen.querySelector(".slide-hint");
   if(wasEmpty){
     if(thumb){thumb.style.left=calcLeft;thumb.style.background=C.ember;thumb.style.boxShadow="0 0 10px "+C.ember+"55";thumb.style.animation="none"}
-    if(fill){fill.style.width=calcWidth;fill.style.background=C.ember}
+    if(fill){fill.style.width=calcLeft;fill.style.background=C.ember}
     if(num){num.textContent=val;num.style.color=C.ember}
-    if(hint)hint.style.display="none";
+    if(hint)hint.remove();
     const btns=document.querySelectorAll(".nav-row button");
     const nextBtn=btns[btns.length-1];
     if(nextBtn&&nextBtn.hasAttribute("disabled")){nextBtn.removeAttribute("disabled");nextBtn.style.color="var(--bg)";nextBtn.style.background="var(--ember)";nextBtn.style.border="none";nextBtn.style.cursor="pointer"}
@@ -671,12 +671,12 @@ function onSlide(v){
     return;
   }
   if(thumb)thumb.style.left=calcLeft;
-  if(fill)fill.style.width=calcWidth;
+  if(fill)fill.style.width=calcLeft;
   if(num)num.textContent=val;
   const rangeInput=screen.querySelector('input[type="range"]');
   if(rangeInput)rangeInput.setAttribute('aria-valuenow',val);
 }
-function advance(){if(step<totalQ-1){step++;render()}else{step=totalQ;render();window.scrollTo({top:0,behavior:"smooth"})}}
+function advance(){if(step<totalQ-1){step++;render();focusScreen()}else{step=totalQ;render();window.scrollTo({top:0,behavior:"smooth"});focusScreen()}}
 
 function renderHistoryCard(currentComp,currentSec){
   const hist=loadHistory();
@@ -1001,9 +1001,15 @@ async function submitEmail(){
   const inp=document.getElementById("emailInput");
   if(!inp||!inp.value.includes("@"))return;
   email=inp.value;
-  emailSent=true;
-  render();
-  try{await fetch("https://app.convertkit.com/forms/"+CONVERTKIT_FORM_ID+"/subscriptions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email_address:email})})}catch(e){}
+  const btn=document.getElementById("dlBtn");
+  if(btn){btn.textContent="Sending...";btn.disabled=true}
+  try{
+    const res=await fetch("https://app.convertkit.com/forms/"+CONVERTKIT_FORM_ID+"/subscriptions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email_address:email})});
+    if(!res.ok)throw new Error(res.status);
+    emailSent=true;render()
+  }catch(e){
+    if(btn){btn.textContent="Try Again";btn.disabled=false;btn.style.background="var(--red)";btn.style.color="var(--bg)";btn.style.border="none";btn.style.cursor="pointer"}
+  }
 }
 
 function downloadCalendarHolds(){const pad=n=>String(n).padStart(2,'0');const now=new Date();const y=now.getFullYear(),m=pad(now.getMonth()+1),d=pad(now.getDate());const stamp=y+m+d+'T'+pad(now.getHours())+pad(now.getMinutes())+pad(now.getSeconds());const times=[{h:'08',label:'Morning'},{h:'12',label:'Midday'},{h:'18',label:'Evening'}];let cal='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Rebellion Collective//Capacity Audit//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n';times.forEach((t,i)=>{cal+='BEGIN:VEVENT\r\n';cal+='DTSTART:'+y+m+d+'T'+t.h+'0000\r\n';cal+='DTEND:'+y+m+d+'T'+t.h+'0500\r\n';cal+='RRULE:FREQ=DAILY\r\n';cal+='SUMMARY:Capacity Check-in ('+t.label+')\r\n';cal+='DESCRIPTION:Take 2 minutes. Notice where your energy\\, attention\\, and time are going.\\nhttps://capacityaudit.rebellioncollective.com\r\n';cal+='UID:capacity-audit-'+t.label.toLowerCase()+'-'+stamp+'@rebellioncollective.com\r\n';cal+='BEGIN:VALARM\r\nTRIGGER:-PT1M\r\nACTION:DISPLAY\r\nDESCRIPTION:Capacity Check-in\r\nEND:VALARM\r\n';cal+='END:VEVENT\r\n'});cal+='END:VCALENDAR';const blob=new Blob([cal],{type:'text/calendar;charset=utf-8'});const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);if(isMobile){const reader=new FileReader();reader.onload=function(){const a=document.createElement('a');a.href=reader.result;a.download='capacity-check-in.ics';a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a)};reader.readAsDataURL(blob)}else{const url=URL.createObjectURL(blob);triggerDownload(url,'capacity-check-in.ics')}}

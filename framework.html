@@ -169,7 +169,7 @@ function togglePractice(key){
 // ── Scenarios ──
 const SCENARIOS={
   balanced:{label:"Balanced",e:7,a:7,t:7,desc:"All three steady. Notice how even decent, even numbers add up to solid capacity. You do not need to be peak in any one of them."},
-  burnout:{label:"Burnout",e:3,a:4,t:2,desc:"Time is gone. Energy is crashing. Attention is just trying to survive. One low number drags the whole thing down. This is what running on fumes actually does to the math."},
+  burnout:{label:"Running on Empty",e:3,a:4,t:2,desc:"Time is gone. Energy is crashing. Attention is just trying to survive. One low number drags the whole thing down. This is what running on fumes actually does to the math."},
   hyperfocus:{label:"Hyperfocus Trap",e:4,a:9,t:3,desc:"Attention is locked in. But the cost is showing up in the other two. Willpower alone cannot hold this together for long."},
   sunday:{label:"Sunday Reset",e:8,a:6,t:8,desc:"Good rest. Time back in your hands. Attention still waking up. This is what recovery feels like before it lands."},
   flow:{label:"Flow State",e:8,a:9,t:7,desc:"Attention is locked in, and Energy and Time can keep up with it. The work feels alive. Hours pass without you noticing. This is what high focus looks like when it is not costing you."},
@@ -257,9 +257,9 @@ function render(){
           <div class="sub-title">Your Capacity</div>
           <p class="sub-lead">Move any of the three and watch what happens. Pay attention to what one low number does to the rest.</p>
 
-          ${renderSlider("energy","Energy","⚡",state.energy)}
-          ${renderSlider("attention","Attention","🎯",state.attention)}
-          ${renderSlider("time","Time","⏱️",state.time)}
+          ${renderSlider("energy","Energy","",state.energy)}
+          ${renderSlider("attention","Attention","",state.attention)}
+          ${renderSlider("time","Time","",state.time)}
 
           <div class="mult-viz" id="mult-viz" style="margin-top:1.25rem">
             <div class="mult-box" style="border-color:${scoreColor(getEffective('energy'))}30">
@@ -292,7 +292,7 @@ function render(){
         <!-- Sub-card 2: What Drains It -->
         <div class="sub-card">
           <div class="sub-title">What Drains It</div>
-          <p class="sub-lead">The same formula that builds your capacity also describes how it leaks. V.O.I.D. are the four forces that drain your capacity. Each one attacks your time, energy and attention, but each hits one of them hardest. In isolation, they hit harder.</p>
+          <p class="sub-lead">The same formula that builds your capacity also describes how it leaks. V.O.I.D. are the four forces that drain your capacity. Each one attacks your energy, attention, and time, but each hits one of them hardest. In isolation, they hit harder.</p>
 
           <div class="void-eq-wrap">
             <div class="void-eq">
@@ -315,7 +315,7 @@ function render(){
 
         <!-- Closing: the Collective note -->
         <div class="void-collective-note" style="margin-top:1.5rem">
-          <p>Connection is the way through. Isolation is the only one of the four variables you can't face alone. The <a href="https://rebellioncollective.com" target="_blank" rel="noopener" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Rebellion Collective</a> is one space built for this. People doing the work together. Coming back to themselves, to each other, and something greater than themselves.</p>
+          <p>Connection is the way through. Isolation is the only one of the four variables you can't face alone. The <a href="https://rebellioncollective.com" target="_blank" rel="noopener" style="color:var(--emberLight);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)">Rebellion Collective</a> is one space built for this. People doing the work together. Coming back to themselves, to each other, and to something greater than themselves.</p>
           <p>The way through is connection.</p>
         </div>
 
@@ -349,13 +349,13 @@ function render(){
             </div>
           </div>
 
-          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:0">The chosen ones already have names. These are the 5 C's. The practices that allow habits to change from autopilot to chosen.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:0">The chosen ones already have names. These are the 5 C's, also called the 5 Habits of Rebellion. The practices that allow habits to change from autopilot to chosen.</p>
         </div>
 
         <!-- Sub-card: The Practices (interactive) -->
         <div class="sub-card">
           <div class="sub-title">The Practices</div>
-          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Here are the five Cs. Toggle one. Watch how they impact your capacity.</p>
+          <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.7;margin-bottom:1rem">Here are the 5 C's. Toggle one. Watch how they impact your capacity.</p>
 
           <div class="practice-grid" id="practices-grid">
             ${renderPractices()}
@@ -383,24 +383,21 @@ function render(){
 
           <div class="card" style="margin-bottom:0.75rem">
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
-              <span style="font-size:1.2rem" aria-hidden="true">⚡</span>
-              <span style="font-weight:600">Energy</span>
+                            <span style="font-weight:600">Energy</span>
             </div>
             <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.5rem"><strong>Structure:</strong> Mental, physical, emotional, alignment</div>
             <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6"><strong>Quality:</strong> <span style="color:${C.green}">Regulated</span> (steady, renewable, yours to direct) vs. <span style="color:${C.red}">Dysregulated</span> (spiking, crashing, reactive)</div>
           </div>
           <div class="card" style="margin-bottom:0.75rem">
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
-              <span style="font-size:1.2rem" aria-hidden="true">🎯</span>
-              <span style="font-weight:600">Attention</span>
+                            <span style="font-weight:600">Attention</span>
             </div>
             <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.5rem"><strong>Structure:</strong> Chosen, captured, present</div>
             <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6"><strong>Quality:</strong> <span style="color:${C.green}">Chosen</span> (directed, intentional) vs. <span style="color:${C.red}">Captured</span> (hijacked, scattered, not yours)</div>
           </div>
           <div class="card" style="margin-bottom:0">
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
-              <span style="font-size:1.2rem" aria-hidden="true">⏱️</span>
-              <span style="font-weight:600">Time</span>
+                            <span style="font-weight:600">Time</span>
             </div>
             <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.5rem"><strong>Structure:</strong> Committed, recovered, protected</div>
             <div style="font-size:0.9rem;color:var(--textMuted);line-height:1.6"><strong>Quality:</strong> <span style="color:${C.green}">Present-oriented</span> (here, now, this) vs. <span style="color:${C.red}">Past/future-oriented</span> (replaying, rehearsing, never arriving)</div>
@@ -413,7 +410,7 @@ function render(){
         <!-- Section 7: Macro Quote -->
     <div class="section">
       <div class="card-lg" style="text-align:center">
-        <p style="font-size:1.1rem;color:var(--warm);line-height:1.7;font-style:italic;max-width:480px;margin:0 auto">"In a system built for extraction, reclaiming your Clarity, Capacity, and Sovereignty is an act of Rebellion."</p>
+        <p style="font-size:1.1rem;color:var(--warm);line-height:1.7;font-style:italic;max-width:480px;margin:0 auto">"In a system built for extraction, reclaiming your capacity is an act of rebellion."</p>
       </div>
     </div>
 
@@ -601,14 +598,14 @@ function resetToAudit(){
 }
 
 // ── 5 C's rendering ──
-function renderPractices(){var ps=[{key:"curiosity",name:"Curiosity",icon:"\u{1F50D}"},{key:"courage",name:"Courage",icon:"\u{1F525}"},{key:"compassion",name:"Compassion",icon:"\u{1F49A}"},{key:"connection",name:"Connection",icon:"\u{1F91D}"},{key:"commitment",name:"Commitment",icon:"\u26A1"}];return ps.map(function(p){var active=state.practices[p.key];return '<button class="practice-item'+(active?' active':'')+'" onclick="togglePractice(\''+p.key+'\')" aria-pressed="'+active+'">'+'<div class="icon" aria-hidden="true">'+p.icon+'</div>'+'<div class="name">'+p.name+'</div>'+'</button>'}).join("")}
+function renderPractices(){var ps=[{key:"curiosity",name:"Curiosity",icon:"\u{1F50D}"},{key:"courage",name:"Courage",icon:"\u{1F525}"},{key:"compassion",name:"Compassion",icon:"\u{1F49A}"},{key:"connection",name:"Connection",icon:"\u{1F91D}"},{key:"commitment",name:"Commitment",icon:"\u26A1"}];return ps.map(function(p){var active=state.practices[p.key];return '<button class="practice-item'+(active?' active':'')+'" onclick="togglePractice(\''+p.key+'\')" aria-pressed="'+active+'">'+'<div class="name">'+p.name+'</div>'+'</button>'}).join("")}
 
 function getPracticeNote(){var count=Object.values(state.practices).filter(Boolean).length;if(count===0) return "";if(count<=2) return count+" practice"+(count>1?"s":"")+" active. Notice how it lifts your capacity and eases the matching force.";if(count<=4) return count+" practices active. The effects add up. This is what rebuilding looks like.";return "All five practices active. This is the full move. Awareness in motion."}
 
 function getTierNote(gm){
   if(gm<=2) return "The system is taking more than you can restore. This is where things start collapsing.";
   if(gm<=4) return "Running on reserves. Still functional, but it is costing you somewhere you might not see yet.";
-  if(gm<=6) return "Getting by, but stretched. There is room here, but some adjustments need to be made to not fall into critical.";
+  if(gm<=6) return "Getting by, but stretched. There is room here. A few adjustments now keep you out of critical.";
   if(gm<=8) return "Steady. What you are putting in is keeping pace with what you put out. The work now is protecting what is working.";
   return "Thriving. Rare and worth noticing. This is what real capacity feels like.";
 }

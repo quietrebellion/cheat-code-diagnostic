@@ -79,16 +79,16 @@ const DARK=C;
 const PARCH={bg:"#e8ebe3",bgCard:"#f0f2ec",ember:"#3d5638",emberLight:"#3d5638",warm:"#2a3528",warmMuted:"#4a5244",text:"#1e2a1c",textMuted:"#3a4238",cream:"#1e2a1c",red:"#a8453a",amber:"#7d6e22",green:"#4a6444"};
 function setTheme(t){Object.assign(C,t);document.body.classList.toggle("parchment",t===PARCH)}
 const SECTIONS=[
-{key:"energy",label:"Energy",icon:"\u26A1",intro:"Energy lives in four domains: mental, physical, emotional, and alignment (the felt sense that your energy is going where it matters). When one collapses, the others compensate until they can\u2019t.",questions:[
+{key:"energy",label:"Energy",icon:"",intro:"Energy lives in four domains: mental, physical, emotional, and alignment (the felt sense that your energy is going where it matters). When one collapses, the others compensate until they can\u2019t.",questions:[
 {key:"mental",label:"Mental Energy",question:"How clear is your thinking right now?",low:"Foggy. Too many tabs open in my head.",high:"Sharp. Decisions come easily."},
 {key:"physical",label:"Physical Energy",question:"How rested and physically resourced do you feel?",low:"Running on fumes. Sleep-deprived, caffeine-dependent, wired but tired.",high:"Rested, nourished, refreshed."},
 {key:"emotional",label:"Emotional Energy",question:"How much emotional weight are you carrying that isn\u2019t yours?",low:"The emotional glue. Performing constantly, carrying what isn\u2019t yours.",high:"Compassionate without being consumed. Available when I choose to be."},
 {key:"alignment",label:"Alignment Energy",question:"Does what you spend your days doing actually matter to you?",low:"Most of it feels hollow or disconnected from what I care about.",high:"The work reflects who I am and what I value."}]},
-{key:"attention",label:"Attention",icon:"\uD83C\uDFAF",intro:"Attention lives in three states: chosen, captured, and present. The deeper question: who benefits from your distraction?",questions:[
+{key:"attention",label:"Attention",icon:"",intro:"Attention lives in three states: chosen, captured, and present. The deeper question: who benefits from your distraction?",questions:[
 {key:"chosen",label:"Chosen Attention",question:"How much of your attention is going where you actually want it?",low:"Almost none. Reactive, scattered, pulled in every direction.",high:"Most of it. I\u2019m where I mean to be."},
 {key:"captured",label:"Captured Attention",question:"How much of your day gets hijacked by things you didn\u2019t choose?",low:"Constantly. Notifications, feeds, other people\u2019s fires.",high:"Very little. I\u2019ve built real protection around my focus."},
 {key:"present",label:"Present Attention",question:"Right now, are you here, or is your mind somewhere else?",low:"Somewhere else. Replaying the past or bracing for what\u2019s next.",high:"Here. Now."}]},
-{key:"time",label:"Time",icon:"\u23F1\uFE0F",intro:"Time breaks down into three types: committed, recovered, and protected. How yours is distributed tells the real story.",questions:[
+{key:"time",label:"Time",icon:"",intro:"Time breaks down into three types: committed, recovered, and protected. How yours is distributed tells the real story.",questions:[
 {key:"committed",label:"Committed Time",question:"How much of your calendar was decided for you?",low:"Almost all of it. My time was handed to me.",high:"Very little. Most of how I spend my time is chosen."},
 {key:"recovered",label:"Recovered Time",question:"How much have you let go of that is no longer worth your time?",low:"Nothing. I\u2019m holding on to a lot right now.",high:"A lot. I\u2019ve dropped what doesn\u2019t serve me."},
 {key:"protected",label:"Protected Time",question:"Do you have time that\u2019s truly yours, that nothing gets to touch?",low:"No. Everything is up for grabs.",high:"Yes. And I protect it."}]}
@@ -106,22 +106,22 @@ depleted:"Your captured attention score is in the middle. You\u2019ve built some
 resourced:"Your captured attention score is high. You\u2019ve built real protection around your focus. The work now is maintenance. Once a month, check: has anything new crept in? Has a tool you chose started choosing you? Staying honest about what\u2019s actually serving you is the practice."
 },
 mental:{
-critical:"Your mental clarity score is very low. When thinking feels foggy, open loops are often part of it: unfinished decisions, unresolved conversations, lingering obligations. If it feels manageable, try getting some of them out of your head. Paper, notes app, voice memo, whatever works. You don\u2019t need to resolve them. You need to stop storing them in your body. And if even that feels like too much right now, that\u2019s data too. Rest might be what\u2019s needed first.",
+critical:"Your mental clarity score is very low. When thinking feels foggy, open loops are often part of it: unfinished decisions, unresolved conversations, lingering obligations. If it feels manageable, try getting some of them out of your head. Paper, notes app, voice memo, whatever works. You only need to stop storing them in your body. And if even that feels like too much right now, that\u2019s data too. Rest might be what\u2019s needed first.",
 depleted:"Your mental clarity score is in the middle. You\u2019re functional, but there may be a cost to the fog. This week, consider picking the two or three open loops causing the most drag. For each one: decide, delegate, or schedule it. You don\u2019t need to resolve them all. You need to stop carrying them alone.",
 resourced:"Your mental clarity score is high. That\u2019s a resource worth protecting. The curiosity practice here is preventive: what\u2019s your system for keeping open loops from accumulating? If you don\u2019t have one, build one. A weekly review. A capture habit. Make the clarity sustainable."
 },
 present:{
-critical:"Your presence score is low. You may be spending more time in the past or future than in the present. Your nervous system is doing its job, trying to keep you safe. That\u2019s not a failure. If it feels safe to try, pause three times today. One breath. Notice where you are without trying to change anything. If dropping into the present feels activating rather than calming, back off. That\u2019s important information about what your system needs.",
+critical:"Your presence score is low. You may be spending more time in the past or future than in the present. Your nervous system is doing its job, trying to keep you safe. If it feels safe to try, pause three times today. One breath. Notice where you are without trying to change anything. If dropping into the present feels activating rather than calming, back off. That\u2019s important information about what your system needs.",
 depleted:"Your presence score is in the middle. You find your way here sometimes but it\u2019s hard to stay. That\u2019s how minds work. If you want to practice, set three gentle anchors this week: morning, midday, end of day. One breath each time. Am I here? The gap between noticing and being present gets shorter with repetition. There\u2019s no failing at this.",
 resourced:"Your presence score is high. You\u2019re mostly here. That\u2019s the foundation everything else is built on. The invitation now is depth. Pick one activity this week and give it your full, undivided attention. A conversation. A meal. A walk. Notice what it feels like when presence is where you already are."
 },
 _default:{critical:"Your scores suggest something is running your equation that you haven\u2019t fully seen yet. You don\u2019t need to fix anything right now. If you have capacity for one thing this week, pick one variable: energy, attention, or time. Observe it without optimizing. Name what you notice. If you don\u2019t have capacity for that, let the scores sit. They\u2019ll be here when you\u2019re ready.",depleted:"You can see some of what\u2019s running your equation, but the picture is still incomplete. Pick one variable this week. Energy, attention, or time. Watch it without trying to change it. The pattern will show itself.",resourced:"You have good visibility into your equation. The curiosity practice now is staying honest. What habit have you stopped questioning because it\u2019s comfortable? That\u2019s where curiosity does its best work."}
 },subKeys:["chosen","captured","mental","present"]},
 
-{name:"Courage",description:"What you find when you get curious can be uncomfortable. Courage doesn\u2019t mean forcing yourself through it. It means moving toward what matters at a pace your system can handle.",actions:{
+{name:"Courage",description:"What you find when you get curious can be uncomfortable. Courage means moving toward what matters at a pace your system can handle.",actions:{
 alignment:{
 critical:"Your alignment score suggests a significant gap between what you\u2019re doing and what you value. That gap is expensive, but it may also exist for reasons that made sense at the time, or that still do. When you\u2019re ready, ask yourself one question: what am I calling responsibility that might actually be fear? And what might be a real constraint I need to respect? You don\u2019t have to blow up your life. Sitting with the difference between fear and genuine limitation is where courage starts.",
-depleted:"Your alignment score is in the middle. Parts of your work connect to what you value. Parts don\u2019t. When it feels right, choose one thing to renegotiate: a commitment, a role, a way you spend your time. Start where you have real agency to move. Courage is a muscle, and it builds with small reps, not dramatic gestures.",
+depleted:"Your alignment score is in the middle. Parts of your work connect to what you value. Parts don\u2019t. When it feels right, choose one thing to renegotiate: a commitment, a role, a way you spend your time. Start where you have real agency to move. Courage is a muscle, and it builds with small reps.",
 resourced:"Your alignment score is high. Your work mostly matches your values. The courageous move now is protecting that alignment when it gets tested. Notice where you\u2019re tempted to compromise for convenience or approval. The cost of small misalignments compounds over time."
 },
 emotional:{
@@ -129,22 +129,22 @@ critical:"A low emotional energy score can signal that something is costing you 
 depleted:"Your emotional energy is in the middle. You\u2019re managing, but something might be taking more than its share. If there\u2019s something you\u2019re holding that doesn\u2019t feel like yours, naming it is the first step. Write it down. Tell one person you trust, if that feels safe.",
 resourced:"Your emotional energy score is high. You\u2019re not carrying more than you need to. The practice now is staying in the hard stuff even when it\u2019s uncomfortable, rather than avoiding it because you can. Sometimes the courageous thing is to sit with tension longer than feels natural. That\u2019s where the real information lives."
 },
-_default:{critical:"Your scores suggest you may be holding on somewhere. There might be good reasons for that. The cost of staying put is real, but so is the cost of moving before you\u2019re ready. If you can name what you\u2019re holding, even privately, that\u2019s the first act of courage. If you can\u2019t name it yet, that\u2019s okay. Let the awareness build.",depleted:"You\u2019re showing up, but there might be a place where you\u2019re choosing comfort over honesty. That\u2019s not a judgment; comfort is a valid need. But if there\u2019s one place this week where a small move toward honesty feels possible, notice it. Even one degree.",resourced:"You\u2019re in a strong place. The courageous move from here is the patient one. Where can you be more honest? With yourself, with someone you trust, with the work? That\u2019s the edge worth walking."}
+_default:{critical:"Your scores suggest you may be holding on somewhere. There might be good reasons for that. The cost of staying put is real, but so is the cost of moving before you\u2019re ready. If you can name what you\u2019re holding, even privately, that\u2019s the first act of courage. If you can\u2019t name it yet, that\u2019s okay. Let the awareness build.",depleted:"You\u2019re showing up, but there might be a place where you\u2019re choosing comfort over honesty. Comfort is a valid need. But if there\u2019s one place this week where a small move toward honesty feels possible, notice it. Even one degree.",resourced:"You\u2019re in a strong place. The courageous move from here is the patient one. Where can you be more honest? With yourself, with someone you trust, with the work? That\u2019s the edge worth walking."}
 },subKeys:["alignment","emotional"]},
 
 {name:"Compassion",description:"Meeting yourself with kindness in the middle of the mess. Without compassion, you find the hard thing and add a second layer of suffering on top of it. Compassion is the floor that holds when everything else is shaking.",actions:{
 emotional:{
-critical:"Your emotional energy score is low. When we\u2019re carrying a lot, self-criticism often gets louder, and that\u2019s the system trying to make sense of the weight, not evidence that you\u2019re doing it wrong. If it feels safe, try the RAIN practice next time you notice the critic: Recognize what\u2019s happening. Allow it to be there. Investigate with kindness. Nurture yourself through it. Ninety seconds. But if you\u2019re not in a place to engage with that right now, the most compassionate thing might be to step back and let yourself rest.",
-depleted:"Your emotional energy is in the middle. You\u2019re carrying some weight but not all of it. This week, see if you can catch one moment where you\u2019re hard on yourself for how you\u2019re handling things. Ask: would I say this to someone I care about? If the answer is no, that\u2019s worth noticing. Not to fix, not to judge. To see.",
+critical:"Your emotional energy score is low. When we\u2019re carrying a lot, self-criticism often gets louder, and that\u2019s the system trying to make sense of the weight. If it feels safe, try the RAIN practice next time you notice the critic: Recognize what\u2019s happening. Allow it to be there. Investigate with kindness. Nurture yourself through it. Ninety seconds. But if you\u2019re not in a place to engage with that right now, the most compassionate thing might be to step back and let yourself rest.",
+depleted:"Your emotional energy is in the middle. You\u2019re carrying some weight but not all of it. This week, see if you can catch one moment where you\u2019re hard on yourself for how you\u2019re handling things. Ask: would I say this to someone I care about? If the answer is no, that\u2019s worth noticing. Just notice it.",
 resourced:"Your emotional energy score is high. You\u2019re not carrying more than you should. The practice now is checking: are you offering yourself the same kindness you offer others? Compassion needs to be resourced. The source has to stay full."
 },
 physical:{
-critical:"Your physical energy score is low. Your body might be holding something your mind hasn\u2019t caught up to yet. If it feels right, choose one thing this week: sleep, movement, or nourishment. Whichever one feels most accessible, not most virtuous. And if your body is asking for stillness rather than action, listen to that. Sometimes the most compassionate response is less, not more.",
-depleted:"Your physical energy is in the middle. You\u2019re doing some things for your body, but the consistency may be uneven. That\u2019s common, and it\u2019s not a character flaw. If there\u2019s one physical practice that\u2019s been slipping, consider recommitting to it this week. Not perfectly. Consistently enough. Your body doesn\u2019t need a new program. It needs presence.",
-resourced:"Your physical energy score is high. Whatever you\u2019re doing for your body is working. The compassion practice here is listening to what it actually needs this week. Some weeks that\u2019s pushing. Some weeks that\u2019s rest. Compassion is responsive, not rigid."
+critical:"Your physical energy score is low. Your body might be holding something your mind hasn\u2019t caught up to yet. If it feels right, choose one thing this week: sleep, movement, or nourishment. Whichever one feels most doable. And if your body is asking for stillness rather than action, listen to that. Sometimes the most compassionate response is to do less.",
+depleted:"Your physical energy is in the middle. You\u2019re doing some things for your body, but the consistency may be uneven. That\u2019s common, and it\u2019s not a character flaw. If there\u2019s one physical practice that\u2019s been slipping, consider recommitting to it this week. Imperfect is fine. What it needs most is your presence.",
+resourced:"Your physical energy score is high. Whatever you\u2019re doing for your body is working. The compassion practice here is listening to what it actually needs this week. Some weeks that\u2019s pushing. Some weeks that\u2019s rest."
 },
 present:{
-critical:"Your presence score is low. If you\u2019re spending a lot of time replaying or rehearsing, that\u2019s your nervous system doing its job, trying to protect you by staying vigilant. It\u2019s not a flaw. If it feels safe to try: notice where you feel it in your body right now. Name the sensation without trying to change it. Three breaths. If turning attention inward feels activating or overwhelming, try an external anchor instead: name five things you can see. Start where your system feels steady.",
+critical:"Your presence score is low. If you\u2019re spending a lot of time replaying or rehearsing, that\u2019s your nervous system doing its job, trying to protect you by staying vigilant. If it feels safe to try: notice where you feel it in your body right now. Name the sensation without trying to change it. Three breaths. If turning attention inward feels activating or overwhelming, try an external anchor instead: name five things you can see. Start where your system feels steady.",
 depleted:"Your presence score is in the middle. You find the present moment sometimes but it\u2019s hard to stay. That\u2019s how minds work, and it\u2019s especially true when the nervous system has learned to stay alert. The compassion practice is in the return. When you notice you\u2019ve drifted, come back without the self-lecture. The gentleness of the return is the practice.",
 resourced:"Your presence score is high. You\u2019re here more often than you\u2019re not. The invitation is to bring compassion to the moments when you aren\u2019t. When you catch yourself drifting, notice what pulled you. Meet it with the same warmth you\u2019d offer a friend."
 },
@@ -162,12 +162,12 @@ critical:"Your alignment score suggests a gap between what you\u2019re doing and
 depleted:"Your alignment score is in the middle. Some of your relationships may be nourishing while others run on autopilot. This week, pay attention to how you feel after your interactions. Notice who you become around different people. That awareness is everything.",
 resourced:"Your alignment score is high. The people around you are likely the right people. The practice now is reciprocity. Ask yourself: what do I bring to their equation? Am I showing up the way I want to be shown up for? Connection is about what you put into the field."
 },
-_default:{critical:"Connection can feel like the hardest thing to reach for when you\u2019re depleted. If reaching out feels possible, try one person today. Someone you trust. Tell them something true about where you are right now. If it doesn\u2019t feel possible, that\u2019s okay. Notice what\u2019s making it hard. That\u2019s information too.",depleted:"Your scores suggest connection could use some attention. This week, go past the surface with one person. Ask how they really are. Then answer the same question truthfully when they ask you back. Connection lives in the exchange.",resourced:"Your connections are strong. The practice now is tending them. Reach out to someone you haven\u2019t talked to in a while. Not because you need something. Because the relationship matters."}
+_default:{critical:"Connection can feel like the hardest thing to reach for when you\u2019re depleted. If reaching out feels possible, try one person today. Someone you trust. Tell them something true about where you are right now. If it doesn\u2019t feel possible, that\u2019s okay. Notice what\u2019s making it hard. That\u2019s information too.",depleted:"Your scores suggest connection could use some attention. This week, go past the surface with one person. Ask how they really are. Then answer the same question truthfully when they ask you back. Connection lives in the exchange.",resourced:"Your connections are strong. The practice now is tending them. Reach out to someone you haven\u2019t talked to in a while. Just because the relationship matters."}
 },subKeys:["committed","alignment"]},
 
-{name:"Commitment",description:"Protecting your capacity over time. Staying curious, courageous, compassionate, and connected. Not perfectly. Not constantly. At whatever pace your system can sustain.",actions:{
+{name:"Commitment",description:"Protecting your capacity over time. Staying curious, courageous, compassionate, and connected. At whatever pace your system can sustain.",actions:{
 protected:{
-critical:"Your protected time score is very low. If nothing on your calendar truly belongs to you, that\u2019s where the system starts breaking down. But there may be real reasons your time isn\u2019t protected: power dynamics, caregiving, financial pressure, environments where boundaries aren\u2019t safe. If you can block one hour this week that\u2019s yours, do it. If you can\u2019t, name what\u2019s preventing it. Seeing the constraint clearly is the first step, not a failure of will.",
+critical:"Your protected time score is very low. If nothing on your calendar truly belongs to you, that\u2019s where the system starts breaking down. But there may be real reasons your time isn\u2019t protected: power dynamics, caregiving, financial pressure, environments where boundaries aren\u2019t safe. If you can block one hour this week that\u2019s yours, do it. If you can\u2019t, name what\u2019s preventing it. Seeing the constraint clearly is the first step.",
 depleted:"Your protected time score is in the middle. You have some boundaries but they may be bending. This week, pick one that\u2019s been slipping and reinforce it. Put language around it. Tell someone about it if that feels safe. A boundary that lives only in your head is hard to hold.",
 resourced:"Your protected time score is high. You\u2019ve built real boundaries and they hold. The commitment practice now is auditing what you\u2019re protecting that time for. Is it being used in service of what matters? Protected time without intention is empty space. Fill it with what you said you cared about."
 },
@@ -176,7 +176,7 @@ critical:"Your recovered time score is very low. You may still be carrying oblig
 depleted:"Your recovered time score is in the middle. You\u2019ve let go of some things, but there may be more to drop. Pick one recurring commitment this week and ask: if I weren\u2019t already doing this, would I choose to start? If the answer is no, that\u2019s your signal. Renegotiate it when the timing is right.",
 resourced:"Your recovered time score is high. You\u2019ve done real work letting go. The practice now is staying honest about what creeps back in. New obligations disguise themselves as opportunities. This week, before you say yes to anything new, ask: what am I saying no to in order to say yes to this?"
 },
-_default:{critical:"If the idea of committing to one more thing feels overwhelming, listen to that. You don\u2019t need to add practices on top of depletion. The smallest honest move might be admitting where you are right now. To yourself. To one person you trust. That\u2019s enough. Commitment starts with one true thing, and sometimes that true thing is: I\u2019m not okay and I need to stop pretending I am.",depleted:"You\u2019re committed to some things but may be spreading thin. Pick the one practice from your audit results that matters most this week. One. Do it imperfectly but consistently. That\u2019s the whole practice.",resourced:"Your commitment is strong. The question now is sustainability. What keeps you going when motivation fades? Build that structure. A rhythm, a community, an accountability partner. Commitment is architecture, not willpower."}
+_default:{critical:"If the idea of committing to one more thing feels overwhelming, listen to that. You don\u2019t need to add practices on top of depletion. The smallest honest move might be admitting where you are right now. To yourself. To one person you trust. That\u2019s enough. Commitment starts with one true thing, and sometimes that true thing is: I\u2019m not okay and I need to stop pretending I am.",depleted:"You\u2019re committed to some things but may be spreading thin. Pick the one practice from your audit results that matters most this week. One. Do it imperfectly but consistently. That\u2019s the whole practice.",resourced:"Your commitment is strong. The question now is sustainability. What keeps you going when motivation fades? Build that structure. A rhythm, a community, an accountability partner. Structure carries you when motivation runs out."}
 },subKeys:["protected","recovered"]}
 ];
 const ALL_Q=SECTIONS.flatMap(s=>s.questions.map(q=>({...q,section:s})));
@@ -184,7 +184,7 @@ const totalQ=ALL_Q.length;
 
 function scoreColor(s){return s<=3?C.red:s<=6?C.amber:C.green}
 function scoreLabel(s){return s<=2?"Critical":s<=4?"Depleted":s<=6?"Stretched":s<=8?"Resourced":"Thriving"}
-function spreadInsight(sp,dim,low){const n=SECTIONS.find(s=>s.key===dim)?.label||dim;if(sp<=1.5){if(low<=3)return"All three dimensions are running low. This is systemic depletion. The whole system needs tending. When everything is equally drained, the intervention is rest and reconnection before strategy.";if(low<=6)return"Your capacity is stretched evenly across all three dimensions. There\u2019s no single point of collapse, but there\u2019s also no reserve. You\u2019re managing, but the margin is thin. Small disruptions hit harder from here.";return"Your three dimensions are holding steady. That\u2019s a stable foundation. The work from here is about protecting what you\u2019ve built and deepening the habits that sustain it.";}if(sp<=4)return"Your "+n.toLowerCase()+" is the constraint. The other dimensions are compensating for it right now, and that compensation has a cost. This is where the pattern becomes visible. When you address "+n.toLowerCase()+" specifically, the whole equation shifts.";return"Your "+n.toLowerCase()+" has collapsed while the rest of your system is still standing. In the C.H.E.A.T. Code\u2122, capacity is multiplicative. One dimension at this level constrains everything else, regardless of how strong the others are. This is where you begin."}
+function spreadInsight(sp,dim,low){const n=SECTIONS.find(s=>s.key===dim)?.label||dim;if(sp<=1.5){if(low<=3)return"All three dimensions are running low. This is systemic depletion. The whole system needs tending. When everything is equally drained, the intervention is rest and reconnection before strategy. If this feels like more than depletion, talk to someone today. In the US, you can call or text 988 any time.";if(low<=6)return"Your capacity is stretched evenly across all three dimensions. There\u2019s no single point of collapse, but there\u2019s also no reserve. You\u2019re managing, but the margin is thin. Small disruptions hit harder from here.";return"Your three dimensions are holding steady. That\u2019s a stable foundation. The work from here is about protecting what you\u2019ve built and deepening the habits that sustain it.";}if(sp<=4)return"Your "+n.toLowerCase()+" is the constraint. The other dimensions are compensating for it right now, and that compensation has a cost. This is where the pattern becomes visible. When you address "+n.toLowerCase()+" specifically, the whole equation shifts.";return"Your "+n.toLowerCase()+" has collapsed while the rest of your system is still standing. In the C.H.E.A.T. Code\u2122, capacity is multiplicative. One dimension at this level constrains everything else, regardless of how strong the others are. This is where you begin."}
 function subInsight(section,scores){const items=section.questions.map(q=>({...q,score:scores[q.key]})).filter(q=>q.score!=null);if(items.length<2)return null;const sorted=[...items].sort((a,b)=>a.score-b.score);if(sorted[sorted.length-1].score-sorted[0].score<=1)return null;return{lowest:sorted[0],highest:sorted[sorted.length-1]}}
 function getAction(h,scores){
   const rs=h.subKeys.filter(k=>scores[k]!=null).sort((a,b)=>scores[a]-scores[b]);
@@ -217,9 +217,9 @@ function computeSectionScores(sc){
 function renderWhatIf(secScores,comp){
   initWhatIf(secScores,comp);
   const dims=[
-    {key:"energy",label:"Energy",icon:"⚡",val:secScores.energy},
-    {key:"attention",label:"Attention",icon:"🎯",val:secScores.attention},
-    {key:"time",label:"Time",icon:"⏱️",val:secScores.time}
+    {key:"energy",label:"Energy",icon:"",val:secScores.energy},
+    {key:"attention",label:"Attention",icon:"",val:secScores.attention},
+    {key:"time",label:"Time",icon:"",val:secScores.time}
   ];
   const origComp=parseFloat(comp);
   let slidersHTML="";
@@ -370,7 +370,7 @@ function renderTimeframe(){
       <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Three times a day is ideal. Once a day works if that’s what you’ve got. Anytime you notice the signals (drained, scattered, short on time, reacting instead of choosing) that’s your cue.</p>
       <p style="font-size:0.95rem;color:var(--cream);line-height:1.6;margin-bottom:1rem">Pay attention to what keeps showing up.</p>
       <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:0.75rem">Download three daily calendar holds (8am, 12pm, 6pm) to build the habit. Each one is five minutes. Open the file and your calendar app will do the rest.</p>
-      <button onclick="downloadCalendarHolds()" style="display:inline-flex;align-items:center;gap:0.5rem;font-family:inherit;font-size:0.9rem;font-weight:500;color:var(--ember);background:transparent;text-decoration:none;border:1px solid rgba(74,100,68,0.3);border-radius:6px;padding:0.5rem 1rem;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='rgba(74,100,68,0.08)'" onmouseout="this.style.background='transparent'">📅 Download Calendar Holds</button>
+      <button onclick="downloadCalendarHolds()" style="display:inline-flex;align-items:center;gap:0.5rem;font-family:inherit;font-size:0.9rem;font-weight:500;color:var(--ember);background:transparent;text-decoration:none;border:1px solid rgba(74,100,68,0.3);border-radius:6px;padding:0.5rem 1rem;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='rgba(74,100,68,0.08)'" onmouseout="this.style.background='transparent'">Download Calendar Holds</button>
       <div style="margin-top:1rem"><a href="framework.html" style="font-size:0.9rem;color:var(--ember);text-decoration:none;border-bottom:1px solid rgba(74,100,68,0.3)" onmouseover="this.style.borderBottomColor='var(--ember)'" onmouseout="this.style.borderBottomColor='rgba(74,100,68,0.3)'">Learn about the C.H.E.A.T. Code framework</a></div>
       <div style="margin-top:1.5rem;text-align:center"><button class="btn" style="width:100%" onclick="timeframe='right_now';showTimeframe=false;showPrediction=true;render()">Continue</button></div>
     <button class="btn-ghost" style="margin-top:0.5rem;font-size:0.9rem;text-align:center;display:block" onclick="showTimeframe=false;step=-1;render()">Back</button>
@@ -542,19 +542,19 @@ function renderIntroDashboard(last,hist){
     const trendDelta=recentAvg-olderAvg;
     let narrative="";
     if(Math.abs(trendDelta)<0.3){
-      narrative="Your capacity has been holding steady over the past "+spanLabel+". Stability is data too. It means your current habits are maintaining the system at this level.";
+      narrative="Compared with your earlier audits, your capacity is holding steady. Stability is data too. It means your current habits are maintaining the system at this level.";
     }else if(trendDelta>0){
-      const magWord=trendDelta>1.5?"significantly":"gradually";
-      narrative="Your capacity has been "+magWord+" rising over the past "+spanLabel+". The practices are working. ";
+      const magWord=trendDelta>1.5?"significantly":"a little";
+      narrative="Compared with your earlier audits, your capacity is "+magWord+" higher. The practices are working. ";
       const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>b.delta-a.delta);
       const driver=SECTIONS.find(s=>s.key===dimDeltas[0].key);
-      if(dimDeltas[0].delta>0.5)narrative+=driver.label+" is leading the shift (+"+dimDeltas[0].delta.toFixed(1)+").";
+      if(dimDeltas[0].delta>0.5)narrative+=driver.label+" has risen the most since then (+"+dimDeltas[0].delta.toFixed(1)+").";
     }else{
-      const magWord=trendDelta<-1.5?"significantly":"gradually";
-      narrative="Your capacity has been "+magWord+" declining over the past "+spanLabel+". This isn’t a verdict. It’s signal. ";
+      const magWord=trendDelta<-1.5?"significantly":"a little";
+      narrative="Compared with your earlier audits, your capacity is "+magWord+" lower. Treat it as signal. ";
       const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>a.delta-b.delta);
       const drain=SECTIONS.find(s=>s.key===dimDeltas[0].key);
-      if(dimDeltas[0].delta<-0.5)narrative+=drain.label+" is where the drop is sharpest ("+dimDeltas[0].delta.toFixed(1)+").";
+      if(dimDeltas[0].delta<-0.5)narrative+=drain.label+" has dropped the most since then ("+dimDeltas[0].delta.toFixed(1)+").";
     }
     trendsCard=`<div class="card-lg" style="border-color:rgba(74,100,68,0.13);margin-bottom:0.75rem">
       <h2 class="label-sm">Trends Analysis</h2>
@@ -579,10 +579,8 @@ function renderIntro(){
   app.innerHTML=`<div class="screen" style="text-align:center;padding-top:2rem">
     <div style="font-size:1.1rem;text-transform:uppercase;letter-spacing:0.25em;color:var(--ember);margin-bottom:1.5rem;font-weight:600">Rebellion Collective</div>
     <h1 style="font-size:2rem;font-weight:600;color:var(--cream);line-height:1.2;margin-bottom:1.5rem">The C.H.E.A.T. Code\u2122 Capacity Audit</h1>
-    <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Ten questions to spark curiosity.</p>
-    <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Two minutes to build awareness.</p>
-    <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 1.5rem;font-style:italic">A lifetime to practice.</p>
-    <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Collect data not drama.</p>
+    <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 0.3rem">Ten questions. Two minutes.</p>
+    <p style="font-size:1.05rem;color:var(--cream);line-height:1.7;max-width:500px;margin:0 auto 1.5rem;font-style:italic">See where your energy, attention, and time are going.</p>
     <p style="font-size:1.05rem;color:var(--cream);margin-bottom:1.5rem">Reclaim what\u2019s yours.</p>
     <p style="font-size:1.4rem;font-weight:600;color:var(--ember);margin-bottom:2.5rem">Be Rebellious.</p>
     <button class="btn" style="align-self:center;animation:pulseGlow 2s ease infinite" onclick="${last?"timeframe='right_now';showTimeframe=false;showPrediction=true;render()":"showTimeframe=true;render()"}">${last?"Retake the Audit":"Begin"}</button>
@@ -591,8 +589,8 @@ function renderIntro(){
   </div>
     ${dashboard}
     <div style="text-align:left;max-width:500px;margin:1.5rem auto 0">
-      <p style="font-size:1.1rem;color:var(--textMuted);line-height:1.7;margin-bottom:0.8rem">Capacity is the raw material of our life.</p>
-      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">The systems we occupy and habits we practice extract or reclaim our time, energy, and attention every day.</p>
+      <p style="font-size:1.1rem;color:var(--textMuted);line-height:1.7;margin-bottom:0.8rem">Capacity is the raw material of our lives.</p>
+      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">The systems we occupy and habits we practice extract or reclaim our energy, attention, and time every day.</p>
       <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">Understanding how systems and habits impact our capacity is the key to making choices that support the kind of life we want to live.</p>
       <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.7;margin-bottom:1.5rem">This Capacity Audit tells you where your capacity is being drained, how, and what to do about it.</p>
     
@@ -814,19 +812,19 @@ function renderTrendsCard(){
   const delta=recentAvg-olderAvg;
   let narrative="";
   if(Math.abs(delta)<0.3){
-    narrative="Your capacity has been holding steady over the past "+spanLabel+". Stability is data too \u2014 it means your current habits are maintaining the system at this level.";
+    narrative="Compared with your earlier audits, your capacity is holding steady. Stability is data too. It means your current habits are maintaining the system at this level.";
   }else if(delta>0){
-    const magWord=delta>1.5?"significantly":"gradually";
-    narrative="Your capacity has been "+magWord+" rising over the past "+spanLabel+". The practices are working. ";
+    const magWord=delta>1.5?"significantly":"a little";
+    narrative="Compared with your earlier audits, your capacity is "+magWord+" higher. The practices are working. ";
     const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>b.delta-a.delta);
     const driver=SECTIONS.find(s=>s.key===dimDeltas[0].key);
-    if(dimDeltas[0].delta>0.5)narrative+=driver.label+" is leading the shift (+"+dimDeltas[0].delta.toFixed(1)+").";
+    if(dimDeltas[0].delta>0.5)narrative+=driver.label+" has risen the most since then (+"+dimDeltas[0].delta.toFixed(1)+").";
   }else{
-    const magWord=delta<-1.5?"significantly":"gradually";
-    narrative="Your capacity has been "+magWord+" declining over the past "+spanLabel+". This isn\u2019t a verdict \u2014 it\u2019s signal. ";
+    const magWord=delta<-1.5?"significantly":"a little";
+    narrative="Compared with your earlier audits, your capacity is "+magWord+" lower. Treat it as signal. ";
     const dimDeltas=["energy","attention","time"].map(k=>{const rAvg=recent.reduce((s,e)=>s+(e.sections[k]||0),0)/recent.length;const oAvg=older.reduce((s,e)=>s+(e.sections[k]||0),0)/older.length;return{key:k,delta:rAvg-oAvg}}).sort((a,b)=>a.delta-b.delta);
     const drain=SECTIONS.find(s=>s.key===dimDeltas[0].key);
-    if(dimDeltas[0].delta<-0.5)narrative+=drain.label+" is where the drop is sharpest ("+dimDeltas[0].delta.toFixed(1)+").";
+    if(dimDeltas[0].delta<-0.5)narrative+=drain.label+" has dropped the most since then ("+dimDeltas[0].delta.toFixed(1)+").";
   }
   return`<div class="card-lg" style="border-color:rgba(74,100,68,0.13)">
     <h2 class="label-sm">Trends Analysis</h2>
@@ -901,7 +899,7 @@ function renderResults(){
     <p style="font-size:0.95rem;color:var(--textMuted);line-height:1.6;margin-bottom:1.25rem">Your results are already saved to this device. Want to go further? Enter your email to receive five dispatches over the next two weeks, one for each habit, with coaching exercises, the framework behind the Capacity Audit, and the deeper questions your scores are pointing to.</p>
     <div style="display:flex;flex-wrap:wrap;gap:0.5rem;max-width:420px;width:100%;box-sizing:border-box;margin:0 auto 0.75rem">
       <label for="emailInput" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">Email address</label>
-      <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code drip campaign" style="flex:1 1 200px;min-width:0;max-width:100%;box-sizing:border-box;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
+      <input type="email" id="emailInput" placeholder="Your email" aria-label="Email address for C.H.E.A.T. Code emails" style="flex:1 1 200px;min-width:0;max-width:100%;box-sizing:border-box;padding:0.85rem 1rem;font-family:inherit;font-size:1rem;background:var(--bg);border:1px solid rgba(138,134,130,0.27);border-radius:6px;color:var(--text);outline:none" onkeydown="if(event.key==='Enter')submitEmail()">
       <button id="dlBtn" onclick="submitEmail()" style="flex:0 0 auto;padding:0.85rem 1.25rem;font-family:inherit;font-size:0.95rem;font-weight:600;background:transparent;color:var(--warmMuted);border:1px solid rgba(138,134,130,0.2);border-radius:6px;cursor:default;white-space:nowrap;transition:all 0.2s ease">Start Dispatches</button>
     </div>
     <p style="font-size:0.8rem;color:var(--warmMuted);margin-top:0.5rem">One-click unsubscribe. Always.</p>
@@ -959,7 +957,7 @@ function renderResults(){
     ${!isShared?`<div style="border-top:1px solid rgba(74,100,68,0.1);margin:1.5rem 0"></div>
     <div class="card-lg" style="border-color:rgba(74,100,68,0.13);margin-bottom:1.25rem">
       <h2 class="label-sm" style="font-size:0.9rem;margin-bottom:0.75rem">One More Thing</h2>
-      <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.75rem;line-height:1.45">Knowing where you stand is not the same as being willing to move.</p>
+      <p style="font-size:1.1rem;font-weight:500;color:var(--cream);margin-bottom:0.75rem;line-height:1.45">Knowing where you stand is only half of it.</p>
       <p style="font-size:1rem;color:var(--textMuted);line-height:1.65;margin-bottom:0.75rem">This audit reveals the shape of your capacity. The habits above offer a path. But the gap between insight and action is real, and it has a name: willingness.</p>
       <p style="font-size:1rem;color:var(--textMuted);line-height:1.65;margin-bottom:0.75rem">${parseFloat(comp)<=4?"When capacity is this depleted, willingness often feels impossible. That makes sense. Start with one question: what is the smallest thing I could do differently tomorrow?":"When you can see the pattern clearly, the question shifts from <em>what do I need to change</em> to <em>am I ready to</em>. Readiness isn't all-or-nothing. It starts with one habit, one conversation, one choice to stop performing capacity you don't have."}</p>
       <p style="font-size:1rem;color:var(--ember);line-height:1.65;font-style:italic">The audit measures where you are. Only you decide where you go next.</p>
@@ -971,8 +969,8 @@ function renderResults(){
     </div>`:""}
     ${isShared?`
     <div class="card-lg" style="text-align:center;border-color:rgba(74,100,68,0.27);background:var(--bgCard)">
-      <h2 style="font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">This isn\u2019t your pattern.</h2>
-      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">Someone shared theirs so you could see what it looks like. The audit takes two minutes and the shape it surfaces is yours alone.</p>
+      <h2 style="font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:0.5rem">This is someone else\u2019s pattern.</h2>
+      <p style="font-size:1.05rem;color:var(--textMuted);line-height:1.6;margin-bottom:1rem">They shared it so you could see what it looks like. The audit takes two minutes and the shape it surfaces is yours alone.</p>
       <button class="btn" onclick="startOwnAudit()">Take the Capacity Audit</button>
     </div>`:`
     <div class="card-lg" style="text-align:center;border-color:rgba(74,100,68,0.13);background:var(--bgCard)">
@@ -1058,7 +1056,7 @@ function genPDF(){
   const sp=highScore-lowScore;const dimLabel=SECTIONS.find(s=>s.key===lowDim).label;
   const insight=spreadInsight(sp,lowDim,lowScore);
   let dims="",habits="";
-  SECTIONS.forEach(s=>{dims+=`<div class="dim"><span class="dim-name">${s.icon} ${s.label}</span><span class="dim-score" style="color:${scoreColor(secScores[s.key])}">${secScores[s.key].toFixed(1)}</span></div>`});
+  SECTIONS.forEach(s=>{dims+=`<div class="dim"><span class="dim-name">${s.label}</span><span class="dim-score" style="color:${scoreColor(secScores[s.key])}">${secScores[s.key].toFixed(1)}</span></div>`});
   FIVE_CS.forEach(h=>{const action=getAction(h,scores);habits+=`<div class="habit"><div class="habit-name">${h.name}</div><div class="habit-desc">${h.description}</div><div class="insight" style="margin-top:0.5rem;font-size:0.9rem"><strong style="color:#f0864e">Try this:</strong> ${action}</div></div>`});
   const tfLabel=timeframe?timeframeLabel(timeframe):"";
   const dateStr=new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});
@@ -1133,7 +1131,7 @@ function generateLocalShareCard(){
       SECTIONS.forEach(s=>{
         const sc=secScores[s.key];
         ctx.fillStyle="#2c2610";ctx.font="500 20px sans-serif";
-        ctx.fillText(s.icon+" "+s.label,60,dy);
+        ctx.fillText(s.label,60,dy);
         ctx.fillStyle=scoreColor(sc);ctx.font="700 20px monospace";
         ctx.fillText(sc.toFixed(1),350,dy);
         // Bar
